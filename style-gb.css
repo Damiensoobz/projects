@@ -1,0 +1,383 @@
+/* ═══════════════════════════════════════════════════════════════
+   GAMEBOY  DMG  SKIN
+   Palette: #9bbc0f · #8bac0f · #306230 · #0f380f
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+img  { display: block; max-width: 100%; image-rendering: pixelated; }
+
+/* ── Body — LCD screen ──────────────────────────────────────── */
+body {
+    background-color: #9bbc0f;
+    /* subtle pixel-grid to mimic LCD dot matrix */
+    background-image:
+        linear-gradient(rgba(15,56,15,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,56,15,0.045) 1px, transparent 1px);
+    background-size: 4px 4px;
+    color: #0f380f;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.65rem;
+    line-height: 2;
+    min-height: 100vh;
+}
+
+/* ── Scanlines overlay ──────────────────────────────────────── */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px, transparent 2px,
+        rgba(15,56,15,0.07) 2px, rgba(15,56,15,0.07) 3px
+    );
+    pointer-events: none;
+    z-index: 9998;
+}
+
+/* ── Container ──────────────────────────────────────────────── */
+.terminal {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 24px 100px;
+}
+
+/* ── Block — chunky pixel panel ─────────────────────────────── */
+.block {
+    background: #8bac0f;
+    border: 3px solid #0f380f;
+    box-shadow: 4px 4px 0 #0f380f;
+    margin-bottom: 28px;
+    padding: 16px 18px 20px;
+    overflow: visible;      /* allow speech bubbles to escape */
+}
+
+/* ── Prompt — game title bar ────────────────────────────────── */
+.prompt {
+    background: #0f380f;
+    margin: -16px -18px 16px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+.prompt::before {
+    content: '>';
+    color: #9bbc0f;
+    font-size: 0.5rem;
+    flex-shrink: 0;
+}
+/* Hide terminal chrome — command becomes the title */
+.p-user, .p-at, .p-host, .p-sep, .p-path, .p-dim, .p-sym { display: none; }
+.p-cmd {
+    color: #9bbc0f;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Footer prompt: centred, no arrow */
+.footer-block .prompt { justify-content: center; background: #306230; }
+.footer-block .prompt::before { display: none; }
+
+/* ── Divider — dashed pixel line ────────────────────────────── */
+.divider {
+    border: none;
+    height: 3px;
+    background: repeating-linear-gradient(
+        to right,
+        #306230 0px, #306230 10px,
+        transparent 10px, transparent 18px
+    );
+    margin: 28px 0;
+}
+
+/* ── Output text ────────────────────────────────────────────── */
+.out { color: #0f380f; margin-bottom: 6px; }
+.out + .out { margin-top: 4px; }
+.out.dim { color: #306230; font-size: 0.58rem; }
+
+.caret { color: #306230; margin-right: 8px; user-select: none; }
+.out strong { color: #0f380f; }
+
+code {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.75em;
+    color: #306230;
+    background: #9bbc0f;
+    border: 2px solid #306230;
+    padding: 0 5px;
+}
+
+.out.quote {
+    margin-top: 14px;
+    border-left: 4px solid #306230;
+    padding-left: 14px;
+    color: #306230;
+    /* Press Start 2P has no italic — use border accent instead */
+}
+
+/* ── ASCII art ──────────────────────────────────────────────── */
+.ascii-art {
+    /* Keep Courier New: block-drawing chars need monospace alignment */
+    font-family: 'Courier New', monospace;
+    font-size: clamp(0.38rem, 1.1vw, 0.62rem);
+    line-height: 1.2;
+    letter-spacing: 0;
+    white-space: pre;
+    overflow-x: auto;
+    margin: 8px 0 16px;
+    color: #0f380f;
+}
+
+/* ── ls meta ────────────────────────────────────────────────── */
+.ls-meta { margin-bottom: 14px; }
+
+/* ── Cards grid ─────────────────────────────────────────────── */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+@media (max-width: 780px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .cards-grid { grid-template-columns: 1fr; } }
+
+/* ── Card ──────────────────────────────────────────────────── */
+.card {
+    position: relative;
+    background: #9bbc0f;
+    border: 3px solid #0f380f;
+    box-shadow: 3px 3px 0 #0f380f;
+    transition: transform 0.1s, box-shadow 0.1s;
+    animation: pixelIn 0.3s ease both;
+}
+.card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 #0f380f;
+}
+
+/* Corner stars */
+.card-corner {
+    position: absolute;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.45rem;
+    color: #306230;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 2;
+    transition: color 0.1s;
+}
+.card:hover .card-corner { color: #0f380f; }
+.card-corner.tl { top: 3px;    left:  4px; }
+.card-corner.tr { top: 3px;    right: 4px; }
+.card-corner.bl { bottom: 3px; left:  4px; }
+.card-corner.br { bottom: 3px; right: 4px; }
+
+.card-link { display: block; text-decoration: none; color: inherit; }
+
+/* Images get the classic 4-shade GB green treatment */
+.card-img {
+    width: 100%;
+    height: 155px;
+    object-fit: cover;
+    border-bottom: 3px solid #0f380f;
+    display: block;
+    filter: sepia(1) hue-rotate(50deg) saturate(0.75) brightness(0.72) contrast(1.1);
+    image-rendering: pixelated;
+    transition: filter 0.15s;
+}
+.card:hover .card-img {
+    filter: sepia(1) hue-rotate(50deg) saturate(0.95) brightness(0.85) contrast(1.15);
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: #0f380f;
+}
+.card-footer::before {
+    content: '>';
+    color: #9bbc0f;
+    flex-shrink: 0;
+    font-size: 0.5rem;
+}
+.card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    color: #9bbc0f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+}
+
+/* ── Speech bubble — RPG dialog box ─────────────────────────── */
+.speech-bubble {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: 246px;
+    background: #9bbc0f;
+    border: 3px solid #0f380f;
+    box-shadow: 3px 3px 0 #0f380f;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s;
+    z-index: 100;
+}
+.bubble-inner {
+    padding: 10px 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.48rem;
+    line-height: 1.9;
+    color: #0f380f;
+}
+/* Pixel-style arrow tail */
+.speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 9px solid transparent;
+    border-top-color: #0f380f;
+}
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: calc(100% - 3px); left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #9bbc0f;
+    z-index: 1;
+}
+.card:hover        .speech-bubble,
+.card:focus-within .speech-bubble {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Tags */
+.bubble-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.bubble-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    color: #9bbc0f;
+    background: #0f380f;
+    padding: 2px 6px;
+    letter-spacing: 0.04em;
+}
+
+/* Mobile: always show flat */
+@media (hover: none) {
+    .speech-bubble {
+        position: static; transform: none; opacity: 1;
+        width: auto; border-top: 3px solid #0f380f; box-shadow: none;
+    }
+    .speech-bubble::before, .speech-bubble::after { display: none; }
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+.empty-state { grid-column: 1 / -1; color: #306230; padding: 8px 0; font-size: 0.6rem; }
+
+/* ── Spotify ────────────────────────────────────────────────── */
+.sp-panel {
+    background: #9bbc0f;
+    border: 3px solid #0f380f;
+    box-shadow: 3px 3px 0 #0f380f;
+    padding: 14px 18px;
+    max-width: 460px;
+    transition: border-color 0.2s;
+}
+.sp-panel.playing { border-color: #306230; }
+
+.sp-status {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.42rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #306230;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Square dot — no border-radius, pixel style */
+.sp-dot {
+    width: 7px; height: 7px;
+    background: #306230;
+    flex-shrink: 0;
+}
+.sp-panel.playing .sp-dot {
+    background: #0f380f;
+    animation: blink 1s step-end infinite;
+}
+
+.sp-track  { color: #0f380f; font-size: 0.65rem; margin-bottom: 4px; }
+.sp-artist { color: #306230; font-size: 0.55rem; margin-bottom: 14px; }
+
+.sp-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.42rem;
+    color: #306230;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+}
+.sp-link:hover { color: #0f380f; }
+.sp-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.sp-error, .sp-loading { color: #306230; font-size: 0.6rem; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.footer-block { text-align: center; }
+.footer-note  { margin-top: 12px; font-size: 0.52rem; color: #306230; }
+.cursor-blink {
+    color: #9bbc0f;
+    animation: blink 1s step-end infinite;
+    font-size: 0.65rem;
+}
+
+/* ── Theme toggle ───────────────────────────────────────────── */
+.theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    background: #0f380f;
+    border: 3px solid #0f380f;
+    color: #9bbc0f;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem;
+    padding: 10px 14px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    box-shadow: 3px 3px 0 #306230;
+    text-shadow: none;
+    transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+}
+.theme-toggle:hover {
+    background: #306230;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 #0f380f;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes pixelIn {
+    from { transform: scale(0.94) translateY(5px); }
+    to   { transform: scale(1)    translateY(0);   }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}

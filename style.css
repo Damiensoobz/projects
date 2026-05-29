@@ -286,6 +286,24 @@ code {
 .footer-block { padding-top: 6px; }
 .footer-note  { margin-top: 14px; font-size: 0.78rem; }
 
+/* ── Theme toggle ──────────────────────────────────────────── */
+.theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    background: var(--bg);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--font);
+    font-size: 0.68rem;
+    padding: 7px 14px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.15s, color 0.15s;
+}
+.theme-toggle:hover { background: var(--green); color: var(--bg); }
+
 /* ── Cursor ────────────────────────────────────────────────── */
 .cursor-blink {
     color: var(--green);
