@@ -365,12 +365,33 @@ code {
 
 .bubble-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
 
+/* Links row */
+.bubble-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+/* Demo link */
+.bubble-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #cc00ff;
+    text-decoration: none;
+    text-shadow: 0 0 5px rgba(204,0,255,0.5);
+}
+.bubble-demo:hover { text-decoration: underline; }
+.bubble-demo svg { width: 12px; height: 12px; flex-shrink: 0; }
+
 /* Source link */
 .bubble-gh {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 10px;
     font-size: 0.72rem;
     color: #ff006e;
     text-decoration: none;

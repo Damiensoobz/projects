@@ -304,12 +304,36 @@ code {
 /* Tags */
 .bubble-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
 
+/* Links row */
+.bubble-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 11px;
+    align-items: center;
+}
+
+/* Demo link */
+.bubble-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--cinzel);
+    font-size: 0.5rem;
+    color: var(--cream);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(237,224,192,0.3);
+    letter-spacing: 0.08em;
+    font-style: normal;
+}
+.bubble-demo:hover { border-bottom-color: var(--cream); }
+.bubble-demo svg { width: 11px; height: 11px; flex-shrink: 0; }
+
 /* Source link */
 .bubble-gh {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 11px;
     font-family: var(--cinzel);
     font-size: 0.5rem;
     color: var(--gold);

@@ -225,12 +225,34 @@ code {
     letter-spacing: 0.06em;
 }
 
+/* Links row */
+.bubble-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 11px;
+    align-items: center;
+}
+
+/* Demo link */
+.bubble-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font);
+    font-size: 0.68rem;
+    color: var(--blue);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+}
+.bubble-demo:hover { text-decoration: underline; }
+.bubble-demo svg { width: 12px; height: 12px; flex-shrink: 0; }
+
 /* Source link */
 .bubble-gh {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 10px;
     font-size: 0.68rem;
     color: var(--green);
     text-decoration: none;

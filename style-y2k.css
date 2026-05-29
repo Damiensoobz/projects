@@ -280,12 +280,33 @@ code {
 /* Tags */
 .bubble-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
 
+/* Links row */
+.bubble-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+/* Demo link */
+.bubble-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.44rem;
+    color: #cc00cc;
+    text-decoration: underline;
+}
+.bubble-demo:hover { color: #ff1493; }
+.bubble-demo svg { width: 10px; height: 10px; flex-shrink: 0; }
+
 /* Source link */
 .bubble-gh {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 10px;
     font-family: 'Press Start 2P', monospace;
     font-size: 0.44rem;
     color: #0000cc;
