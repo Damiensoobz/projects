@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>damien@portfolio:~$</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="terminal">
+
+    <!-- ── Welcome ─────────────────────────────────────────── -->
+    <section class="block">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">welcome</span></div>
+        <pre class="ascii-art" aria-label="Damien">
+ ██████╗  █████╗ ███╗   ███╗██╗███████╗███╗   ██╗
+ ██╔══██╗██╔══██╗████╗ ████║██║██╔════╝████╗  ██║
+ ██║  ██║███████║██╔████╔██║██║█████╗  ██╔██╗ ██║
+ ██║  ██║██╔══██║██║╚██╔╝██║██║██╔══╝  ██║╚██╗██║
+ ██████╔╝██║  ██║██║ ╚═╝ ██║██║███████╗██║ ╚████║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚══════╝╚═╝  ╚═══╝</pre>
+        <p class="out">developer &amp; code wizard &mdash; v1.0.0</p>
+        <p class="out dim">scroll to explore &nbsp;&middot;&nbsp; hover cards to inspect</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── About ───────────────────────────────────────────── -->
+    <section class="block">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">about</span></div>
+        <p class="out"><span class="caret">&gt;</span> Hark, weary traveler. Thou hast stumbled upon the digital interface of <strong>Damien</strong> — a humble code wizard who, much like Gandalf, shows up exactly when needed and refuses to write documentation.</p>
+        <p class="out"><span class="caret">&gt;</span> By day, a crafter of fine digital wares. By night, questioning every semicolon under the blue light of a monitor. Armed with caffeine, Stack Overflow, and the sheer audacity to push to <code>main</code>.</p>
+        <p class="out quote"><span class="caret">&gt;&gt;</span> &ldquo;It&rsquo;s dangerous to go alone. Take this GitHub link.&rdquo;</p>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── Projects ────────────────────────────────────────── -->
+    <section class="block">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">ls -la projects/</span></div>
+        <p class="out dim ls-meta">total <span id="project-count">0</span></p>
+        <div class="cards-grid" id="cards-grid"></div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── Spotify ──────────────────────────────────────────── -->
+    <section class="block">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">spotify --status</span></div>
+        <div id="spotify-widget"></div>
+    </section>
+
+    <!-- ── Footer prompt ───────────────────────────────────── -->
+    <div class="block footer-block">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="cursor-blink">█</span></div>
+        <p class="out dim footer-note">&copy; <span id="footer-year"></span> Damien &mdash; built on caffeine and audacity</p>
+    </div>
+
+</div>
+
+<script src="projects.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
