@@ -425,12 +425,10 @@ code {
 /* ── Footer ──────────────────────────────────────────────────── */
 .footer-block { border-left-color: rgba(255, 0, 110, 0.2); }
 .footer-note  { margin-top: 14px; font-size: 0.78rem; color: #5030a0; }
-.cursor-blink {
-    color: #ff006e;
-    text-shadow: 0 0 10px #ff006e;
-    animation: blink 1s step-end infinite;
-    font-size: 0.85rem;
-}
+.cursor-blink { display: none; }
+
+.out a { color: #ff006e; text-decoration: none; text-shadow: 0 0 6px rgba(255,0,110,0.5); }
+.out a:hover { text-decoration: underline; }
 
 /* ── Theme toggle ────────────────────────────────────────────── */
 .theme-toggle {

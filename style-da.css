@@ -385,10 +385,10 @@ code {
 .footer-block { text-align: center; }
 .footer-block::before { display: none; } /* remove inner-border ornament */
 .footer-note  { margin-top: 16px; font-size: 0.9rem; color: var(--dim); font-style: italic; }
-.cursor-blink {
-    color: var(--gold);
-    animation: blink 1.2s step-end infinite;
-}
+.cursor-blink { display: none; }
+
+.out a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(200,150,28,0.4); }
+.out a:hover { border-bottom-color: var(--gold); }
 
 /* ── Theme toggle ──────────────────────────────────────────── */
 .theme-toggle {

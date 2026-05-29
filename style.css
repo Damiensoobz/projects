@@ -66,6 +66,9 @@ body {
     font-style: italic;
 }
 
+.out a { color: var(--green); text-decoration: none; }
+.out a:hover { text-decoration: underline; }
+
 code {
     font-family: var(--font);
     font-size: 0.88em;

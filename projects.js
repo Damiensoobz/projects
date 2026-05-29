@@ -37,7 +37,7 @@ var projects = [
 // ─────────────────────────────────────────────────────────────
 
 var spotifyConfig = {
-    profileUrl:  "https://open.spotify.com/user/damiensoobz",
+    profileUrl:  "https://open.spotify.com/user/wp3u6rngsgjr9ufv0cffw6nkp?si=543a1709d1244910",
     lastfmUser:  "damiensoobz",
     lastfmKey:   "6ae90e4ac257aaa4a0d73230afa39dd8",
 };

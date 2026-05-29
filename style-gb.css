@@ -342,11 +342,10 @@ code {
 /* ── Footer ─────────────────────────────────────────────────── */
 .footer-block { text-align: center; }
 .footer-note  { margin-top: 12px; font-size: 0.52rem; color: #306230; }
-.cursor-blink {
-    color: #9bbc0f;
-    animation: blink 1s step-end infinite;
-    font-size: 0.65rem;
-}
+.cursor-blink { display: none; }
+
+.out a { color: #0f380f; font-weight: bold; text-decoration: underline; }
+.out a:hover { color: #306230; }
 
 /* ── Theme toggle ───────────────────────────────────────────── */
 .theme-toggle {

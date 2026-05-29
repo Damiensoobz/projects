@@ -127,6 +127,9 @@ code {
     font-size: 1.05rem;
 }
 
+.out a { color: #0000cc; text-decoration: underline; font-weight: 700; }
+.out a:hover { color: #ff1493; }
+
 /* ── ASCII art — animated rainbow ──────────────────────────── */
 .ascii-art {
     font-family: 'Courier New', monospace;
