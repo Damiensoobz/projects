@@ -37,7 +37,7 @@ var projects = [
 // ─────────────────────────────────────────────────────────────
 
 var spotifyConfig = {
-    profileUrl:  "",   // e.g. "https://open.spotify.com/user/yourusername"
-    lastfmUser:  "",   // your Last.fm username
-    lastfmKey:   "",   // your Last.fm API key
+    profileUrl:  "https://open.spotify.com/user/damiensoobz",
+    lastfmUser:  "damiensoobz",
+    lastfmKey:   "6ae90e4ac257aaa4a0d73230afa39dd8",
 };
