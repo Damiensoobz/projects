@@ -225,6 +225,20 @@ code {
     letter-spacing: 0.06em;
 }
 
+/* Source link */
+.bubble-gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    font-size: 0.68rem;
+    color: var(--green);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+}
+.bubble-gh:hover { text-decoration: underline; }
+.bubble-gh svg { width: 12px; height: 12px; flex-shrink: 0; }
+
 /* Mobile: always show */
 @media (hover: none) {
     .speech-bubble { position: static; transform: none; opacity: 1; width: auto; border-top: 1px solid var(--border); box-shadow: none; }

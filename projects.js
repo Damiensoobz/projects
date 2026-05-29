@@ -2,12 +2,25 @@
 //  projects.js  —  Edit this file to update your portfolio.
 // ─────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────
+//  HOW TO ADD A PROJECT:
+//
+//  title       — display name on the card
+//  description — shown in the hover bubble
+//  image       — screenshot: save file in /images/ and put "images/filename.png"
+//                leave "" for an auto-generated placeholder
+//  link        — where the card clicks to (live demo URL, or GitHub repo if no demo)
+//  github      — optional: repo URL — shows a "view source" link in the bubble
+//  tags        — short tech labels shown as chips in the bubble
+// ─────────────────────────────────────────────────────────────
+
 var projects = [
     {
         title: "The Oracle's Forecast",
         description: "A sorcerous divination tool that communes with weather spirits to foretell the coming storms. No sacrificial offerings required — just an API key.",
-        image: "",        // path to image in /images/, e.g. "images/project.png"
-        link: "#",        // URL to open on click
+        image: "",
+        link: "#",
+        github: "",
         tags: ["JavaScript", "API", "CSS"]
     },
     {
@@ -15,6 +28,7 @@ var projects = [
         description: "A mystical scroll that remembers every task the adventurer commits to — and more importantly, which ones they quietly abandoned after 20 minutes.",
         image: "",
         link: "#",
+        github: "",
         tags: ["React", "localStorage"]
     },
     {
@@ -22,6 +36,7 @@ var projects = [
         description: "An arcane device for those who lack the mental fortitude to multiply numbers in their head. Peer reviewed by three wizards and a goblin accountant.",
         image: "",
         link: "#",
+        github: "",
         tags: ["HTML", "CSS", "JS"]
     }
 ];

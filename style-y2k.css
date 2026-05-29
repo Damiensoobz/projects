@@ -279,6 +279,21 @@ code {
 
 /* Tags */
 .bubble-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+
+/* Source link */
+.bubble-gh {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.44rem;
+    color: #0000cc;
+    text-decoration: underline;
+}
+.bubble-gh:hover { color: #ff1493; }
+.bubble-gh svg { width: 10px; height: 10px; flex-shrink: 0; }
+
 .bubble-tag {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.45rem;
