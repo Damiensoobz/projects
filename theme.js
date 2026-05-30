@@ -4,11 +4,8 @@
     var label = document.getElementById('toggle-label');
 
     var THEMES = [
-        { key: 'terminal',  css: 'style.css',      btn: '// switch skin'  },
-        { key: 'y2k',       css: 'style-y2k.css',  btn: 'Switch Skin'     },
-        { key: 'synthwave', css: 'style-sw.css',   btn: '> switch_skin'   },
-        { key: 'gameboy',     css: 'style-gb.css',   btn: '> SWITCH SKIN'     },
-        { key: 'darkacademia', css: 'style-da.css', btn: '✦ change skin'    }
+        { key: 'y2k',     css: 'style-y2k.css', btn: 'Switch Skin'  },
+        { key: 'gameboy', css: 'style-gb.css',   btn: '> SWITCH SKIN' },
     ];
 
     var saved = localStorage.getItem('skin');
@@ -28,5 +25,8 @@
         sheet.href        = t.css;
         label.textContent = t.btn;
         document.documentElement.dataset.skin = t.key;
+        setTimeout(function() {
+            if (window.triggerScramble) window.triggerScramble();
+        }, 80);
     }
 })();

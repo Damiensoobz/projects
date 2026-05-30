@@ -326,6 +326,9 @@ code {
 
 /* ── Spotify ────────────────────────────────────────────────── */
 .sp-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     background: #9bbc0f;
     border: 3px solid #0f380f;
     box-shadow: 3px 3px 0 #0f380f;
@@ -374,6 +377,36 @@ code {
 .sp-link svg { width: 12px; height: 12px; flex-shrink: 0; }
 
 .sp-error, .sp-loading { color: #306230; font-size: 0.6rem; }
+
+/* ── Status grid ─────────────────────────────────────────────── */
+.status-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; align-items: stretch; }
+@media (max-width: 780px) { .status-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .status-grid { grid-template-columns: 1fr; } }
+.status-grid > * { display: flex; flex-direction: column; }
+
+/* ── GitHub widget ───────────────────────────────────────────── */
+.gh-panel { flex: 1; display: flex; flex-direction: column; background: #9bbc0f; border: 3px solid #0f380f; box-shadow: 3px 3px 0 #0f380f; padding: 10px 12px; }
+.gh-status { font-family: 'Press Start 2P', monospace; font-size: 0.42rem; color: #306230; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
+.gh-dot { width: 6px; height: 6px; background: #306230; flex-shrink: 0; }
+.gh-panel.active .gh-dot { background: #0f380f; }
+.gh-repo { font-family: 'Press Start 2P', monospace; color: #0f380f; font-size: 0.5rem; margin-bottom: 4px; }
+.gh-commit { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.4rem; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.6; }
+.gh-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gh-time { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.38rem; }
+.gh-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; }
+.gh-link:hover { color: #306230; }
+
+/* ── Steam widget ────────────────────────────────────────────── */
+.steam-panel { flex: 1; display: flex; flex-direction: column; background: #9bbc0f; border: 3px solid #0f380f; box-shadow: 3px 3px 0 #0f380f; overflow: hidden; }
+.steam-status { font-family: 'Press Start 2P', monospace; font-size: 0.42rem; color: #306230; padding: 10px 12px 5px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.steam-dot { width: 6px; height: 6px; background: #306230; flex-shrink: 0; }
+.steam-panel.active .steam-dot { background: #0f380f; animation: blink 1s step-end infinite; }
+.steam-img { width: 100%; height: 70px; object-fit: cover; display: block; filter: sepia(1) hue-rotate(50deg) saturate(0.75) brightness(0.72) contrast(1.1); image-rendering: pixelated; border-bottom: 3px solid #306230; }
+.steam-info { padding: 6px 12px 10px; }
+.steam-game { font-family: 'Press Start 2P', monospace; color: #0f380f; font-size: 0.45rem; margin-bottom: 4px; line-height: 1.6; }
+.steam-meta { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.38rem; margin-bottom: 8px; }
+.steam-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; }
+.steam-link:hover { color: #306230; }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 .footer-block { text-align: center; }

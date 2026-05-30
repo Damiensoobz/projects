@@ -51,17 +51,12 @@ body {
     overflow-x: hidden;
 }
 
-/* Crisp SVG folder icon — title bar */
+/* Crisp SVG folder icon — title bar (content:url renders as vector, no blur) */
 .prompt::before {
-    content: '';
-    display: inline-block;
-    width: 16px;
-    height: 13px;
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='13' viewBox='0 0 16 13' shape-rendering='crispEdges'><path d='M0,4 L0,0 L7,0 L7,4 L16,4 L16,13 L0,13 Z' fill='%23ffd740'/><polyline points='0,13 0,0 7,0 7,4 16,4' fill='none' stroke='%23ffe880' stroke-width='1'/><polyline points='16,4 16,13 0,13' fill='none' stroke='%23806000' stroke-width='1'/></svg>");
     flex-shrink: 0;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 13'><path d='M0,4 L0,0 L7,0 L7,4 L16,4 L16,13 L0,13 Z' fill='%23ffd740'/><path d='M0,13 L0,0 L7,0 L7,4 L16,4' fill='none' stroke='%23ffe880' stroke-width='1.2'/><path d='M16,4 L16,13 L0,13' fill='none' stroke='%23806000' stroke-width='1.2'/></svg>");
-    background-repeat: no-repeat;
-    background-size: contain;
-    image-rendering: pixelated;
+    line-height: 1;
+    vertical-align: middle;
 }
 
 /* Hide terminal chrome */
@@ -78,21 +73,13 @@ body {
     flex: 1;
 }
 
-/* Fake Win98 window controls */
+/* Win98 window control buttons — SVG draws each button properly */
 .prompt::after {
-    content: '─  □  ✕';
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='54' height='14' shape-rendering='crispEdges'><rect x='0' y='0' width='16' height='14' fill='%23d4d0c8'/><polyline points='15,0 0,0 0,13' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='0,13 15,13 15,0' fill='none' stroke='%23404040' stroke-width='1'/><rect x='4' y='10' width='7' height='2' fill='%23000000'/><rect x='19' y='0' width='16' height='14' fill='%23d4d0c8'/><polyline points='34,0 19,0 19,13' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='19,13 34,13 34,0' fill='none' stroke='%23404040' stroke-width='1'/><rect x='23' y='4' width='8' height='7' fill='none' stroke='%23000000' stroke-width='1'/><rect x='23' y='4' width='8' height='2' fill='%23000000'/><rect x='38' y='0' width='16' height='14' fill='%23d4d0c8'/><polyline points='53,0 38,0 38,13' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='38,13 53,13 53,0' fill='none' stroke='%23404040' stroke-width='1'/><line x1='42' y1='4' x2='49' y2='10' stroke='%23000000' stroke-width='1.5'/><line x1='49' y1='4' x2='42' y2='10' stroke='%23000000' stroke-width='1.5'/></svg>");
     flex-shrink: 0;
-    font-family: Arial, sans-serif;
-    font-size: 0.52rem;
-    color: #000000;
-    background: #d4d0c8;
-    border-top:    1px solid #ffffff;
-    border-left:   1px solid #ffffff;
-    border-right:  1px solid #404040;
-    border-bottom: 1px solid #404040;
-    padding: 1px 6px 2px;
-    letter-spacing: 4px;
     cursor: default;
+    line-height: 1;
+    vertical-align: middle;
 }
 
 /* Footer prompt */
@@ -100,9 +87,7 @@ body {
 
 /* Crisp SVG floppy disk icon — footer */
 .footer-block .prompt::before {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><rect width='14' height='14' fill='%23d4d0c8'/><rect x='1' y='1' width='12' height='5' fill='%23b8ac80'/><rect x='2' y='2' width='4' height='3' fill='%23282828'/><rect x='9' y='1' width='4' height='5' fill='%23806020'/><rect x='2' y='7' width='10' height='6' fill='%23f0ece4'/><rect width='14' height='14' fill='none' stroke='%23404040' stroke-width='1'/></svg>");
-    width: 14px;
-    height: 14px;
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23d4d0c8'/><rect x='1' y='1' width='12' height='5' fill='%23b8ac80'/><rect x='2' y='2' width='4' height='3' fill='%23282828'/><rect x='9' y='1' width='4' height='5' fill='%23806020'/><rect x='2' y='7' width='10' height='6' fill='%23f0ece4'/><rect width='14' height='14' fill='none' stroke='%23404040' stroke-width='1'/></svg>");
 }
 .footer-block .prompt::after { display: none; }
 
@@ -231,7 +216,7 @@ code {
     content: '';
     display: block;
     flex: 1;
-    min-height: 72px;
+    min-height: 120px;
     background: repeating-linear-gradient(
         to bottom,
         transparent 0px,
@@ -255,18 +240,13 @@ code {
 
 /* Crisp SVG folder icon in footer */
 .card-footer::before {
-    content: '';
-    display: inline-block;
-    width: 14px;
-    height: 12px;
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='12' viewBox='0 0 14 12' shape-rendering='crispEdges'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%23ffd740'/><polyline points='0,12 0,0 6,0 6,3 14,3' fill='none' stroke='%23ffe880' stroke-width='1'/><polyline points='14,3 14,12 0,12' fill='none' stroke='%23806000' stroke-width='1'/></svg>");
     flex-shrink: 0;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%23ffd740'/><path d='M0,12 L0,0 L6,0 L6,3 L14,3' fill='none' stroke='%23ffe880' stroke-width='1'/><path d='M14,3 L14,12 L0,12' fill='none' stroke='%23806000' stroke-width='1'/></svg>");
-    background-repeat: no-repeat;
-    background-size: contain;
-    image-rendering: pixelated;
+    vertical-align: middle;
+    line-height: 1;
 }
 .card:hover .card-footer::before {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%23ffe880'/><path d='M0,12 L0,0 L6,0 L6,3 L14,3' fill='none' stroke='%23ffffff' stroke-width='1'/><path d='M14,3 L14,12 L0,12' fill='none' stroke='%23a08030' stroke-width='1'/></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='12' viewBox='0 0 14 12' shape-rendering='crispEdges'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%23ffe880'/><polyline points='0,12 0,0 6,0 6,3 14,3' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='14,3 14,12 0,12' fill='none' stroke='%23a08030' stroke-width='1'/></svg>");
 }
 .card-title {
     font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
@@ -388,142 +368,270 @@ code {
 .empty-state { grid-column: 1 / -1; color: #808080; padding: 8px 0; font-size: 0.78rem; }
 
 /* ═══════════════════════════════════════════════════════════════
-   WINAMP  2.x  MEDIA  PLAYER  —  Spotify widget
+   STATUS  WIDGETS  —  unified Win98 mini-window style
+   All three panels share the same chrome: raised border + blue title bar
    ═══════════════════════════════════════════════════════════════ */
 
-.sp-panel {
-    background: #232323;
-    border-top:    2px solid #6a6a7a;
-    border-left:   2px solid #6a6a7a;
-    border-right:  2px solid #0a0a14;
-    border-bottom: 2px solid #0a0a14;
-    box-shadow: 1px 1px 0 #000000;
+/* ── Status grid ─────────────────────────────────────────────── */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    align-items: stretch;
+}
+@media (max-width: 780px) { .status-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .status-grid { grid-template-columns: 1fr; } }
+/* Wrapper divs must be flex containers so inner panels can flex: 1 */
+.status-grid > * { display: flex; flex-direction: column; }
+
+/* ── Shared panel base ───────────────────────────────────────── */
+.sp-panel,
+.gh-panel,
+.steam-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;                /* fill the grid cell wrapper */
+    background: #d4d0c8;
+    border-top:    2px solid #ffffff;
+    border-left:   2px solid #ffffff;
+    border-right:  2px solid #404040;
+    border-bottom: 2px solid #404040;
+    box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
     padding: 0;
-    max-width: 380px;
+    max-width: none;
     overflow: hidden;
-    font-family: 'Courier New', monospace;
 }
 
-/* Winamp title bar */
-.sp-panel::before {
-    content: 'WINAMP';
+/* ── Blue Win98 title bars ───────────────────────────────────── */
+.sp-panel::before,
+.gh-panel::before,
+.steam-panel::before {
     display: block;
-    background: linear-gradient(to right, #10108a 0%, #4848c8 50%, #10108a 100%);
-    color: #d0d0ff;
+    background: linear-gradient(to right, #000080 0%, #1084d0 70%);
+    color: #ffffff;
     font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 3px 8px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-bottom: 1px solid #08084a;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    letter-spacing: 0;
+    text-transform: none;
 }
+.sp-panel::before    { content: 'Now Playing'; }
+.gh-panel::before    { content: 'Last Push'; }
+.steam-panel::before { content: 'Recently Played'; }
 
-/* LED display status */
+/* ── No ::after on any panel ─────────────────────────────────── */
+.sp-panel::after { display: none; }
+
+/* ── Spotify widget ──────────────────────────────────────────── */
 .sp-status {
-    background: #000000;
-    color: #20a020;
-    font-family: 'Courier New', monospace;
-    font-size: 0.52rem;
-    letter-spacing: 0.12em;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 5px 8px 2px;
-    margin-bottom: 0;
+    color: #808080;
+    padding: 8px 10px 4px;
     display: flex;
     align-items: center;
     gap: 7px;
-    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 0;
+    border-bottom: 1px solid #808080;
 }
-
-/* LED indicator dot — square for Winamp */
 .sp-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 0;
-    background: #1a3a1a;
-    border: 1px solid #0a200a;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #808080;
     flex-shrink: 0;
 }
 .sp-panel.playing .sp-dot {
-    background: #00d000;
-    border-color: #00a000;
-    box-shadow: 0 0 4px #00d000, 0 0 8px rgba(0, 208, 0, 0.4);
-    animation: ledPulse 0.8s step-end infinite;
+    background: #1db954;
+    animation: blink 1s step-end infinite;
 }
-
-/* Track name — amber LED display */
 .sp-track {
-    background: #000000;
-    color: #d4a020;
-    font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    font-weight: normal;
+    font-family: Tahoma, Arial, sans-serif;
+    color: #000000;
+    font-size: 0.85rem;
+    font-weight: 700;
     font-style: normal;
-    padding: 6px 8px 2px;
-    letter-spacing: 0.04em;
+    padding: 8px 10px 2px;
     margin-bottom: 0;
-    text-shadow: 0 0 4px rgba(212, 160, 32, 0.6);
+    text-shadow: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background: none;
 }
-
-/* Artist — green LED display */
 .sp-artist {
-    background: #000000;
-    color: #20a020;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    padding: 0 8px 6px;
-    letter-spacing: 0.04em;
+    font-family: Tahoma, Arial, sans-serif;
+    color: #808080;
+    font-size: 0.72rem;
+    padding: 0 10px 10px;
     margin-bottom: 0;
-    text-shadow: 0 0 4px rgba(32, 160, 32, 0.5);
+    text-shadow: none;
+    background: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-style: normal;
+    flex: 1;
 }
-
-/* Transport buttons strip */
-.sp-panel::after {
-    content: '|◀◀   ▶   ⏸   ■   ▶▶|';
-    display: block;
-    background: #1a1a1a;
-    color: #808080;
-    font-family: 'Courier New', monospace;
-    font-size: 0.52rem;
-    text-align: center;
-    padding: 5px 8px;
-    letter-spacing: 5px;
-    border-top: 1px solid #3a3a3a;
-    border-bottom: 1px solid #080808;
-}
-
-/* Open Spotify link — bottom strip */
 .sp-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-top: 1px solid #808080;
+    color: #1db954;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.68rem;
+    text-decoration: none;
+    letter-spacing: 0;
+    text-transform: none;
+    text-shadow: none;
+    background: none;
+    margin-top: auto;
+}
+.sp-link:hover { text-decoration: underline; color: #22dd66; }
+.sp-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.sp-error  { color: #cc0000; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; padding: 10px; }
+.sp-loading { color: #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; padding: 10px; }
+
+/* ── GitHub widget — GitHub dark theme ──────────────────────── */
+.gh-panel {
+    background: #0d1117;        /* GitHub dark mode bg */
+    border-color: #30363d;
+    box-shadow: none;
+}
+.gh-panel::before {
+    content: 'Last Push';
+    background: #161b22;        /* GitHub dark nav */
+    border-bottom: 1px solid #30363d;
+}
+.gh-panel.active { border-color: #3fb950; }
+
+.gh-status {
+    font-family: 'Courier New', monospace;
+    font-size: 0.58rem;
+    color: #8b949e;
+    padding: 8px 10px 5px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px 8px;
-    background: #1e1e1e;
-    border-top: 1px solid #3a3a3a;
-    color: #1db954;
-    font-family: 'Courier New', monospace;
-    font-size: 0.52rem;
-    text-decoration: none;
-    letter-spacing: 0.12em;
+    gap: 6px;
     text-transform: uppercase;
-    text-shadow: 0 0 6px rgba(29, 185, 84, 0.5);
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid #21262d;
+    background: #0d1117;
 }
-.sp-link:hover {
-    background: #2a2a2a;
-    text-decoration: none;
-    color: #22dd66;
+.gh-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #3fb950;        /* always GitHub green */
+    box-shadow: 0 0 5px rgba(63,185,80,0.5);
+    flex-shrink: 0;
+    animation: pulse 2.5s ease-in-out infinite;
 }
-.sp-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+.gh-repo {
+    font-family: 'Courier New', monospace;
+    color: #3fb950;             /* GitHub contribution green */
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 8px 10px 3px;
+}
+.gh-commit {
+    font-family: 'Courier New', monospace;
+    color: #c9d1d9;             /* GitHub primary text */
+    font-size: 0.62rem;
+    padding: 2px 10px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    opacity: 0.8;
+}
+.gh-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-top: 1px solid #21262d;
+    margin-top: auto;
+    background: #161b22;
+}
+.gh-time { font-family: 'Courier New', monospace; color: #8b949e; font-size: 0.58rem; }
+.gh-link { font-family: 'Courier New', monospace; font-size: 0.58rem; color: #58a6ff; text-decoration: none; }
+.gh-link:hover { text-decoration: underline; color: #79c0ff; }
 
-.sp-error  { background: #000000; color: #d42020; font-family: 'Courier New', monospace; font-size: 0.62rem; padding: 8px; }
-.sp-loading { background: #000000; color: #20a020; font-family: 'Courier New', monospace; font-size: 0.62rem; padding: 8px; }
+/* ── Steam widget — Steam dark theme ────────────────────────── */
+.steam-panel {
+    background: #1b2838;        /* Steam store dark navy */
+    border-color: #4b6171;
+    box-shadow: none;
+}
+.steam-panel::before {
+    content: 'Recently Played';
+    background: linear-gradient(to right, #1b2838 0%, #2a475e 100%);  /* Steam nav gradient */
+    border-bottom: 1px solid #4b6171;
+}
+.steam-panel.active { border-color: #66c0f4; }
+
+.steam-status {
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.58rem;
+    color: #8f98a0;
+    padding: 7px 10px 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid #4b6171;
+    background: #1b2838;
+}
+.steam-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #66c0f4;        /* Steam light blue — always on */
+    flex-shrink: 0;
+}
+.steam-panel.active .steam-dot { box-shadow: 0 0 5px rgba(102,192,244,0.6); animation: pulse 2.5s ease-in-out infinite; }
+.steam-img {
+    width: 100%;
+    height: 84px;               /* taller — game art is the hero */
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid #4b6171;
+    filter: brightness(0.9) saturate(1.05);
+    transition: filter 0.2s;
+}
+.steam-panel:hover .steam-img { filter: brightness(1) saturate(1.1); }
+.steam-info { padding: 7px 10px 10px; flex: 1; display: flex; flex-direction: column; background: #1b2838; }
+.steam-game {
+    font-family: Tahoma, Arial, sans-serif;
+    color: #c6d4df;             /* Steam's light text */
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+.steam-meta {
+    font-family: Tahoma, Arial, sans-serif;
+    color: #8f98a0;             /* Steam's muted text */
+    font-size: 0.58rem;
+    margin-bottom: 8px;
+    flex: 1;
+}
+.steam-link {
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.58rem;
+    color: #66c0f4;             /* Steam light blue */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: auto;
+}
+.steam-link:hover { color: #79c8f0; text-decoration: underline; }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 .footer-block { text-align: center; }

@@ -2,6 +2,44 @@
     // ── Footer year ────────────────────────────────────────────
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
+    // ── ASCII name scramble — hover or load to decode ───────────
+    var _art  = document.querySelector('.ascii-art');
+    if (_art) {
+        var _orig = _art.textContent;
+        var _pool = '▓▒░▄▀◆●★#@$%!?><~^*+';
+        var _busy = false;
+
+        function _scramble() {
+            if (_busy) return;
+            _busy = true;
+            var chars = _orig.split('');
+            var idxs  = chars.reduce(function(a, c, i) {
+                if (c !== ' ' && c !== '\n' && c !== '\r') a.push(i);
+                return a;
+            }, []);
+            // Random reveal order so it doesn't just sweep left-to-right
+            var order = idxs.slice().sort(function() { return Math.random() - 0.5; });
+            var done  = {};
+            var f = 0, totalF = 44;
+
+            (function tick() {
+                var rev = Math.floor(f / totalF * order.length);
+                for (var k = 0; k < rev; k++) done[order[k]] = 1;
+                _art.textContent = chars.map(function(c, i) {
+                    if (c === ' ' || c === '\n' || c === '\r') return c;
+                    return done[i] ? c : _pool[Math.floor(Math.random() * _pool.length)];
+                }).join('');
+                if (++f <= totalF) requestAnimationFrame(tick);
+                else { _art.textContent = _orig; _busy = false; }
+            })();
+        }
+
+        _scramble();                             // auto-run on load
+        _art.style.cursor = 'crosshair';
+        _art.addEventListener('mouseenter', _scramble);  // hover to re-trigger
+        window.triggerScramble = _scramble;      // expose for theme switcher
+    }
+
     // ── Projects ────────────────────────────────────────────────
     const grid  = document.getElementById('cards-grid');
     const count = document.getElementById('project-count');
@@ -143,6 +181,131 @@
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
   ${label} ↗
 </a>`;
+    }
+
+    // ── GitHub last push widget ──────────────────────────────────
+    var ghEl  = document.getElementById('github-widget');
+    var ghCfg = (typeof githubConfig !== 'undefined') ? githubConfig : {};
+
+    if (ghEl && ghCfg.username) {
+        ghEl.innerHTML = '<p class="sp-loading out dim">> connecting to github...</p>';
+        fetchGithubPush(ghCfg.username, ghCfg.profileUrl);
+    }
+
+    function fetchGithubPush(username, profileUrl) {
+        fetch('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=15')
+            .then(function(r) { return r.json(); })
+            .then(function(events) {
+                var push = null;
+                for (var i = 0; i < events.length; i++) {
+                    if (events[i].type === 'PushEvent') { push = events[i]; break; }
+                }
+                if (!push) { renderGithubStatic(username, profileUrl); return; }
+                var commits = push.payload.commits;
+                var commit  = commits && commits[commits.length - 1];
+                var msg     = (commit && commit.message) ? commit.message.split('\n')[0] : '—';
+                var repo    = push.repo.name.split('/')[1];
+                var repoUrl = 'https://github.com/' + push.repo.name;
+                var when    = timeAgo(new Date(push.created_at));
+                renderGithubPush(repo, msg, when, repoUrl, profileUrl);
+            })
+            .catch(function() { renderGithubStatic(username, profileUrl); });
+    }
+
+    function renderGithubPush(repo, msg, when, repoUrl, profileUrl) {
+        ghEl.innerHTML =
+            '<div class="gh-panel active">' +
+                '<div class="gh-status"><span class="gh-dot"></span>last push</div>' +
+                '<div class="gh-repo">' + esc(repo) + '</div>' +
+                '<div class="gh-commit">' + esc(msg) + '</div>' +
+                '<div class="gh-meta">' +
+                    '<span class="gh-time">' + esc(when) + '</span>' +
+                    '<a class="gh-link" href="' + esc(repoUrl) + '" target="_blank" rel="noopener noreferrer">view repo ↗</a>' +
+                '</div>' +
+            '</div>';
+    }
+
+    function renderGithubStatic(username, profileUrl) {
+        ghEl.innerHTML =
+            '<div class="gh-panel">' +
+                '<div class="gh-status"><span class="gh-dot"></span>github</div>' +
+                (profileUrl
+                    ? '<a class="gh-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">view profile ↗</a>'
+                    : '<p class="sp-error">no recent activity found</p>') +
+            '</div>';
+    }
+
+    // ── Steam recently played widget ─────────────────────────────
+    var stEl  = document.getElementById('steam-widget');
+    var stCfg = (typeof steamConfig !== 'undefined') ? steamConfig : {};
+
+    if (stEl && stCfg.apiKey && stCfg.steamId) {
+        stEl.innerHTML = '<p class="sp-loading out dim">> connecting to steam...</p>';
+        fetchSteamRecent(stCfg.apiKey, stCfg.steamId, stCfg.profileUrl);
+    } else if (stEl) {
+        renderSteamStatic(stCfg.profileUrl || '');
+    }
+
+    function fetchSteamRecent(apiKey, steamId, profileUrl) {
+        // Steam API lacks CORS headers — route through allorigins.win proxy
+        var api   = 'https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key='
+                    + apiKey + '&steamid=' + steamId + '&count=1&format=json';
+        var proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(api);
+
+        fetch(proxy)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var games = data && data.response && data.response.games;
+                if (!games || games.length === 0) { renderSteamStatic(profileUrl); return; }
+                var g   = games[0];
+                var hrs = g.playtime_2weeks
+                    ? (Math.round(g.playtime_2weeks / 6) / 10)   // minutes → hours, 1 dp
+                    : 0;
+                renderSteamGame(g.name, g.appid, hrs, profileUrl);
+            })
+            .catch(function() { renderSteamStatic(profileUrl); });
+    }
+
+    function renderSteamGame(name, appId, hrs, profileUrl) {
+        var storeUrl = 'https://store.steampowered.com/app/' + appId + '/';
+        var imgUrl   = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + appId + '/header.jpg';
+        stEl.innerHTML =
+            '<div class="steam-panel active">' +
+                '<div class="steam-status"><span class="steam-dot"></span>recently played</div>' +
+                '<a href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
+                    '<img class="steam-img" src="' + esc(imgUrl) + '" alt="' + esc(name) + '" loading="lazy">' +
+                '</a>' +
+                '<div class="steam-info">' +
+                    '<div class="steam-game">' + esc(name) + '</div>' +
+                    '<div class="steam-meta">' + hrs + ' hrs past 2 weeks</div>' +
+                    (profileUrl
+                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">steam profile ↗</a>'
+                        : '') +
+                '</div>' +
+            '</div>';
+    }
+
+    function renderSteamStatic(profileUrl) {
+        stEl.innerHTML =
+            '<div class="steam-panel">' +
+                '<div class="steam-status"><span class="steam-dot"></span>steam</div>' +
+                '<div class="steam-info">' +
+                    (profileUrl
+                        ? '<p class="out dim" style="margin-bottom:10px;font-size:0.72rem">add your Steam API key in <code>projects.js</code></p>' +
+                          '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">steam profile ↗</a>'
+                        : '<p class="sp-error">add your <code>steamConfig</code> in <code>projects.js</code></p>') +
+                '</div>' +
+            '</div>';
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function timeAgo(date) {
+        var s = Math.floor((Date.now() - date) / 1000);
+        if (s < 60)     return 'just now';
+        if (s < 3600)   return Math.floor(s / 60)    + 'm ago';
+        if (s < 86400)  return Math.floor(s / 3600)  + 'h ago';
+        if (s < 604800) return Math.floor(s / 86400) + 'd ago';
+        return Math.floor(s / 604800) + 'w ago';
     }
 
     function esc(s) {

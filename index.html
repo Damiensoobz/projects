@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Press+Start+2P&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <link id="main-style" rel="stylesheet" href="style.css">
+    <link id="main-style" rel="stylesheet" href="style-y2k.css">
 </head>
 <body>
 
@@ -48,10 +48,14 @@
 
     <hr class="divider">
 
-    <!-- ── Spotify ──────────────────────────────────────────── -->
+    <!-- ── Live Status ───────────────────────────────────────── -->
     <section class="block">
-        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">spotify --status</span></div>
-        <div id="spotify-widget"></div>
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">status --live</span></div>
+        <div class="status-grid">
+            <div id="spotify-widget"></div>
+            <div id="github-widget"></div>
+            <div id="steam-widget"></div>
+        </div>
     </section>
 
     <!-- ── Footer prompt ───────────────────────────────────── -->

@@ -423,6 +423,39 @@ code {
 
 .sp-error, .sp-loading { color: var(--dim); font-size: 0.9rem; font-style: italic; }
 
+/* ── Status grid ─────────────────────────────────────────────── */
+.status-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+@media (max-width: 780px) { .status-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .status-grid { grid-template-columns: 1fr; } }
+
+/* ── GitHub widget ───────────────────────────────────────────── */
+.gh-panel { background: var(--card); border: 1px solid var(--border); padding: 14px 17px; transition: border-color 0.28s; position: relative; }
+.gh-panel::before { content: ''; position: absolute; inset: 4px; border: 1px solid rgba(58,43,24,0.4); pointer-events: none; }
+.gh-panel.active { border-color: var(--gold); }
+.gh-status { font-family: var(--cinzel); font-size: 0.5rem; color: var(--dim); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.18em; text-transform: uppercase; }
+.gh-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.gh-panel.active .gh-dot { background: var(--gold); box-shadow: 0 0 6px rgba(200,150,28,0.5); }
+.gh-repo { font-family: var(--cinzel); color: var(--gold); font-size: 0.6rem; margin-bottom: 4px; letter-spacing: 0.08em; }
+.gh-commit { font-family: var(--serif); color: var(--text); font-size: 0.82rem; margin-bottom: 12px; font-style: italic; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gh-meta { display: flex; align-items: center; gap: 12px; }
+.gh-time { font-family: var(--cinzel); color: var(--dim); font-size: 0.48rem; letter-spacing: 0.08em; }
+.gh-link { font-family: var(--cinzel); font-size: 0.48rem; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(200,150,28,0.3); letter-spacing: 0.08em; }
+.gh-link:hover { border-bottom-color: var(--gold); }
+
+/* ── Steam widget ────────────────────────────────────────────── */
+.steam-panel { background: var(--card); border: 1px solid var(--border); overflow: hidden; transition: border-color 0.28s; }
+.steam-panel.active { border-color: var(--gold); }
+.steam-status { font-family: var(--cinzel); font-size: 0.5rem; color: var(--dim); padding: 12px 17px 6px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.18em; text-transform: uppercase; }
+.steam-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.steam-panel.active .steam-dot { background: var(--gold); box-shadow: 0 0 6px rgba(200,150,28,0.5); animation: pulse 2.5s ease-in-out infinite; }
+.steam-img { width: 100%; height: 78px; object-fit: cover; display: block; filter: sepia(0.6) brightness(0.65) contrast(1.1) saturate(0.75); transition: filter 0.3s; }
+.steam-panel:hover .steam-img { filter: sepia(0.3) brightness(0.85) contrast(1.05) saturate(0.88); }
+.steam-info { padding: 8px 17px 14px; }
+.steam-game { font-family: var(--cinzel); color: var(--cream); font-size: 0.6rem; margin-bottom: 4px; letter-spacing: 0.06em; }
+.steam-meta { font-family: var(--serif); color: var(--dim); font-size: 0.78rem; margin-bottom: 10px; font-style: italic; }
+.steam-link { font-family: var(--cinzel); font-size: 0.48rem; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(200,150,28,0.3); letter-spacing: 0.08em; }
+.steam-link:hover { border-bottom-color: var(--gold); }
+
 /* ── Footer ─────────────────────────────────────────────────── */
 .footer-block { text-align: center; }
 .footer-block::before { display: none; } /* remove inner-border ornament */

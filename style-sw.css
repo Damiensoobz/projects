@@ -458,6 +458,38 @@ code {
 .sp-link svg { width: 14px; height: 14px; flex-shrink: 0; }
 .sp-error, .sp-loading { color: #5030a0; font-size: 0.82rem; }
 
+/* ── Status grid ─────────────────────────────────────────────── */
+.status-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+@media (max-width: 780px) { .status-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .status-grid { grid-template-columns: 1fr; } }
+
+/* ── GitHub widget ───────────────────────────────────────────── */
+.gh-panel { background: rgba(6,0,22,0.72); border: 1px solid rgba(255,0,110,0.45); border-left: 3px solid #ff006e; padding: 14px 16px; transition: border-color 0.22s; }
+.gh-panel.active { border-color: #cc00ff; border-left-color: #cc00ff; }
+.gh-status { font-size: 0.62rem; color: #5030a0; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; letter-spacing: 0.12em; text-transform: uppercase; }
+.gh-dot { width: 6px; height: 6px; border-radius: 50%; background: #5030a0; flex-shrink: 0; }
+.gh-panel.active .gh-dot { background: #cc00ff; box-shadow: 0 0 6px #cc00ff; }
+.gh-repo { color: #cc00ff; font-size: 0.78rem; margin-bottom: 4px; font-weight: 600; text-shadow: 0 0 8px rgba(204,0,255,0.5); }
+.gh-commit { color: #d0b0f0; font-size: 0.7rem; margin-bottom: 12px; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gh-meta { display: flex; align-items: center; gap: 12px; }
+.gh-time { color: #5030a0; font-size: 0.65rem; }
+.gh-link { font-size: 0.65rem; color: #cc00ff; text-decoration: none; text-shadow: 0 0 5px rgba(204,0,255,0.4); }
+.gh-link:hover { text-decoration: underline; }
+
+/* ── Steam widget ────────────────────────────────────────────── */
+.steam-panel { background: rgba(6,0,22,0.72); border: 1px solid rgba(255,0,110,0.45); border-left: 3px solid #ff006e; overflow: hidden; transition: border-color 0.22s; }
+.steam-panel.active { border-color: #66c0f4; border-left-color: #66c0f4; }
+.steam-status { font-size: 0.62rem; color: #5030a0; padding: 12px 16px 6px; display: flex; align-items: center; gap: 7px; letter-spacing: 0.12em; text-transform: uppercase; }
+.steam-dot { width: 6px; height: 6px; border-radius: 50%; background: #5030a0; flex-shrink: 0; }
+.steam-panel.active .steam-dot { background: #66c0f4; box-shadow: 0 0 6px rgba(102,192,244,0.6); }
+.steam-img { width: 100%; height: 78px; object-fit: cover; display: block; filter: brightness(0.7) hue-rotate(10deg) saturate(1.2); transition: filter 0.2s; }
+.steam-panel:hover .steam-img { filter: brightness(0.95) hue-rotate(10deg) saturate(1.4); }
+.steam-info { padding: 8px 16px 14px; }
+.steam-game { color: #fff; font-size: 0.8rem; margin-bottom: 3px; text-shadow: 0 0 8px rgba(255,255,255,0.3); }
+.steam-meta { color: #5030a0; font-size: 0.65rem; margin-bottom: 10px; }
+.steam-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.65rem; color: #66c0f4; text-decoration: none; text-shadow: 0 0 5px rgba(102,192,244,0.5); }
+.steam-link:hover { text-decoration: underline; }
+
 /* ── Footer ──────────────────────────────────────────────────── */
 .footer-block { border-left-color: rgba(255, 0, 110, 0.2); }
 .footer-note  { margin-top: 14px; font-size: 0.78rem; color: #5030a0; }

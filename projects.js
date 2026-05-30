@@ -56,3 +56,28 @@ var spotifyConfig = {
     lastfmUser:  "damiensoobz",
     lastfmKey:   "6ae90e4ac257aaa4a0d73230afa39dd8",
 };
+
+// ─────────────────────────────────────────────────────────────
+//  GitHub "last push" — no API key needed, public data only
+// ─────────────────────────────────────────────────────────────
+
+var githubConfig = {
+    username:   "Damiensoobz",
+    profileUrl: "https://github.com/Damiensoobz",
+};
+
+// ─────────────────────────────────────────────────────────────
+//  Steam "recently played" — optional, static site friendly
+//
+//  HOW TO SET UP:
+//  1. Get a free key at https://steamcommunity.com/dev/apikey
+//     (any domain name works — use your GitHub Pages URL)
+//  2. Find your 64-bit Steam ID at https://steamid.io
+//  3. Fill in your details below
+// ─────────────────────────────────────────────────────────────
+
+var steamConfig = {
+    apiKey:     "",  // your Steam Web API key
+    steamId:    "",  // 64-bit Steam ID, e.g. "76561198XXXXXXXXX"
+    profileUrl: "",  // e.g. "https://steamcommunity.com/id/yourname"
+};
