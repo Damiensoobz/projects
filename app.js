@@ -192,6 +192,10 @@
         fetchGithubPush(ghCfg.username, ghCfg.profileUrl);
     }
 
+    var GH_ICON     = '<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+    var BRANCH_ICON = '<svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>';
+    var STEAM_ICON  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>';
+
     function fetchGithubPush(username, profileUrl) {
         fetch('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=15')
             .then(function(r) { return r.json(); })
@@ -201,26 +205,33 @@
                     if (events[i].type === 'PushEvent') { push = events[i]; break; }
                 }
                 if (!push) { renderGithubStatic(username, profileUrl); return; }
-                var commits = push.payload.commits;
-                var commit  = commits && commits[commits.length - 1];
-                var msg     = (commit && commit.message) ? commit.message.split('\n')[0] : '—';
-                var repo    = push.repo.name.split('/')[1];
-                var repoUrl = 'https://github.com/' + push.repo.name;
-                var when    = timeAgo(new Date(push.created_at));
-                renderGithubPush(repo, msg, when, repoUrl, profileUrl);
+                var commits   = push.payload.commits;
+                var commit    = commits && commits[commits.length - 1];
+                var msg       = (commit && commit.message) ? commit.message.split('\n')[0] : '—';
+                var sha       = (commit && commit.sha)     ? commit.sha.substring(0, 7)   : '';
+                var branch    = push.payload.ref ? push.payload.ref.replace('refs/heads/', '') : '';
+                var repo      = push.repo.name.split('/')[1];
+                var repoUrl   = 'https://github.com/' + push.repo.name;
+                var commitUrl = sha ? 'https://github.com/' + push.repo.name + '/commit/' + commit.sha : repoUrl;
+                var when      = timeAgo(new Date(push.created_at));
+                renderGithubPush(repo, msg, sha, branch, when, repoUrl, commitUrl);
             })
             .catch(function() { renderGithubStatic(username, profileUrl); });
     }
 
-    function renderGithubPush(repo, msg, when, repoUrl, profileUrl) {
+    function renderGithubPush(repo, msg, sha, branch, when, repoUrl, commitUrl) {
         ghEl.innerHTML =
             '<div class="gh-panel active">' +
                 '<div class="gh-status"><span class="gh-dot"></span>last push</div>' +
-                '<div class="gh-repo">' + esc(repo) + '</div>' +
-                '<div class="gh-commit">' + esc(msg) + '</div>' +
+                '<div class="gh-repo">' + GH_ICON + esc(repo) + '</div>' +
+                (branch ? '<div class="gh-branch">' + BRANCH_ICON + esc(branch) + '</div>' : '') +
+                '<div class="gh-commit">' +
+                    (sha ? '<a class="gh-sha" href="' + esc(commitUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(sha) + '</a> ' : '') +
+                    esc(msg) +
+                '</div>' +
                 '<div class="gh-meta">' +
                     '<span class="gh-time">' + esc(when) + '</span>' +
-                    '<a class="gh-link" href="' + esc(repoUrl) + '" target="_blank" rel="noopener noreferrer">view repo ↗</a>' +
+                    '<a class="gh-link" href="' + esc(repoUrl) + '" target="_blank" rel="noopener noreferrer">' + GH_ICON + 'view repo ↗</a>' +
                 '</div>' +
             '</div>';
     }
@@ -279,7 +290,7 @@
                     '<div class="steam-game">' + esc(name) + '</div>' +
                     '<div class="steam-meta">' + hrs + ' hrs past 2 weeks</div>' +
                     (profileUrl
-                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">steam profile ↗</a>'
+                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'steam profile ↗</a>'
                         : '') +
                 '</div>' +
             '</div>';

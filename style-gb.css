@@ -389,11 +389,16 @@ code {
 .gh-status { font-family: 'Press Start 2P', monospace; font-size: 0.42rem; color: #306230; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
 .gh-dot { width: 6px; height: 6px; background: #306230; flex-shrink: 0; }
 .gh-panel.active .gh-dot { background: #0f380f; }
-.gh-repo { font-family: 'Press Start 2P', monospace; color: #0f380f; font-size: 0.5rem; margin-bottom: 4px; }
+.gh-repo { font-family: 'Press Start 2P', monospace; color: #0f380f; font-size: 0.5rem; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; }
+.gh-repo svg { flex-shrink: 0; }
+.gh-branch { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.38rem; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; line-height: 1.6; }
+.gh-branch svg { flex-shrink: 0; }
+.gh-sha { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; margin-right: 3px; }
 .gh-commit { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.4rem; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.6; }
 .gh-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .gh-time { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.38rem; }
-.gh-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; }
+.gh-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; }
+.gh-link svg { flex-shrink: 0; }
 .gh-link:hover { color: #306230; }
 
 /* ── Steam widget ────────────────────────────────────────────── */
@@ -405,7 +410,8 @@ code {
 .steam-info { padding: 6px 12px 10px; }
 .steam-game { font-family: 'Press Start 2P', monospace; color: #0f380f; font-size: 0.45rem; margin-bottom: 4px; line-height: 1.6; }
 .steam-meta { font-family: 'Press Start 2P', monospace; color: #306230; font-size: 0.38rem; margin-bottom: 8px; }
-.steam-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; }
+.steam-link { font-family: 'Press Start 2P', monospace; font-size: 0.38rem; color: #0f380f; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; }
+.steam-link svg { flex-shrink: 0; }
 .steam-link:hover { color: #306230; }
 
 /* ── Footer ─────────────────────────────────────────────────── */

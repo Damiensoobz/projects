@@ -534,22 +534,45 @@ code {
 }
 .gh-repo {
     font-family: 'Courier New', monospace;
-    color: #3fb950;             /* GitHub contribution green */
-    font-size: 0.8rem;
+    color: #3fb950;
+    font-size: 0.78rem;
     font-weight: 700;
-    padding: 8px 10px 3px;
+    padding: 8px 10px 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
+.gh-repo svg { width: 13px; height: 13px; flex-shrink: 0; color: #3fb950; }
+.gh-branch {
+    font-family: 'Courier New', monospace;
+    color: #6e7681;             /* GitHub dimmer text */
+    font-size: 0.58rem;
+    padding: 1px 10px 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.gh-branch svg { width: 10px; height: 10px; flex-shrink: 0; }
 .gh-commit {
     font-family: 'Courier New', monospace;
-    color: #c9d1d9;             /* GitHub primary text */
+    color: #c9d1d9;
     font-size: 0.62rem;
     padding: 2px 10px 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
-    opacity: 0.8;
 }
+.gh-sha {
+    font-family: 'Courier New', monospace;
+    font-size: 0.58rem;
+    color: #3fb950;             /* commit hash in GitHub green */
+    text-decoration: none;
+    background: rgba(63,185,80,0.1);
+    padding: 0 3px;
+    border-radius: 2px;
+}
+.gh-sha:hover { background: rgba(63,185,80,0.2); }
 .gh-meta {
     display: flex;
     align-items: center;
@@ -560,7 +583,16 @@ code {
     background: #161b22;
 }
 .gh-time { font-family: 'Courier New', monospace; color: #8b949e; font-size: 0.58rem; }
-.gh-link { font-family: 'Courier New', monospace; font-size: 0.58rem; color: #58a6ff; text-decoration: none; }
+.gh-link {
+    font-family: 'Courier New', monospace;
+    font-size: 0.58rem;
+    color: #58a6ff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.gh-link svg { width: 11px; height: 11px; flex-shrink: 0; }
 .gh-link:hover { text-decoration: underline; color: #79c0ff; }
 
 /* ── Steam widget — Steam dark theme ────────────────────────── */
@@ -624,13 +656,14 @@ code {
 .steam-link {
     font-family: Tahoma, Arial, sans-serif;
     font-size: 0.58rem;
-    color: #66c0f4;             /* Steam light blue */
+    color: #66c0f4;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     margin-top: auto;
 }
+.steam-link svg { width: 13px; height: 13px; flex-shrink: 0; }
 .steam-link:hover { color: #79c8f0; text-decoration: underline; }
 
 /* ── Footer ─────────────────────────────────────────────────── */

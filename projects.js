@@ -77,7 +77,7 @@ var githubConfig = {
 // ─────────────────────────────────────────────────────────────
 
 var steamConfig = {
-    apiKey:     "",  // your Steam Web API key
-    steamId:    "",  // 64-bit Steam ID, e.g. "76561198XXXXXXXXX"
-    profileUrl: "",  // e.g. "https://steamcommunity.com/id/yourname"
+    apiKey:     "2FEDB1166B6D38009BD40461A2DFC0F8",
+    steamId:    "76561198823151635",
+    profileUrl: "https://steamcommunity.com/profiles/76561198823151635",
 };
