@@ -5,7 +5,7 @@
 
     var THEMES = [
         { key: 'terminal',  css: 'style.css',      btn: '// switch skin'  },
-        { key: 'y2k',       css: 'style-y2k.css',  btn: '★ SWITCH SKIN ★' },
+        { key: 'y2k',       css: 'style-y2k.css',  btn: 'Switch Skin'     },
         { key: 'synthwave', css: 'style-sw.css',   btn: '> switch_skin'   },
         { key: 'gameboy',     css: 'style-gb.css',   btn: '> SWITCH SKIN'     },
         { key: 'darkacademia', css: 'style-da.css', btn: '✦ change skin'    }
