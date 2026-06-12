@@ -18,6 +18,36 @@ body {
     min-height: 100vh;
 }
 
+/* ── CRT monitor effect ─────────────────────────────────────── */
+/* Scanlines + faint screen glare */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background:
+        radial-gradient(ellipse at 50% 38%, rgba(255,255,255,0.05) 0%, transparent 62%),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px, transparent 2px,
+            rgba(0,0,0,0.055) 2px, rgba(0,0,0,0.055) 3px
+        );
+}
+/* Curved-glass bezel: dark rounded edge + vignette */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 16px;
+    box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,0.55),
+        inset 0 0 10px 3px rgba(0,0,0,0.45),
+        inset 0 0 130px rgba(0,0,0,0.25);
+}
+
 /* ── Container ─────────────────────────────────────────────── */
 .terminal {
     max-width: 980px;
@@ -230,7 +260,8 @@ code {
 .card-footer {
     display: flex;
     align-items: center;
-    gap: 6px;
+    flex-wrap: wrap;
+    gap: 0 6px;
     padding: 5px 8px;
     background: #d4d0c8;
     border-top: 1px solid #806000;
@@ -261,6 +292,20 @@ code {
 }
 .card:hover .card-title { color: #ffffff; }
 
+/* Plain-English subtitle — second line of the file label */
+.card-subtitle {
+    flex-basis: 100%;
+    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+    font-size: 0.6rem;
+    color: #606060;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.06s;
+}
+.card:hover .card-subtitle { color: #c0c8e8; }
+
 /* ── Speech bubble — Win98 tooltip ──────────────────────────── */
 .speech-bubble {
     position: absolute;
@@ -283,6 +328,14 @@ code {
     font-size: 0.75rem;
     line-height: 1.55;
     color: #000000;
+}
+.bubble-subtitle {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #606060;
+    margin-bottom: 4px;
 }
 .speech-bubble::before {
     content: '';
@@ -709,4 +762,12 @@ code {
 @keyframes ledPulse {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.3; }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
 }

@@ -59,7 +59,7 @@
             : `href="#"`;
 
         const tags = (project.tags || [])
-            .map(t => `<span class="bubble-tag">${t}</span>`)
+            .map(t => `<span class="bubble-tag">${esc(t)}</span>`)
             .join('');
 
         const demoLink = hasLink
@@ -85,16 +85,18 @@
   <span class="card-corner bl">&#x2514;</span>
   <span class="card-corner br">&#x2518;</span>
 
-  <a ${aAttrs} class="card-link" aria-label="${project.title}">
-    <img class="card-img" src="${img}" alt="${project.title}">
+  <a ${aAttrs} class="card-link" aria-label="${esc(project.title)}">
+    <img class="card-img" src="${img}" alt="${esc(project.title)}">
     <div class="card-footer">
-      <h3 class="card-title">${project.title}</h3>
+      <h3 class="card-title">${esc(project.title)}</h3>
+      ${project.subtitle ? `<span class="card-subtitle">${esc(project.subtitle)}</span>` : ''}
     </div>
   </a>
 
   <div class="speech-bubble" role="tooltip">
     <div class="bubble-inner">
-      <p>${project.description}</p>
+      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
+      <p>${esc(project.description)}</p>
       ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
       ${bubbleLinks}
     </div>
@@ -169,10 +171,8 @@
         spotifyEl.innerHTML = `
 <div class="sp-panel">
   <div class="sp-status"><span class="sp-dot"></span>spotify</div>
-  ${profileUrl
-    ? `<p class="out" style="margin-bottom:10px">link your Last.fm to show now playing &mdash; see <code>projects.js</code></p>${spotifyLinkHtml(profileUrl, 'open profile')}`
-    : `<p class="sp-error">add your <code>profileUrl</code> and Last.fm credentials in <code>projects.js</code> to enable this widget</p>`
-  }
+  <div class="sp-artist">signal lost &mdash; the bards are resting</div>
+  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
 </div>`;
     }
 
@@ -250,20 +250,17 @@
     var stEl  = document.getElementById('steam-widget');
     var stCfg = (typeof steamConfig !== 'undefined') ? steamConfig : {};
 
-    if (stEl && stCfg.apiKey && stCfg.steamId) {
+    if (stEl && stCfg.proxyUrl) {
         stEl.innerHTML = '<p class="sp-loading out dim">> connecting to steam...</p>';
-        fetchSteamRecent(stCfg.apiKey, stCfg.steamId, stCfg.profileUrl);
+        fetchSteamRecent(stCfg.proxyUrl, stCfg.profileUrl);
     } else if (stEl) {
         renderSteamStatic(stCfg.profileUrl || '');
     }
 
-    function fetchSteamRecent(apiKey, steamId, profileUrl) {
-        // Steam API lacks CORS headers — route through allorigins.win proxy
-        var api   = 'https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key='
-                    + apiKey + '&steamid=' + steamId + '&count=1&format=json';
-        var proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(api);
-
-        fetch(proxy)
+    function fetchSteamRecent(proxyUrl, profileUrl) {
+        // proxyUrl is a serverless endpoint that holds the Steam key
+        // server-side and returns GetRecentlyPlayedGames JSON as-is
+        fetch(proxyUrl)
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 var games = data && data.response && data.response.games;
@@ -301,10 +298,10 @@
             '<div class="steam-panel">' +
                 '<div class="steam-status"><span class="steam-dot"></span>steam</div>' +
                 '<div class="steam-info">' +
+                    '<div class="steam-meta">the wizard is away from the keep</div>' +
                     (profileUrl
-                        ? '<p class="out dim" style="margin-bottom:10px;font-size:0.72rem">add your Steam API key in <code>projects.js</code></p>' +
-                          '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">steam profile ↗</a>'
-                        : '<p class="sp-error">add your <code>steamConfig</code> in <code>projects.js</code></p>') +
+                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'steam profile ↗</a>'
+                        : '') +
                 '</div>' +
             '</div>';
     }

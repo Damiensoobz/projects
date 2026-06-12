@@ -1,11 +1,15 @@
 // ─────────────────────────────────────────────────────────────
 //  projects.js  —  Edit this file to update your portfolio.
+//
+//  ⚠ This file is public (GitHub Pages). Never put API keys or
+//    secrets in here — anything in this repo is world-readable.
 // ─────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────
 //  HOW TO ADD A PROJECT:
 //
-//  title       — display name on the card
+//  title       — display name on the card (flavor name is fine)
+//  subtitle    — plain-English one-liner: what it actually is
 //  description — shown in the hover bubble
 //  image       — screenshot: save file in /images/ and put "images/filename.png"
 //                leave "" for an auto-generated placeholder
@@ -16,28 +20,31 @@
 
 var projects = [
     {
-        title: "The Oracle's Forecast",
-        description: "A sorcerous divination tool that communes with weather spirits to foretell the coming storms. No sacrificial offerings required — just an API key.",
+        title: "The Serpent's Trial",
+        subtitle: "browser snake game",
+        description: "The arcade classic, summoned in the browser. Steer the serpent, devour, grow — and learn that your greatest enemy was your own tail all along.",
         image: "",
-        link: "#",
-        github: "",
-        tags: ["JavaScript", "API", "CSS"]
+        link: "#",   // TODO: live demo URL (GitHub Pages)
+        github: "",  // TODO: repo URL
+        tags: ["JavaScript", "HTML", "CSS"]
     },
     {
-        title: "The Quest Log",
-        description: "A mystical scroll that remembers every task the adventurer commits to — and more importantly, which ones they quietly abandoned after 20 minutes.",
+        title: "Memento Mori",
+        subtitle: "life-in-weeks calendar",
+        description: "Your entire life on one screen, one box per week. Part calendar, part existential alarm clock. The wizards advise checking it no more than once a day.",
         image: "",
-        link: "#",
-        github: "",
-        tags: ["React", "localStorage"]
+        link: "#",   // TODO: live demo URL (GitHub Pages)
+        github: "",  // TODO: repo URL
+        tags: ["JavaScript", "CSS"]
     },
     {
-        title: "The Arithmancer's Tool",
-        description: "An arcane device for those who lack the mental fortitude to multiply numbers in their head. Peer reviewed by three wizards and a goblin accountant.",
+        title: "The Cartographer's Conjuring",
+        subtitle: "fantasy map generator — WIP",
+        description: "Conjures procedurally generated fantasy realms: coastlines, mountain ranges, and place names no one can pronounce. Still brewing in the cauldron.",
         image: "",
-        link: "#",
-        github: "",
-        tags: ["HTML", "CSS", "JS"]
+        link: "#",   // TODO: repo URL until a hosted demo exists
+        github: "",  // TODO: repo URL
+        tags: ["Python", "Procedural Gen"]
     }
 ];
 
@@ -49,6 +56,8 @@ var projects = [
 //  2. In Spotify → Settings → Social, connect Last.fm scrobbling
 //  3. Get a free API key at https://www.last.fm/api/account/create
 //  4. Fill in your details below
+//  (Last.fm read keys are rate-limited + read-only public data,
+//   so exposing this one client-side is acceptable.)
 // ─────────────────────────────────────────────────────────────
 
 var spotifyConfig = {
@@ -67,17 +76,20 @@ var githubConfig = {
 };
 
 // ─────────────────────────────────────────────────────────────
-//  Steam "recently played" — optional, static site friendly
+//  Steam "recently played"
 //
-//  HOW TO SET UP:
-//  1. Get a free key at https://steamcommunity.com/dev/apikey
-//     (any domain name works — use your GitHub Pages URL)
-//  2. Find your 64-bit Steam ID at https://steamid.io
-//  3. Fill in your details below
+//  ⚠ Steam Web API keys must NOT be put here — they grant access
+//    to your whole key quota and live forever in git history.
+//    The old key was exposed and must be revoked at:
+//    https://steamcommunity.com/dev/apikey
+//
+//  PLAN: route through a serverless proxy (e.g. Vercel function)
+//  that holds the key as an env var, then set proxyUrl below.
+//  Until then the widget shows a plain profile link.
 // ─────────────────────────────────────────────────────────────
 
 var steamConfig = {
-    apiKey:     "2FEDB1166B6D38009BD40461A2DFC0F8",
+    proxyUrl:   "",   // e.g. "https://your-app.vercel.app/api/steam" — keeps the key server-side
     steamId:    "76561198823151635",
     profileUrl: "https://steamcommunity.com/profiles/76561198823151635",
 };

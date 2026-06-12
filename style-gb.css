@@ -37,6 +37,20 @@ body::after {
     z-index: 9998;
 }
 
+/* ── CRT/LCD bezel — curved-glass edge + vignette ───────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 14px;
+    box-shadow:
+        inset 0 0 0 2px rgba(15,56,15,0.7),
+        inset 0 0 10px 3px rgba(15,56,15,0.55),
+        inset 0 0 120px rgba(15,56,15,0.3);
+}
+
 /* ── Container ──────────────────────────────────────────────── */
 .terminal {
     max-width: 900px;
@@ -198,7 +212,8 @@ code {
 .card-footer {
     display: flex;
     align-items: center;
-    gap: 6px;
+    flex-wrap: wrap;
+    gap: 0 6px;
     padding: 8px 10px;
     background: #0f380f;
 }
@@ -217,6 +232,19 @@ code {
     text-overflow: ellipsis;
     letter-spacing: 0.04em;
     line-height: 1.6;
+}
+
+/* Plain-English subtitle — second line of the label */
+.card-subtitle {
+    flex-basis: 100%;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.34rem;
+    color: #8bac0f;
+    line-height: 1.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.04em;
 }
 
 /* ── Speech bubble — RPG dialog box ─────────────────────────── */
@@ -240,6 +268,13 @@ code {
     font-size: 0.48rem;
     line-height: 1.9;
     color: #0f380f;
+}
+.bubble-subtitle {
+    font-size: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #306230;
+    margin-bottom: 5px;
 }
 /* Pixel-style arrow tail */
 .speech-bubble::before {
