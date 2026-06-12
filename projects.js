@@ -22,19 +22,19 @@ var projects = [
     {
         title: "The Serpent's Trial",
         subtitle: "browser snake game",
-        description: "The arcade classic, summoned in the browser. Steer the serpent, devour, grow — and learn that your greatest enemy was your own tail all along.",
+        description: "The arcade classic, summoned in the browser — with a Game Boy coat of paint. Steer the serpent, devour, grow, and learn that your greatest enemy was your own tail all along.",
         image: "",
-        link: "#",   // TODO: live demo URL (GitHub Pages)
-        github: "",  // TODO: repo URL
+        link: "https://damiensoobz.github.io/snakeysnake/",
+        github: "https://github.com/Damiensoobz/snakeysnake",
         tags: ["JavaScript", "HTML", "CSS"]
     },
     {
         title: "Memento Mori",
         subtitle: "life-in-weeks calendar",
-        description: "Your entire life on one screen, one box per week. Part calendar, part existential alarm clock. The wizards advise checking it no more than once a day.",
+        description: "80 years. 52 weeks each. 4,160 boxes total. Enter your date of birth and watch the ones behind you fill in. Part calendar, part existential alarm clock.",
         image: "",
-        link: "#",   // TODO: live demo URL (GitHub Pages)
-        github: "",  // TODO: repo URL
+        link: "https://damiensoobz.github.io/Memento-Mori/",
+        github: "https://github.com/Damiensoobz/Memento-Mori",
         tags: ["JavaScript", "CSS"]
     },
     {
