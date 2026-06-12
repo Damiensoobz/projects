@@ -283,6 +283,17 @@ code {
     line-height: 1.9;
     color: #0f380f;
 }
+/* Screenshot at top of bubble — bleeds to edges, full color as a window into the real project */
+.bubble-img {
+    display: block;
+    width: calc(100% + 24px);
+    height: 80px;
+    object-fit: cover;
+    object-position: top center;
+    margin: -10px -12px 8px;
+    border-bottom: 2px solid #0f380f;
+}
+
 .bubble-subtitle {
     font-size: 0.4rem;
     text-transform: uppercase;
@@ -309,8 +320,10 @@ code {
     z-index: 1;
 }
 .card:hover        .speech-bubble,
-.card:focus-within .speech-bubble {
+.card:focus-within .speech-bubble,
+.card.bubble-open  .speech-bubble {
     opacity: 1;
+    pointer-events: auto;
     transform: translateX(-50%) translateY(0);
 }
 

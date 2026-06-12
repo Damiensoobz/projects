@@ -49,10 +49,11 @@
     } else {
         if (count) count.textContent = projects.length;
         grid.innerHTML = projects.map(buildCard).join('');
+        initBubbleHover();
     }
 
     function buildCard(project, index) {
-        const img     = project.image || makePlaceholder(project.title, index);
+        const placeholder = makePlaceholder(project.title, index);
         const hasLink = project.link && project.link !== '#';
         const aAttrs  = hasLink
             ? `href="${project.link}" target="_blank" rel="noopener noreferrer"`
@@ -78,6 +79,10 @@
             ? `<div class="bubble-links">${demoLink}${ghLink}</div>`
             : '';
 
+        const bubbleImg = project.image
+            ? `<img class="bubble-img" src="${esc(project.image)}" alt="${esc(project.title)}">`
+            : '';
+
         return `
 <article class="card" style="animation-delay:${index * 0.07 + 0.1}s">
   <span class="card-corner tl">&#x250C;</span>
@@ -86,7 +91,7 @@
   <span class="card-corner br">&#x2518;</span>
 
   <a ${aAttrs} class="card-link" aria-label="${esc(project.title)}">
-    <img class="card-img" src="${img}" alt="${esc(project.title)}">
+    <img class="card-img" src="${placeholder}" alt="${esc(project.title)}">
     <div class="card-footer">
       <h3 class="card-title">${esc(project.title)}</h3>
       ${project.subtitle ? `<span class="card-subtitle">${esc(project.subtitle)}</span>` : ''}
@@ -94,6 +99,7 @@
   </a>
 
   <div class="speech-bubble" role="tooltip">
+    ${bubbleImg}
     <div class="bubble-inner">
       ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
       <p>${esc(project.description)}</p>
@@ -304,6 +310,24 @@
                         : '') +
                 '</div>' +
             '</div>';
+    }
+
+    // ── Bubble hover persistence ─────────────────────────────────
+    // CSS :hover loses the bubble when the cursor crosses the gap between
+    // the card and the bubble, making links unclickable. JS holds the class
+    // open for 260ms after card mouseleave, long enough to reach the bubble.
+    function initBubbleHover() {
+        document.querySelectorAll('.card').forEach(function(card) {
+            var bubble = card.querySelector('.speech-bubble');
+            if (!bubble) return;
+            var timer;
+            function open()  { clearTimeout(timer); card.classList.add('bubble-open'); }
+            function close() { timer = setTimeout(function() { card.classList.remove('bubble-open'); }, 260); }
+            card.addEventListener('mouseenter', open);
+            card.addEventListener('mouseleave', close);
+            bubble.addEventListener('mouseenter', open);
+            bubble.addEventListener('mouseleave', close);
+        });
     }
 
     // ── Helpers ──────────────────────────────────────────────────

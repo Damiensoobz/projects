@@ -346,6 +346,17 @@ code {
     line-height: 1.55;
     color: #000000;
 }
+/* Screenshot at top of bubble — bleeds to edges, above padding */
+.bubble-img {
+    display: block;
+    width: calc(100% + 20px);
+    height: 90px;
+    object-fit: cover;
+    object-position: top center;
+    margin: -8px -10px 8px;
+    border-bottom: 1px solid #808080;
+}
+
 .bubble-subtitle {
     font-size: 0.62rem;
     font-weight: 700;
@@ -372,8 +383,10 @@ code {
     z-index: 1;
 }
 .card:hover        .speech-bubble,
-.card:focus-within .speech-bubble {
+.card:focus-within .speech-bubble,
+.card.bubble-open  .speech-bubble {
     opacity: 1;
+    pointer-events: auto;
     transform: translateX(-50%) translateY(0);
 }
 
