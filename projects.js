@@ -23,7 +23,7 @@ var projects = [
         title: "The Serpent's Trial",
         subtitle: "browser snake game",
         description: "The arcade classic, summoned in the browser — with a Game Boy coat of paint. Steer the serpent, devour, grow, and learn that your greatest enemy was your own tail all along.",
-        image: "",
+        image: "images/snake.png",
         link: "https://damiensoobz.github.io/snakeysnake/",
         github: "https://github.com/Damiensoobz/snakeysnake",
         tags: ["JavaScript", "HTML", "CSS"]
@@ -32,7 +32,7 @@ var projects = [
         title: "Memento Mori",
         subtitle: "life-in-weeks calendar",
         description: "80 years. 52 weeks each. 4,160 boxes total. Enter your date of birth and watch the ones behind you fill in. Part calendar, part existential alarm clock.",
-        image: "",
+        image: "images/memento.png",
         link: "https://damiensoobz.github.io/Memento-Mori/",
         github: "https://github.com/Damiensoobz/Memento-Mori",
         tags: ["JavaScript", "CSS"]
