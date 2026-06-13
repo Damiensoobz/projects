@@ -39,12 +39,12 @@ var projects = [
     },
     {
         title: "The Cartographer's Conjuring",
-        subtitle: "fantasy map generator — WIP",
-        description: "Conjures procedurally generated fantasy realms: coastlines, mountain ranges, and place names no one can pronounce. Still brewing in the cauldron.",
-        image: "",
-        link: "#",   // TODO: repo URL until a hosted demo exists
-        github: "",  // TODO: repo URL
-        tags: ["Python", "Procedural Gen"]
+        subtitle: "fantasy map generator",
+        description: "Conjures procedurally generated fantasy realms: coastlines, mountain ranges, rivers, settlements, and place names no one can pronounce. Every seed is a new world.",
+        image: "images/map.png",
+        link: "https://huggingface.co/spaces/damienbuids/fantasicmapio",
+        github: "",
+        tags: ["Python", "FastAPI", "Procedural Gen"]
     }
 ];
 
