@@ -49,72 +49,53 @@
     } else {
         if (count) count.textContent = projects.length;
         grid.innerHTML = projects.map(buildCard).join('');
-        initBubbleHover();
     }
 
     function buildCard(project, index) {
-        const placeholder = makePlaceholder(project.title, index);
         const hasLink = project.link && project.link !== '#';
-        const aAttrs  = hasLink
-            ? `href="${project.link}" target="_blank" rel="noopener noreferrer"`
-            : `href="#"`;
+        const img     = project.image ? esc(project.image) : makePlaceholder(project.title, index);
 
         const tags = (project.tags || [])
-            .map(t => `<span class="bubble-tag">${esc(t)}</span>`)
+            .map(t => `<span class="card-tag">${esc(t)}</span>`)
             .join('');
 
         const demoLink = hasLink
-            ? `<a class="bubble-demo" href="${project.link}" target="_blank" rel="noopener noreferrer">` +
+            ? `<a class="card-demo" href="${esc(project.link)}" target="_blank" rel="noopener noreferrer">` +
               `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.252.027A2 2 0 0 1 7 9.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/><path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/></svg>` +
               ` live demo ↗</a>`
             : '';
 
         const ghLink = project.github
-            ? `<a class="bubble-gh" href="${esc(project.github)}" target="_blank" rel="noopener noreferrer">` +
+            ? `<a class="card-gh" href="${esc(project.github)}" target="_blank" rel="noopener noreferrer">` +
               `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>` +
               ` view source ↗</a>`
             : '';
 
-        const bubbleLinks = (demoLink || ghLink)
-            ? `<div class="bubble-links">${demoLink}${ghLink}</div>`
+        const links = (demoLink || ghLink)
+            ? `<div class="card-links">${demoLink}${ghLink}</div>`
             : '';
 
-        const bubbleClass = project.image ? 'speech-bubble has-preview' : 'speech-bubble';
-
-        const bubbleInner = project.image
-            ? `<div class="bubble-img-pane">
-      <img class="bubble-img" src="${esc(project.image)}" alt="${esc(project.title)}">
-    </div>
-    <div class="bubble-text-pane">
-      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
-      <p>${esc(project.description)}</p>
-      ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
-      ${bubbleLinks}
-    </div>`
-            : `<div class="bubble-inner">
-      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
-      <p>${esc(project.description)}</p>
-      ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
-      ${bubbleLinks}
-    </div>`;
+        // Screenshot is a link when there's a demo, otherwise a plain frame
+        const shotTag   = hasLink ? 'a' : 'div';
+        const shotAttrs = hasLink
+            ? ` href="${esc(project.link)}" target="_blank" rel="noopener noreferrer"`
+            : '';
 
         return `
 <article class="card" style="animation-delay:${index * 0.07 + 0.1}s">
-  <span class="card-corner tl">&#x250C;</span>
-  <span class="card-corner tr">&#x2510;</span>
-  <span class="card-corner bl">&#x2514;</span>
-  <span class="card-corner br">&#x2518;</span>
-
-  <a ${aAttrs} class="card-link" aria-label="${esc(project.title)}">
-    <img class="card-img" src="${placeholder}" alt="${esc(project.title)}">
-    <div class="card-footer">
-      <h3 class="card-title">${esc(project.title)}</h3>
-      ${project.subtitle ? `<span class="card-subtitle">${esc(project.subtitle)}</span>` : ''}
+  <div class="card-bar">
+    <h3 class="card-title">${esc(project.title)}</h3>
+  </div>
+  <div class="card-main">
+    <${shotTag} class="card-shot"${shotAttrs} aria-label="${esc(project.title)} screenshot">
+      <img class="card-img" src="${img}" alt="${esc(project.title)} screenshot" loading="lazy">
+    </${shotTag}>
+    <div class="card-body">
+      ${project.subtitle ? `<p class="card-subtitle">${esc(project.subtitle)}</p>` : ''}
+      <p class="card-desc">${esc(project.description)}</p>
+      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      ${links}
     </div>
-  </a>
-
-  <div class="${bubbleClass}" role="tooltip">
-    ${bubbleInner}
   </div>
 </article>`;
     }
@@ -319,24 +300,6 @@
                         : '') +
                 '</div>' +
             '</div>';
-    }
-
-    // ── Bubble hover persistence ─────────────────────────────────
-    // CSS :hover loses the bubble when the cursor crosses the gap between
-    // the card and the bubble, making links unclickable. JS holds the class
-    // open for 260ms after card mouseleave, long enough to reach the bubble.
-    function initBubbleHover() {
-        document.querySelectorAll('.card').forEach(function(card) {
-            var bubble = card.querySelector('.speech-bubble');
-            if (!bubble) return;
-            var timer;
-            function open()  { clearTimeout(timer); card.classList.add('bubble-open'); }
-            function close() { timer = setTimeout(function() { card.classList.remove('bubble-open'); }, 260); }
-            card.addEventListener('mouseenter', open);
-            card.addEventListener('mouseleave', close);
-            bubble.addEventListener('mouseenter', open);
-            bubble.addEventListener('mouseleave', close);
-        });
     }
 
     // ── Helpers ──────────────────────────────────────────────────
