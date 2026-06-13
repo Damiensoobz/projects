@@ -79,9 +79,24 @@
             ? `<div class="bubble-links">${demoLink}${ghLink}</div>`
             : '';
 
-        const bubbleImg = project.image
-            ? `<img class="bubble-img" src="${esc(project.image)}" alt="${esc(project.title)}">`
-            : '';
+        const bubbleClass = project.image ? 'speech-bubble has-preview' : 'speech-bubble';
+
+        const bubbleInner = project.image
+            ? `<div class="bubble-img-pane">
+      <img class="bubble-img" src="${esc(project.image)}" alt="${esc(project.title)}">
+    </div>
+    <div class="bubble-text-pane">
+      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
+      <p>${esc(project.description)}</p>
+      ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
+      ${bubbleLinks}
+    </div>`
+            : `<div class="bubble-inner">
+      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
+      <p>${esc(project.description)}</p>
+      ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
+      ${bubbleLinks}
+    </div>`;
 
         return `
 <article class="card" style="animation-delay:${index * 0.07 + 0.1}s">
@@ -98,14 +113,8 @@
     </div>
   </a>
 
-  <div class="speech-bubble" role="tooltip">
-    ${bubbleImg}
-    <div class="bubble-inner">
-      ${project.subtitle ? `<p class="bubble-subtitle">${esc(project.subtitle)}</p>` : ''}
-      <p>${esc(project.description)}</p>
-      ${tags ? `<div class="bubble-tags">${tags}</div>` : ''}
-      ${bubbleLinks}
-    </div>
+  <div class="${bubbleClass}" role="tooltip">
+    ${bubbleInner}
   </div>
 </article>`;
     }

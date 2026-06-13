@@ -170,73 +170,92 @@ code {
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    column-gap: 12px;
+    row-gap: 28px;
+    padding-top: 18px;
 }
 @media (max-width: 780px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .cards-grid { grid-template-columns: 1fr; } }
 
-/* ── Card ──────────────────────────────────────────────────── */
+/* ── Card — GB folder ───────────────────────────────────────── */
 .card {
     position: relative;
-    background: #9bbc0f;
+    background: #8bac0f;
     border: 3px solid #0f380f;
     box-shadow: 3px 3px 0 #0f380f;
-    transition: transform 0.1s, box-shadow 0.1s;
+    overflow: visible;
+    transition: background 0.06s;
     animation: pixelIn 0.3s ease both;
 }
-.card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 5px 5px 0 #0f380f;
-}
+.card:hover { background: #9bbc0f; }
 
-/* Corner stars */
-.card-corner {
+/* Pixel folder tab */
+.card::before {
+    content: '';
     position: absolute;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.45rem;
-    color: #306230;
-    line-height: 1;
-    pointer-events: none;
-    z-index: 2;
-    transition: color 0.1s;
+    top: -12px;
+    left: 0;
+    width: 52px;
+    height: 12px;
+    background: #8bac0f;
+    border-top: 3px solid #0f380f;
+    border-left: 3px solid #0f380f;
+    border-right: 3px solid #0f380f;
+    transition: background 0.06s;
 }
-.card:hover .card-corner { color: #0f380f; }
-.card-corner.tl { top: 3px;    left:  4px; }
-.card-corner.tr { top: 3px;    right: 4px; }
-.card-corner.bl { bottom: 3px; left:  4px; }
-.card-corner.br { bottom: 3px; right: 4px; }
+.card:hover::before { background: #9bbc0f; }
 
-.card-link { display: block; text-decoration: none; color: inherit; }
+/* Hide terminal corners */
+.card-corner { display: none; }
 
-/* Images get the classic 4-shade GB green treatment */
-.card-img {
-    width: 100%;
-    height: 155px;
-    object-fit: cover;
-    border-bottom: 3px solid #0f380f;
+.card-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+}
+/* Hide placeholder image — folder body takes its place */
+.card-img { display: none; }
+
+/* Folder body — pixel horizontal dot-lines */
+.card-link::before {
+    content: '';
     display: block;
-    filter: sepia(1) hue-rotate(50deg) saturate(0.75) brightness(0.72) contrast(1.1);
-    image-rendering: pixelated;
-    transition: filter 0.15s;
-}
-.card:hover .card-img {
-    filter: sepia(1) hue-rotate(50deg) saturate(0.95) brightness(0.85) contrast(1.15);
+    flex: 1;
+    min-height: 100px;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 7px,
+        rgba(15, 56, 15, 0.12) 7px,
+        rgba(15, 56, 15, 0.12) 8px
+    );
 }
 
+/* File label — GB dark footer */
 .card-footer {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 0 6px;
-    padding: 8px 10px;
+    padding: 6px 8px;
     background: #0f380f;
+    border-top: 3px solid #0f380f;
+    transition: background 0.06s;
 }
+.card:hover .card-footer { background: #306230; }
+
+/* GB folder icon in footer */
 .card-footer::before {
-    content: '>';
-    color: #9bbc0f;
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='12' viewBox='0 0 14 12' shape-rendering='crispEdges'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%238bac0f'/><polyline points='0,12 0,0 6,0 6,3 14,3' fill='none' stroke='%239bbc0f' stroke-width='1'/><polyline points='14,3 14,12 0,12' fill='none' stroke='%230f380f' stroke-width='1'/></svg>");
     flex-shrink: 0;
-    font-size: 0.5rem;
+    vertical-align: middle;
+    line-height: 1;
 }
+.card:hover .card-footer::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='12' viewBox='0 0 14 12' shape-rendering='crispEdges'><path d='M0,3 L0,0 L6,0 L6,3 L14,3 L14,12 L0,12 Z' fill='%239bbc0f'/><polyline points='0,12 0,0 6,0 6,3 14,3' fill='none' stroke='%23c8d870' stroke-width='1'/><polyline points='14,3 14,12 0,12' fill='none' stroke='%230f380f' stroke-width='1'/></svg>");
+}
+
 .card-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.4rem;
@@ -246,9 +265,11 @@ code {
     text-overflow: ellipsis;
     letter-spacing: 0.04em;
     line-height: 1.6;
+    transition: color 0.06s;
 }
+.card:hover .card-title { color: #c8d870; }
 
-/* Plain-English subtitle — second line of the label */
+/* Plain-English subtitle */
 .card-subtitle {
     flex-basis: 100%;
     font-family: 'Press Start 2P', monospace;
@@ -259,7 +280,9 @@ code {
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: 0.04em;
+    transition: color 0.06s;
 }
+.card:hover .card-subtitle { color: #9bbc0f; }
 
 /* ── Speech bubble — RPG dialog box ─────────────────────────── */
 .speech-bubble {
@@ -283,15 +306,35 @@ code {
     line-height: 1.9;
     color: #0f380f;
 }
-/* Screenshot at top of bubble — bleeds to edges, full color as a window into the real project */
+/* Two-pane layout when bubble has a screenshot */
+.speech-bubble.has-preview {
+    width: 340px;
+    display: flex;
+    flex-direction: row;
+}
+.bubble-img-pane {
+    width: 120px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-right: 3px solid #0f380f;
+}
 .bubble-img {
-    display: block;
-    width: calc(100% + 24px);
-    height: 80px;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
     object-fit: cover;
     object-position: top center;
-    margin: -10px -12px 8px;
-    border-bottom: 2px solid #0f380f;
+    display: block;
+    image-rendering: pixelated;
+}
+.bubble-text-pane {
+    flex: 1;
+    padding: 10px 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.48rem;
+    line-height: 1.9;
+    color: #0f380f;
+    min-width: 0;
 }
 
 .bubble-subtitle {
