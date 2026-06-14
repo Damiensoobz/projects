@@ -54,6 +54,15 @@ var projects = [
     link: "https://damiensoobz.github.io/DungeonDice/",
     github: "https://github.com/Damiensoobz/DungeonDice",
     tags: ["JavaScript", "API", "CSS"]
+    },
+    {
+    title: "Hecker",
+    subtitle: "Pretend you're a real life hacker.",
+    description: "Instructions at the nottom of the screen on first load - press ? for help :)",
+    image: "images/hecker.png",
+    link: "https://damiensoobz.github.io/hecker/",
+    github: "https://github.com/Damiensoobz/hecker",
+    tags: ["JavaScript", "HTML", "CSS"]
     }
 ];
 
