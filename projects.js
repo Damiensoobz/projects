@@ -45,6 +45,15 @@ var projects = [
         link: "https://huggingface.co/spaces/damienbuids/fantasicmapio",
         github: "",
         tags: ["Python", "FastAPI", "Procedural Gen"]
+    },
+    {
+    title: "Dungeon Dice!",
+    subtitle: "DIGITAL GAME MASTER TOOLKIT.",
+    description: "It was only supposed to be a fun way to emulate a dice roll...",
+    image: "images/dice.png",
+    link: "https://damiensoobz.github.io/DungeonDice/",
+    github: "https://github.com/Damiensoobz/DungeonDice",
+    tags: ["JavaScript", "API", "CSS"]
     }
 ];
 
