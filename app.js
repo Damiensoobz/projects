@@ -3,6 +3,7 @@
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
     // ── ASCII name scramble — hover or load to decode ───────────
+    var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var _art  = document.querySelector('.ascii-art');
     if (_art) {
         var _orig = _art.textContent;
@@ -10,7 +11,7 @@
         var _busy = false;
 
         function _scramble() {
-            if (_busy) return;
+            if (_busy || _reduceMotion) return;   // honor reduced-motion: leave the name decoded
             _busy = true;
             var chars = _orig.split('');
             var idxs  = chars.reduce(function(a, c, i) {
@@ -196,21 +197,45 @@
         fetch('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=15')
             .then(function(r) { return r.json(); })
             .then(function(events) {
+                if (!Array.isArray(events)) { renderGithubStatic(username, profileUrl); return; }
                 var push = null;
                 for (var i = 0; i < events.length; i++) {
                     if (events[i].type === 'PushEvent') { push = events[i]; break; }
                 }
                 if (!push) { renderGithubStatic(username, profileUrl); return; }
-                var commits   = push.payload.commits;
-                var commit    = commits && commits[commits.length - 1];
-                var msg       = (commit && commit.message) ? commit.message.split('\n')[0] : '—';
-                var sha       = (commit && commit.sha)     ? commit.sha.substring(0, 7)   : '';
-                var branch    = push.payload.ref ? push.payload.ref.replace('refs/heads/', '') : '';
+
+                // GitHub's events API no longer includes the per-commit `commits`
+                // array in PushEvent payloads — only ref/head/before. So derive the
+                // SHA from payload.head and fetch the message from the commits API.
+                var p         = push.payload || {};
+                var commits   = p.commits || [];
+                var last      = commits.length ? commits[commits.length - 1] : null;
+                var fullSha   = (last && last.sha) || p.head || '';
+                var sha       = fullSha ? fullSha.substring(0, 7) : '';
+                var branch    = p.ref ? p.ref.replace('refs/heads/', '') : '';
                 var repo      = push.repo.name.split('/')[1];
                 var repoUrl   = 'https://github.com/' + push.repo.name;
-                var commitUrl = sha ? 'https://github.com/' + push.repo.name + '/commit/' + commit.sha : repoUrl;
+                var commitUrl = fullSha ? repoUrl + '/commit/' + fullSha : repoUrl;
                 var when      = timeAgo(new Date(push.created_at));
-                renderGithubPush(repo, msg, sha, branch, when, repoUrl, commitUrl);
+                var inlineMsg = (last && last.message) ? last.message.split('\n')[0] : '';
+
+                if (inlineMsg) {
+                    renderGithubPush(repo, inlineMsg, sha, branch, when, repoUrl, commitUrl);
+                    return;
+                }
+                // No message in the event — fetch it from the commit itself.
+                if (fullSha) {
+                    fetch('https://api.github.com/repos/' + push.repo.name + '/commits/' + fullSha)
+                        .then(function(r) { return r.ok ? r.json() : null; })
+                        .then(function(data) {
+                            var msg = (data && data.commit && data.commit.message)
+                                ? data.commit.message.split('\n')[0] : '';
+                            renderGithubPush(repo, msg, sha, branch, when, repoUrl, commitUrl);
+                        })
+                        .catch(function() { renderGithubPush(repo, '', sha, branch, when, repoUrl, commitUrl); });
+                } else {
+                    renderGithubPush(repo, '', sha, branch, when, repoUrl, commitUrl);
+                }
             })
             .catch(function() { renderGithubStatic(username, profileUrl); });
     }

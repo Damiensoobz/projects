@@ -31,7 +31,7 @@
 - [ ] `addingProjects.txt` is empty — delete or fold into this file.
 - [ ] Decide fate of unused `style.css`, `style-sw.css`, `style-da.css`
       (kept per CLAUDE.md, but they're dead weight in the deploy).
-- [ ] Reduced motion: respect `prefers-reduced-motion` for scramble/animations.
+- [x] Reduced motion: respect `prefers-reduced-motion` for scramble/animations. (2026-06-15)
 
 ## ✅ Done (2026-06-13)
 - [x] Default skin = Win98 (most legible) — already the default, confirmed.

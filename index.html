@@ -11,9 +11,12 @@
     <meta property="og:url" content="https://damiensoobz.github.io/projects/">
     <meta property="og:image" content="https://damiensoobz.github.io/projects/images/map.png">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://damiensoobz.github.io/projects/">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Press+Start+2P&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Only Press Start 2P is used (Game Boy skin); the active Win98 skin uses system fonts. -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="base.css">
     <link id="main-style" rel="stylesheet" href="style-y2k.css">
 </head>
 <body>
@@ -62,13 +65,15 @@
     <!-- ── Projects ────────────────────────────────────────── -->
     <section class="block">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">ls -la projects/</span></div>
-        <p class="out dim ls-meta">total <span id="project-count">3</span></p>
+        <p class="out dim ls-meta">total <span id="project-count">5</span></p>
         <div class="cards-grid" id="cards-grid"></div>
         <noscript>
             <ul class="out">
                 <li>The Serpent's Trial &mdash; browser snake game</li>
                 <li>Memento Mori &mdash; life-in-weeks calendar</li>
-                <li>The Cartographer's Conjuring &mdash; fantasy map generator (WIP)</li>
+                <li>The Cartographer's Conjuring &mdash; fantasy map generator</li>
+                <li>Dungeon Dice! &mdash; digital game master toolkit</li>
+                <li>Hecker &mdash; fake hacker terminal toy</li>
             </ul>
             <p class="out dim">Enable JavaScript for the full experience, or browse the source on <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
         </noscript>
