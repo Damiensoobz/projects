@@ -119,6 +119,45 @@
         if (b) restore(b);
     }
 
+    // ── Draggable windows ───────────────────────────────────────
+    // Uses transform (not position) so the document flow — and thus the
+    // tidy default layout and mobile view — stays intact; the window just
+    // floats visually. Disabled on small screens and on maximized windows.
+    var zTop = 10;
+    function makeDraggable(b) {
+        var bar = b.querySelector('.prompt');
+        var tx = 0, ty = 0;
+        b._resetPos = function () { tx = ty = 0; b.style.transform = ''; b.style.zIndex = ''; };
+        bar.addEventListener('mousedown', function (e) {
+            if (e.button !== 0 || e.target.closest('.win-ctrls')) return;
+            if (window.innerWidth < 760 || b.classList.contains('win-max')) return;
+            e.preventDefault();
+            b.style.position = 'relative';
+            b.style.zIndex = ++zTop;                 // raise the grabbed window
+            document.body.classList.add('dragging');
+            var sx = e.clientX, sy = e.clientY, bx = tx, by = ty;
+            function move(ev) {
+                tx = bx + (ev.clientX - sx);
+                ty = by + (ev.clientY - sy);
+                b.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+            }
+            function up() {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+                document.body.classList.remove('dragging');
+            }
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+        });
+        // Double-click the title bar snaps the window home.
+        bar.addEventListener('dblclick', function (e) {
+            if (e.target.closest('.win-ctrls')) return;
+            b._resetPos();
+        });
+    }
+    blocks.forEach(makeDraggable);
+    function tidyWindows() { blocks.forEach(function (b) { if (b._resetPos) b._resetPos(); }); zTop = 10; }
+
     // ── Start menu open/close ───────────────────────────────────
     var startBtn = document.getElementById('start-btn');
     function setMenu(open) {
@@ -202,7 +241,7 @@
     ctx.hidden = true;
     ctx.innerHTML =
         '<button class="ctx-item" data-act="refresh">Refresh</button>' +
-        '<button class="ctx-item" data-act="arrange">Arrange Icons</button>' +
+        '<button class="ctx-item" data-act="tidy">Tidy Windows</button>' +
         '<div class="ctx-sep"></div>' +
         '<button class="ctx-item" data-act="props">Properties</button>';
     document.body.appendChild(ctx);
@@ -220,6 +259,7 @@
     ctx.addEventListener('click', function (e) {
         var act = e.target.getAttribute('data-act');
         if (act === 'refresh' && window.triggerScramble) window.triggerScramble();
+        else if (act === 'tidy') tidyWindows();
         else if (act === 'props') openDialog('Display Properties', sysInfoHtml());
         hideCtx();
     });

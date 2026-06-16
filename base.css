@@ -224,7 +224,8 @@ body.has-max { overflow: hidden; }
 .sm-item { display: flex; align-items: center; gap: 8px; cursor: pointer; text-align: left; white-space: nowrap; }
 .sm-ico { flex-shrink: 0; }
 
-.win-ctrls { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
+.prompt.wm { cursor: move; }                      /* draggable title bar */
+.win-ctrls { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; cursor: default; }
 .wc { position: relative; flex-shrink: 0; cursor: pointer; padding: 0; width: 16px; height: 14px; }
 .wc::before { content: ''; position: absolute; }
 

@@ -213,12 +213,8 @@ code {
     flex-shrink: 0;
     line-height: 1;
 }
-.card-bar::after {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='35' height='14' shape-rendering='crispEdges'><rect x='0' y='0' width='16' height='14' fill='%23d4d0c8'/><polyline points='15,0 0,0 0,13' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='0,13 15,13 15,0' fill='none' stroke='%23404040' stroke-width='1'/><rect x='4' y='10' width='7' height='2' fill='%23000000'/><rect x='19' y='0' width='16' height='14' fill='%23d4d0c8'/><polyline points='34,0 19,0 19,13' fill='none' stroke='%23ffffff' stroke-width='1'/><polyline points='19,13 34,13 34,0' fill='none' stroke='%23404040' stroke-width='1'/><line x1='23' y1='4' x2='30' y2='10' stroke='%23000000' stroke-width='1.5'/><line x1='30' y1='4' x2='23' y2='10' stroke='%23000000' stroke-width='1.5'/></svg>");
-    margin-left: auto;
-    flex-shrink: 0;
-    line-height: 1;
-}
+/* Project cards have no functional window buttons — a plain title bar reads
+   more honestly now that real windows own the min/max/close controls. */
 .card-title {
     font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
     font-size: 0.74rem;
