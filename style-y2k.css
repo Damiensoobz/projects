@@ -608,3 +608,142 @@ code {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.4; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP ENVIRONMENT — Win98 paint
+   ═══════════════════════════════════════════════════════════════ */
+.taskbar {
+    background: #d4d0c8;
+    border-top: 2px solid #ffffff;
+    box-shadow: inset 0 1px 0 #dfdfdf;
+}
+
+/* Start button */
+.start-btn {
+    height: 24px;
+    padding: 2px 9px 2px 5px;
+    background: #d4d0c8;
+    border-top:    2px solid #ffffff;
+    border-left:   2px solid #ffffff;
+    border-right:  2px solid #404040;
+    border-bottom: 2px solid #404040;
+    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #000000;
+}
+.start-btn.pressed, .start-btn:active {
+    border-top-color: #404040; border-left-color: #404040;
+    border-right-color: #ffffff; border-bottom-color: #ffffff;
+    padding: 3px 8px 1px 6px;
+}
+.start-logo {
+    width: 16px; height: 14px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><g transform='skewY(-9)' transform-origin='8 7'><rect x='1' y='4' width='6' height='4' fill='%23ff3b30'/><rect x='8' y='4' width='6' height='4' fill='%232fb344'/><rect x='1' y='9' width='6' height='4' fill='%23308cff'/><rect x='8' y='9' width='6' height='4' fill='%23ffd200'/></g></svg>") center/contain no-repeat;
+}
+
+/* Taskbar window buttons */
+.task-btn {
+    height: 24px;
+    padding: 2px 8px;
+    background: #d4d0c8;
+    border-top:    2px solid #ffffff;
+    border-left:   2px solid #ffffff;
+    border-right:  2px solid #404040;
+    border-bottom: 2px solid #404040;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.7rem;
+    color: #000000;
+}
+.task-btn.active {
+    border-top-color: #404040; border-left-color: #404040;
+    border-right-color: #ffffff; border-bottom-color: #ffffff;
+    background: #c8c4bc;
+    box-shadow: inset 1px 1px 0 #808080;
+    font-weight: 700;
+}
+.tb-ico {
+    width: 14px; height: 12px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='13' viewBox='0 0 16 13' shape-rendering='crispEdges'><path d='M0,4 L0,0 L7,0 L7,4 L16,4 L16,13 L0,13 Z' fill='%23ffd740'/><polyline points='0,13 0,0 7,0 7,4 16,4' fill='none' stroke='%23806000' stroke-width='1'/></svg>") center/contain no-repeat;
+}
+
+/* System tray */
+.tray {
+    height: 24px;
+    padding: 1px 8px;
+    border-top:    1px solid #808080;
+    border-left:   1px solid #808080;
+    border-right:  1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+.tray-clock { font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; color: #000000; }
+.taskbar #theme-toggle {
+    position: static; bottom: auto; right: auto; margin: 0;
+    height: 22px; padding: 1px 8px; font-size: 0.64rem;
+}
+
+/* Start menu */
+.start-menu {
+    background: #d4d0c8;
+    border-top:    2px solid #ffffff;
+    border-left:   2px solid #ffffff;
+    border-right:  2px solid #404040;
+    border-bottom: 2px solid #404040;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+}
+.sm-rail {
+    width: 26px;
+    padding: 10px 4px;
+    background: linear-gradient(to top, #000080, #1084d0);
+    color: #c0c0c0;
+    font-family: Tahoma, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.08em;
+}
+.sm-rail b { color: #ffffff; }
+.sm-list { padding: 3px; }
+.sm-head {
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.62rem;
+    color: #808080;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 8px 6px;
+    border-bottom: 1px solid #808080;
+    margin-bottom: 2px;
+}
+.sm-item {
+    background: none; border: none;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.78rem;
+    color: #000000;
+    padding: 5px 20px 5px 8px;
+}
+.sm-item:hover { background: #000080; color: #ffffff; }
+.sm-ico {
+    width: 18px; height: 16px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='13' viewBox='0 0 16 13' shape-rendering='crispEdges'><path d='M0,4 L0,0 L7,0 L7,4 L16,4 L16,13 L0,13 Z' fill='%23ffd740'/><polyline points='0,13 0,0 7,0 7,4 16,4' fill='none' stroke='%23806000' stroke-width='1'/></svg>") center/contain no-repeat;
+}
+
+/* Window control buttons */
+.prompt.wm::after { display: none; }     /* hide the decorative SVG button strip */
+.win-ctrls { gap: 1px; }
+.wc {
+    background: #d4d0c8;
+    border-top:    1px solid #ffffff;
+    border-left:   1px solid #ffffff;
+    border-right:  1px solid #404040;
+    border-bottom: 1px solid #404040;
+}
+.wc:active {
+    border-top-color: #404040; border-left-color: #404040;
+    border-right-color: #ffffff; border-bottom-color: #ffffff;
+}
+.wc-min::before  { left: 3px; right: 4px; bottom: 2px; height: 2px; background: #000000; }
+.wc-max::before  { left: 3px; right: 3px; top: 2px; bottom: 3px; border: 1px solid #000000; border-top-width: 2px; }
+.wc-close::before {
+    content: '\2715'; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700; color: #000000; line-height: 1;
+}

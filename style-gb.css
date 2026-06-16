@@ -373,3 +373,65 @@ code {
     from { transform: scale(0.94) translateY(5px); }
     to   { transform: scale(1)    translateY(0);   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP ENVIRONMENT — Game Boy paint
+   ═══════════════════════════════════════════════════════════════ */
+.taskbar { background: #8bac0f; border-top: 3px solid #0f380f; }
+
+.start-btn {
+    background: #0f380f; color: #9bbc0f;
+    border: 2px solid #0f380f;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.4rem; letter-spacing: 0.04em;
+    padding: 5px 8px;
+}
+.start-btn.pressed, .start-btn:active { background: #306230; }
+.start-logo { width: 9px; height: 9px; background: #9bbc0f; }
+
+.task-btn {
+    background: #9bbc0f; color: #0f380f;
+    border: 2px solid #0f380f;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.34rem; letter-spacing: 0.02em;
+    padding: 4px 6px;
+}
+.task-btn.active { background: #306230; color: #9bbc0f; }
+.tb-ico { display: none; }
+
+.tray { border: 2px solid #0f380f; padding: 3px 6px; }
+.tray-clock { font-family: 'Press Start 2P', monospace; font-size: 0.34rem; color: #0f380f; }
+.taskbar #theme-toggle {
+    position: static; bottom: auto; right: auto; margin: 0;
+    box-shadow: none; padding: 5px 6px; font-size: 0.32rem;
+}
+
+.start-menu { background: #8bac0f; border: 3px solid #0f380f; box-shadow: 3px 3px 0 #0f380f; }
+.sm-rail {
+    width: 22px; padding: 8px 3px;
+    background: #0f380f; color: #9bbc0f;
+    font-family: 'Press Start 2P', monospace; font-size: 0.5rem; letter-spacing: 0.06em;
+}
+.sm-rail b { color: #9bbc0f; }
+.sm-list { padding: 3px; }
+.sm-head {
+    font-family: 'Press Start 2P', monospace; font-size: 0.34rem;
+    color: #306230; padding: 6px 8px; border-bottom: 2px solid #306230; margin-bottom: 2px;
+}
+.sm-item {
+    background: none; border: none;
+    font-family: 'Press Start 2P', monospace; font-size: 0.4rem; color: #0f380f;
+    padding: 7px 12px 7px 8px;
+}
+.sm-item:hover { background: #0f380f; color: #9bbc0f; }
+.sm-ico { width: 8px; height: 8px; background: #306230; }
+
+.prompt.wm::after { display: none; }
+.wc { width: 14px; height: 12px; background: #9bbc0f; border: 2px solid #0f380f; }
+.wc-min::before  { left: 2px; right: 2px; bottom: 1px; height: 2px; background: #0f380f; }
+.wc-max::before  { inset: 1px; border: 1px solid #0f380f; }
+.wc-close::before {
+    content: 'x'; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 6px; color: #0f380f; line-height: 1;
+}
