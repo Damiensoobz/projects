@@ -145,4 +145,103 @@
     }
     tick();
     setInterval(tick, 15000);
+
+    // ── Reusable Win98 dialog ───────────────────────────────────
+    function openDialog(title, bodyHtml) {
+        var ov = document.createElement('div');
+        ov.className = 'dlg-overlay';
+        ov.innerHTML =
+            '<div class="dlg" role="dialog" aria-label="' + esc(title) + '">' +
+                '<div class="dlg-bar"><span class="dlg-title">' + esc(title) + '</span>' +
+                    '<button class="dlg-x" aria-label="Close"></button></div>' +
+                '<div class="dlg-body">' + bodyHtml + '</div>' +
+                '<div class="dlg-foot"><button class="dlg-ok">OK</button></div>' +
+            '</div>';
+        document.body.appendChild(ov);
+        function close() { ov.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') close(); }
+        ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+        ov.querySelector('.dlg-x').addEventListener('click', close);
+        ov.querySelector('.dlg-ok').addEventListener('click', close);
+        document.addEventListener('keydown', onKey);
+        ov.querySelector('.dlg-ok').focus();
+        return ov;
+    }
+
+    function sysInfoHtml() {
+        return '<div class="dlg-sys">' +
+            '<div class="dlg-sys-logo"></div>' +
+            '<div class="dlg-sys-text">' +
+                '<p><b>damienOS 98</b></p>' +
+                '<p>Registered to: one (1) code wizard</p>' +
+                '<p>Display: ' + window.innerWidth + ' × ' + window.innerHeight + '</p>' +
+                '<p>Caffeine: <b>critical</b></p>' +
+            '</div></div>';
+    }
+
+    // ── Desktop icons ───────────────────────────────────────────
+    var deskIcons = [
+        { kind: 'computer', label: 'My Computer', action: function () { openDialog('My Computer', sysInfoHtml()); } },
+        { kind: 'note',     label: 'readme.txt',  action: function () { openFromMenu(blocks[0] && blocks[0].dataset.winId); } },
+        { kind: 'bin',      label: 'Recycle Bin', action: function () { openDialog('Recycle Bin', '<p class="dlg-p">The Recycle Bin is empty.<br>(No regrets in here.)</p>'); } }
+    ];
+    var deskWrap = document.createElement('div');
+    deskWrap.className = 'desktop-icons';
+    deskIcons.forEach(function (ic) {
+        var b = document.createElement('button');
+        b.className = 'desk-icon icon-' + ic.kind;
+        b.innerHTML = '<span class="desk-glyph"></span><span class="desk-label">' + esc(ic.label) + '</span>';
+        b.addEventListener('click', ic.action);
+        deskWrap.appendChild(b);
+    });
+    document.body.appendChild(deskWrap);
+
+    // ── Desktop right-click context menu ────────────────────────
+    var ctx = document.createElement('div');
+    ctx.className = 'ctx-menu';
+    ctx.hidden = true;
+    ctx.innerHTML =
+        '<button class="ctx-item" data-act="refresh">Refresh</button>' +
+        '<button class="ctx-item" data-act="arrange">Arrange Icons</button>' +
+        '<div class="ctx-sep"></div>' +
+        '<button class="ctx-item" data-act="props">Properties</button>';
+    document.body.appendChild(ctx);
+    function hideCtx() { ctx.hidden = true; }
+    document.addEventListener('contextmenu', function (e) {
+        if (e.target.closest('a, button, input, textarea, img, .card-img')) return;  // keep native menu on links/media
+        e.preventDefault();
+        ctx.hidden = false;
+        var w = ctx.offsetWidth || 160, h = ctx.offsetHeight || 120;
+        ctx.style.left = Math.min(e.clientX, window.innerWidth - w - 4) + 'px';
+        ctx.style.top  = Math.min(e.clientY, window.innerHeight - h - 34) + 'px';
+    });
+    document.addEventListener('click', hideCtx);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideCtx(); });
+    ctx.addEventListener('click', function (e) {
+        var act = e.target.getAttribute('data-act');
+        if (act === 'refresh' && window.triggerScramble) window.triggerScramble();
+        else if (act === 'props') openDialog('Display Properties', sysInfoHtml());
+        hideCtx();
+    });
+
+    // ── One-time boot splash (per browser session) ──────────────
+    if (!sessionStorage.getItem('booted')) {
+        sessionStorage.setItem('booted', '1');
+        var boot = document.createElement('div');
+        boot.className = 'boot-splash';
+        boot.innerHTML =
+            '<div class="boot-box">' +
+                '<div class="boot-logo"></div>' +
+                '<div class="boot-name">damien<b>98</b></div>' +
+                '<div class="boot-bar"><span></span></div>' +
+                '<div class="boot-tip">starting up&hellip;</div>' +
+            '</div>';
+        document.body.appendChild(boot);
+        var killBoot = function () {
+            boot.classList.add('boot-done');
+            setTimeout(function () { if (boot.parentNode) boot.remove(); }, 500);
+        };
+        setTimeout(killBoot, 1900);          // fail-safe auto-dismiss
+        boot.addEventListener('click', killBoot);
+    }
 })();

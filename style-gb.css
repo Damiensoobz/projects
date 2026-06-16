@@ -435,3 +435,45 @@ code {
     display: flex; align-items: center; justify-content: center;
     font-size: 6px; color: #0f380f; line-height: 1;
 }
+
+/* ── Desktop icons — Game Boy ───────────────────────────────── */
+.desk-label { font-family: 'Press Start 2P', monospace; font-size: 0.34rem; color: #0f380f; line-height: 1.5; }
+.desk-icon:hover .desk-label, .desk-icon:focus .desk-label { background: #0f380f; color: #9bbc0f; }
+.desk-glyph { border: 2px solid #0f380f; background: #306230; }
+.icon-computer .desk-glyph { background: #306230; }
+.icon-note .desk-glyph { background: #9bbc0f; }
+.icon-bin .desk-glyph { background: #0f380f; }
+
+/* ── Context menu — Game Boy ────────────────────────────────── */
+.ctx-menu { background: #8bac0f; padding: 3px; border: 3px solid #0f380f; box-shadow: 3px 3px 0 #0f380f; }
+.ctx-item { font-family: 'Press Start 2P', monospace; font-size: 0.4rem; color: #0f380f; padding: 6px 16px 6px 8px; }
+.ctx-item:hover { background: #0f380f; color: #9bbc0f; }
+.ctx-sep { height: 0; border-top: 2px solid #306230; margin: 3px; }
+
+/* ── Dialog — Game Boy ──────────────────────────────────────── */
+.dlg-overlay { background: rgba(15,56,15,0.25); }
+.dlg { background: #8bac0f; border: 3px solid #0f380f; box-shadow: 4px 4px 0 #0f380f; }
+.dlg-bar { background: #0f380f; padding: 6px 8px; }
+.dlg-title { font-family: 'Press Start 2P', monospace; font-size: 0.42rem; color: #9bbc0f; letter-spacing: 0.04em; }
+.dlg-x { width: 14px; height: 12px; background: #9bbc0f; border: 2px solid #0f380f; }
+.dlg-x::before { content: 'x'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 6px; color: #0f380f; }
+.dlg-body { padding: 14px; font-family: 'Press Start 2P', monospace; font-size: 0.44rem; line-height: 1.9; color: #0f380f; }
+.dlg-p { line-height: 1.9; }
+.dlg-sys-text p { margin-bottom: 8px; }
+.dlg-sys-logo { width: 40px; height: 40px; background: #0f380f; }
+.dlg-foot { padding: 0 14px 14px; }
+.dlg-ok {
+    min-width: 60px; padding: 7px 10px; background: #0f380f; color: #9bbc0f;
+    border: 2px solid #0f380f; font-family: 'Press Start 2P', monospace; font-size: 0.4rem;
+    box-shadow: 2px 2px 0 #306230;
+}
+.dlg-ok:active { box-shadow: none; transform: translate(2px, 2px); }
+
+/* ── Boot splash — Game Boy ─────────────────────────────────── */
+.boot-splash { background: #9bbc0f; }
+.boot-logo { width: 40px; height: 40px; background: #0f380f; }
+.boot-name { font-family: 'Press Start 2P', monospace; font-size: 0.95rem; color: #0f380f; }
+.boot-name b { color: #306230; }
+.boot-bar { border: 2px solid #0f380f; background: #9bbc0f; }
+.boot-bar span { background: #0f380f; }
+.boot-tip { font-family: 'Press Start 2P', monospace; font-size: 0.4rem; color: #306230; }
