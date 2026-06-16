@@ -50,15 +50,60 @@
     } else {
         if (count) count.textContent = projects.length;
         grid.innerHTML = projects.map(buildCard).join('');
+        hydrateCommits();
+    }
+
+    // Extract "owner/repo" from a GitHub URL.
+    function repoSlug(url) {
+        var m = /github\.com\/([^\/]+\/[^\/]+)/.exec(url || '');
+        return m ? m[1].replace(/\.git$/, '') : '';
+    }
+
+    // Small sessionStorage-cached JSON fetch (keeps us well under GitHub's
+    // 60 req/hr unauthenticated limit across reloads).
+    function cachedJson(url, ttl) {
+        try {
+            var raw = sessionStorage.getItem('gh:' + url);
+            if (raw) { var o = JSON.parse(raw); if (Date.now() - o.t < ttl) return Promise.resolve(o.d); }
+        } catch (e) {}
+        return fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function (d) { try { sessionStorage.setItem('gh:' + url, JSON.stringify({ t: Date.now(), d: d })); } catch (e) {} return d; });
+    }
+
+    // Fill each card's "last commit" line from its repo's latest commit.
+    function hydrateCommits() {
+        [].forEach.call(document.querySelectorAll('.card-commit[data-repo]'), function (el) {
+            var slug = el.getAttribute('data-repo');
+            if (!slug) return;
+            cachedJson('https://api.github.com/repos/' + slug + '/commits?per_page=1', 600000)
+                .then(function (arr) {
+                    var c = arr && arr[0];
+                    if (!c || !c.commit) return;
+                    var msg  = c.commit.message.split('\n')[0];
+                    var sha  = (c.sha || '').substring(0, 7);
+                    var date = c.commit.author && c.commit.author.date;
+                    var when = date ? timeAgo(new Date(date)) : '';
+                    var url  = c.html_url || ('https://github.com/' + slug);
+                    el.innerHTML =
+                        '<span class="cc-label">last commit</span> ' +
+                        (sha ? '<a class="cc-sha" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(sha) + '</a> ' : '') +
+                        '<span class="cc-msg">' + esc(msg) + '</span>' +
+                        (when ? ' <span class="cc-time">· ' + esc(when) + '</span>' : '');
+                    el.hidden = false;
+                })
+                .catch(function () { /* leave the line hidden on error */ });
+        });
     }
 
     function buildCard(project, index) {
         const hasLink = project.link && project.link !== '#';
         const img     = project.image ? esc(project.image) : makePlaceholder(project.title, index);
+        const slug    = repoSlug(project.github);
 
         const tags = (project.tags || [])
             .map(t => `<span class="card-tag">${esc(t)}</span>`)
-            .join('');
+            .join('')
+            + (project.mobile ? `<span class="card-tag card-tag-mobile">Mobile Friendly</span>` : '');
 
         const demoLink = hasLink
             ? `<a class="card-demo" href="${esc(project.link)}" target="_blank" rel="noopener noreferrer">` +
@@ -95,6 +140,7 @@
       ${project.subtitle ? `<p class="card-subtitle">${esc(project.subtitle)}</p>` : ''}
       <p class="card-desc">${esc(project.description)}</p>
       ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      ${slug ? `<p class="card-commit" data-repo="${esc(slug)}" hidden></p>` : ''}
       ${links}
     </div>
   </div>

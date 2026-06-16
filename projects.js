@@ -15,7 +15,10 @@
 //                leave "" for an auto-generated placeholder
 //  link        — where the card clicks to (live demo URL, or GitHub repo if no demo)
 //  github      — optional: repo URL — shows a "view source" link in the bubble
+//              + drives the live "last commit" line on the card
 //  tags        — short tech labels shown as chips in the bubble
+//  mobile      — optional: true => shows a "Mobile Friendly" badge. Only set
+//                this on projects that genuinely work well on a phone.
 // ─────────────────────────────────────────────────────────────
 
 var projects = [
@@ -35,7 +38,8 @@ var projects = [
         image: "images/memento.png",
         link: "https://damiensoobz.github.io/Memento-Mori/",
         github: "https://github.com/Damiensoobz/Memento-Mori",
-        tags: ["JavaScript", "CSS"]
+        tags: ["JavaScript", "CSS"],
+        mobile: true
     },
     {
         title: "The Cartographer's Conjuring",
@@ -53,7 +57,8 @@ var projects = [
     image: "images/dice.png",
     link: "https://damiensoobz.github.io/DungeonDice/",
     github: "https://github.com/Damiensoobz/DungeonDice",
-    tags: ["JavaScript", "API", "CSS"]
+    tags: ["JavaScript", "API", "CSS"],
+    mobile: true
     },
     {
     title: "Hecker",

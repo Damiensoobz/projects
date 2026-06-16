@@ -227,6 +227,16 @@ code {
     letter-spacing: 0.04em;
 }
 .card-links { gap: 12px; }
+.card-tag-mobile { background: #306230; color: #9bbc0f; }
+.card-tag-mobile::before { content: '>\00a0'; }
+.card-commit {
+    font-family: 'Press Start 2P', monospace; font-size: 0.38rem;
+    color: #306230; margin-bottom: 10px; line-height: 1.7;
+}
+.card-commit .cc-label { color: #0f380f; }
+.card-commit .cc-sha { color: #0f380f; text-decoration: underline; }
+.card-commit .cc-msg { color: #306230; }
+.card-commit .cc-time { color: #306230; }
 .card-demo {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.44rem;

@@ -267,6 +267,21 @@ code {
     padding: 1px 6px;
 }
 .card-links { gap: 14px; }
+.card-tag-mobile {
+    background: #0a7a0a; color: #ffffff; font-weight: 700;
+    border-top-color: #4fd44f; border-left-color: #4fd44f;
+    border-right-color: #044a04; border-bottom-color: #044a04;
+}
+.card-tag-mobile::before { content: '\2713\00a0'; }   /* check mark */
+.card-commit {
+    font-family: 'Courier New', monospace; font-size: 0.64rem;
+    color: #606060; margin-bottom: 8px; line-height: 1.4;
+}
+.card-commit .cc-label { color: #000080; text-transform: uppercase; font-size: 0.54rem; letter-spacing: 0.04em; }
+.card-commit .cc-sha { color: #0000cc; text-decoration: none; background: #eaeaf6; padding: 0 3px; }
+.card-commit .cc-sha:hover { text-decoration: underline; }
+.card-commit .cc-msg { color: #404040; }
+.card-commit .cc-time { color: #808080; }
 .card-demo, .card-gh {
     font-family: Tahoma, Arial, sans-serif;
     font-size: 0.76rem;
