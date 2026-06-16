@@ -184,28 +184,51 @@
     }
 
     function fetchNowPlaying(user, key) {
-        const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(user)}&api_key=${encodeURIComponent(key)}&format=json&limit=1`;
+        const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(user)}&api_key=${encodeURIComponent(key)}&format=json&limit=5`;
         fetch(url)
             .then(r => r.json())
             .then(data => {
-                const tracks = data?.recenttracks?.track;
-                if (!tracks || tracks.length === 0) { renderSpotifyStatic(cfg.profileUrl); return; }
-                const track    = Array.isArray(tracks) ? tracks[0] : tracks;
-                const playing  = track['@attr']?.nowplaying === 'true';
-                const name     = track.name || '—';
-                const artist   = track.artist?.['#text'] || '—';
-                renderSpotifyTrack(name, artist, playing, cfg.profileUrl);
+                let tracks = data?.recenttracks?.track;
+                if (!tracks) { renderSpotifyStatic(cfg.profileUrl); return; }
+                if (!Array.isArray(tracks)) tracks = [tracks];
+                if (tracks.length === 0) { renderSpotifyStatic(cfg.profileUrl); return; }
+                renderSpotifyTracks(tracks, cfg.profileUrl);
             })
             .catch(() => renderSpotifyStatic(cfg.profileUrl));
     }
 
-    function renderSpotifyTrack(name, artist, playing, profileUrl) {
-        const statusText = playing ? 'now playing' : 'last played';
+    // Largest non-placeholder cover Last.fm offers for a track.
+    function lfmArt(track) {
+        const imgs = track.image || [];
+        let url = '';
+        for (let i = imgs.length - 1; i >= 0; i--) { if (imgs[i] && imgs[i]['#text']) { url = imgs[i]['#text']; break; } }
+        if (/2a96cbd8b46e442fc41c2b86b821562f/.test(url)) return '';   // Last.fm "no art" star
+        return url;
+    }
+
+    function renderSpotifyTracks(tracks, profileUrl) {
+        const first   = tracks[0];
+        const playing  = first['@attr']?.nowplaying === 'true';
+        const name     = first.name || '—';
+        const artist   = first.artist?.['#text'] || '—';
+        const art      = lfmArt(first);
+        const status   = playing ? 'now playing' : 'last played';
+        const rows = tracks.slice(0, 5).map((t, i) => {
+            const n = t.name || '—';
+            const a = t.artist?.['#text'] || '';
+            return `<li class="sp-row${i === 0 ? ' on' : ''}"><span class="sp-row-name">${esc(n)}</span><span class="sp-row-artist">${esc(a)}</span></li>`;
+        }).join('');
         spotifyEl.innerHTML = `
 <div class="sp-panel${playing ? ' playing' : ''}">
-  <div class="sp-status"><span class="sp-dot"></span>${statusText}</div>
-  <div class="sp-track">${esc(name)}</div>
-  <div class="sp-artist">${esc(artist)}</div>
+  <div class="sp-now">
+    ${art ? `<img class="sp-art" src="${esc(art)}" alt="" loading="lazy">` : '<div class="sp-art sp-art-empty"></div>'}
+    <div class="sp-meta">
+      <div class="sp-status"><span class="sp-dot"></span>${status}</div>
+      <div class="sp-track">${esc(name)}</div>
+      <div class="sp-artist">${esc(artist)}</div>
+    </div>
+  </div>
+  <ol class="sp-list">${rows}</ol>
   ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
 </div>`;
     }

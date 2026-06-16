@@ -299,6 +299,22 @@ code {
 .sp-link:hover { color: #0f380f; }
 .sp-link svg { width: 12px; height: 12px; }
 
+/* Now-playing row with album art + playlist (GB LCD) */
+.sp-now { display: flex; gap: 8px; padding: 0 0 8px; align-items: center; }
+.sp-now .sp-status { margin-bottom: 4px; }
+.sp-meta { min-width: 0; flex: 1; }
+.sp-art {
+    width: 40px; height: 40px; object-fit: cover; flex-shrink: 0;
+    border: 2px solid #0f380f; image-rendering: pixelated;
+    filter: sepia(1) hue-rotate(50deg) saturate(0.7) brightness(0.8) contrast(1.1);
+}
+.sp-art-empty { background: #0f380f; filter: none; }
+.sp-list { list-style: none; margin: 0; background: #0f380f; max-height: 80px; overflow-y: auto; }
+.sp-row { display: flex; justify-content: space-between; gap: 6px; font-family: 'Press Start 2P', monospace; font-size: 0.34rem; color: #9bbc0f; padding: 5px 8px; white-space: nowrap; line-height: 1.5; }
+.sp-row.on { color: #ffffff; background: #306230; }
+.sp-row-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sp-row-artist { color: #6f8f2f; flex-shrink: 0; }
+
 .sp-error, .sp-loading { color: #306230; font-size: 0.6rem; }
 
 /* ── Status grid ─────────────────────────────────────────────── */

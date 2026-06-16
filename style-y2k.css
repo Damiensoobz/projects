@@ -402,6 +402,26 @@ code {
 .sp-link:hover { text-decoration: underline; color: #22dd66; }
 .sp-link svg { width: 13px; height: 13px; }
 
+/* Now-playing row with album art + a Winamp-style playlist */
+.sp-now { display: flex; gap: 8px; padding: 8px 10px 6px; align-items: center; }
+.sp-now .sp-status { padding: 0 0 2px; border: none; margin: 0; }
+.sp-now .sp-track  { padding: 0; }
+.sp-now .sp-artist { padding: 0; flex: none; }
+.sp-meta { min-width: 0; flex: 1; }
+.sp-art {
+    width: 46px; height: 46px; object-fit: cover; flex-shrink: 0;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.sp-art-empty {
+    background: #000000 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%231db954'><path d='M9 17V5l10-2v12'/><circle cx='6.5' cy='17.5' r='2.5'/><circle cx='16.5' cy='15.5' r='2.5'/></svg>") center/22px no-repeat;
+}
+.sp-list { list-style: none; margin: 0; background: #000000; border-top: 1px solid #404040; max-height: 92px; overflow-y: auto; }
+.sp-row { display: flex; justify-content: space-between; gap: 8px; font-family: 'Courier New', monospace; font-size: 0.62rem; color: #1db954; padding: 2px 10px; white-space: nowrap; }
+.sp-row.on { color: #2be070; background: #0c0c0c; }
+.sp-row-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sp-row-artist { color: #3f8a52; flex-shrink: 0; }
+
 .sp-error  { color: #cc0000; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; padding: 10px; }
 .sp-loading { color: #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; padding: 10px; }
 
