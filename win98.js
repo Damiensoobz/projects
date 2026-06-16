@@ -19,6 +19,11 @@
         b.dataset.winName = b.querySelector('.p-cmd').textContent.trim();
     });
 
+    // The terminal-style <hr> dividers don't belong in the windowed desktop —
+    // they'd orphan as floating lines whenever a window collapses. Remove them
+    // here so the no-JS view still keeps them as section separators.
+    [].forEach.call(document.querySelectorAll('.divider'), function (d) { d.remove(); });
+
     // ── Taskbar ─────────────────────────────────────────────────
     var bar = document.createElement('div');
     bar.className = 'taskbar';
