@@ -432,7 +432,7 @@ code {
     box-shadow: none;
 }
 .gh-panel::before {
-    content: 'Last Push';
+    content: 'Activity';
     background: #161b22;        /* GitHub dark nav */
     border-bottom: 1px solid #30363d;
 }
@@ -506,6 +506,21 @@ code {
 }
 .gh-link svg { width: 11px; height: 11px; }
 .gh-link:hover { text-decoration: underline; color: #79c0ff; }
+
+/* Activity feed (Event Viewer) */
+.gh-feed { list-style: none; margin: 0; padding: 0; flex: 1; overflow-y: auto; max-height: 152px; }
+.gh-ev { display: flex; align-items: center; gap: 7px; padding: 3px 10px; font-family: 'Courier New', monospace; font-size: 0.6rem; color: #c9d1d9; white-space: nowrap; }
+.gh-ev:nth-child(even) { background: #0e141b; }
+.gh-ev-ico { flex-shrink: 0; width: 13px; height: 13px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: #0d1117; background: #3fb950; border-radius: 2px; }
+.gh-ev-star   { background: #e3b341; }
+.gh-ev-create { background: #58a6ff; }
+.gh-ev-fork   { background: #bc8cff; }
+.gh-ev-pr     { background: #a371f7; }
+.gh-ev-issue  { background: #f85149; }
+.gh-ev-text { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.gh-ev-repo { color: #58a6ff; text-decoration: none; }
+.gh-ev-repo:hover { text-decoration: underline; }
+.gh-ev-time { color: #6e7681; flex-shrink: 0; font-size: 0.54rem; }
 
 /* ── Steam widget — Steam dark theme ────────────────────────── */
 .steam-panel {
