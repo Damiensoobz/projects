@@ -95,6 +95,13 @@
         });
     }
 
+    // Re-render the project "posts" (used by the IE Refresh button).
+    window.reloadBlog = function () {
+        if (!grid || typeof projects === 'undefined') return;
+        grid.innerHTML = projects.map(buildCard).join('');
+        hydrateCommits();
+    };
+
     function buildCard(project, index) {
         const hasLink = project.link && project.link !== '#';
         const img     = project.image ? esc(project.image) : makePlaceholder(project.title, index);

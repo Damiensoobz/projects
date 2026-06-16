@@ -62,21 +62,41 @@
 
     <hr class="divider">
 
-    <!-- ── Projects ────────────────────────────────────────── -->
-    <section class="block">
+    <!-- ── Projects (styled as Internet Explorer + a blog) ─────── -->
+    <section class="block" data-app="ie" data-app-title="Damien's Blog - Microsoft Internet Explorer">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">ls -la projects/</span></div>
-        <p class="out dim ls-meta">total <span id="project-count">5</span></p>
-        <div class="cards-grid" id="cards-grid"></div>
-        <noscript>
-            <ul class="out">
-                <li>The Serpent's Trial &mdash; browser snake game</li>
-                <li>Memento Mori &mdash; life-in-weeks calendar</li>
-                <li>The Cartographer's Conjuring &mdash; fantasy map generator</li>
-                <li>Dungeon Dice! &mdash; digital game master toolkit</li>
-                <li>Hecker &mdash; fake hacker terminal toy</li>
-            </ul>
-            <p class="out dim">Enable JavaScript for the full experience, or browse the source on <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-        </noscript>
+        <div class="ie-chrome">
+            <div class="ie-menubar"><span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span></div>
+            <div class="ie-toolbar">
+                <button class="ie-btn" type="button" data-ie="back" disabled><span class="ie-ico ie-ico-back"></span>Back</button>
+                <button class="ie-btn" type="button" data-ie="fwd" disabled><span class="ie-ico ie-ico-fwd"></span>Forward</button>
+                <button class="ie-btn" type="button" data-ie="stop" disabled><span class="ie-ico ie-ico-stop"></span>Stop</button>
+                <button class="ie-btn" type="button" data-ie="refresh"><span class="ie-ico ie-ico-refresh"></span>Refresh</button>
+                <button class="ie-btn" type="button" data-ie="home"><span class="ie-ico ie-ico-home"></span>Home</button>
+            </div>
+            <div class="ie-address">
+                <span class="ie-addr-label">Address</span>
+                <a class="ie-url" href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">
+                    <span class="ie-favicon"></span><span class="ie-url-text">http://damienbuilds.dev/blog</span>
+                </a>
+                <a class="ie-go" href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">Go</a>
+            </div>
+        </div>
+        <div class="ie-page">
+            <p class="out dim ls-meta">total <span id="project-count">5</span></p>
+            <div class="cards-grid" id="cards-grid"></div>
+            <noscript>
+                <ul class="out">
+                    <li>The Serpent's Trial &mdash; browser snake game</li>
+                    <li>Memento Mori &mdash; life-in-weeks calendar</li>
+                    <li>The Cartographer's Conjuring &mdash; fantasy map generator</li>
+                    <li>Dungeon Dice! &mdash; digital game master toolkit</li>
+                    <li>Hecker &mdash; fake hacker terminal toy</li>
+                </ul>
+                <p class="out dim">Enable JavaScript for the full experience, or browse the source on <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+            </noscript>
+        </div>
+        <div class="ie-statusbar"><span class="ie-status-text">Done</span><span class="ie-zone">Internet</span></div>
     </section>
 
     <hr class="divider">

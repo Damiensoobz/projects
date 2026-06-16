@@ -15,8 +15,13 @@
     if (!blocks.length) return;
 
     blocks.forEach(function (b, i) {
-        b.dataset.winId   = 'win' + i;
-        b.dataset.winName = b.querySelector('.p-cmd').textContent.trim();
+        b.dataset.winId = 'win' + i;
+        // An app-styled section sets its own window/taskbar title; otherwise
+        // the command text is used.
+        var titleEl  = b.querySelector('.p-cmd');
+        var appTitle = b.getAttribute('data-app-title');
+        if (appTitle) titleEl.textContent = appTitle;
+        b.dataset.winName = titleEl.textContent.trim();
     });
 
     // The terminal-style <hr> dividers don't belong in the windowed desktop —
@@ -283,5 +288,26 @@
         };
         setTimeout(killBoot, 1900);          // fail-safe auto-dismiss
         boot.addEventListener('click', killBoot);
+    }
+
+    // ── Internet Explorer toolbar (projects "blog" app) ─────────
+    var ieApp = document.querySelector('[data-app="ie"]');
+    if (ieApp) {
+        var ieStatus = ieApp.querySelector('.ie-status-text');
+        function ieFlash(msg) {
+            if (!ieStatus) return;
+            ieStatus.textContent = msg;
+            setTimeout(function () { ieStatus.textContent = 'Done'; }, 1000);
+        }
+        var refreshBtn = ieApp.querySelector('[data-ie="refresh"]');
+        var homeBtn    = ieApp.querySelector('[data-ie="home"]');
+        if (refreshBtn) refreshBtn.addEventListener('click', function () {
+            ieFlash('Opening page http://damienbuilds.dev/blog ...');
+            if (window.reloadBlog) window.reloadBlog();
+        });
+        if (homeBtn) homeBtn.addEventListener('click', function () {
+            var page = ieApp.querySelector('.ie-page');
+            if (page) page.scrollTop = 0;
+        });
     }
 })();

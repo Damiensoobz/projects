@@ -870,3 +870,109 @@ code {
 }
 .boot-bar span { background: linear-gradient(to right, #000080, #1084d0); }
 .boot-tip { font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #c0c0c0; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP: Projects → Internet Explorer + a blog
+   ═══════════════════════════════════════════════════════════════ */
+.block[data-app="ie"] { display: flex; flex-direction: column; padding: 0; }
+.block[data-app="ie"] > .prompt { margin: 0; }
+/* IE "e" logo in the title bar */
+.block[data-app="ie"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><ellipse cx='8' cy='7' rx='7' ry='3.1' fill='none' stroke='%23ffd200' stroke-width='1.6' transform='rotate(-20 8 7)'/><text x='8' y='11.4' font-family='Georgia,serif' font-size='12' font-weight='bold' fill='%231560bd' text-anchor='middle'>e</text></svg>");
+}
+
+.ie-menubar { display: flex; gap: 14px; background: #d4d0c8; padding: 3px 8px; border-bottom: 1px solid #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
+.ie-menubar span:first-letter { text-decoration: underline; }
+
+.ie-toolbar { display: flex; align-items: center; gap: 1px; background: #d4d0c8; padding: 3px 5px; border-bottom: 1px solid #808080; }
+.ie-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: transparent; border: 1px solid transparent;
+    padding: 3px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; cursor: pointer;
+}
+.ie-btn:not([disabled]):hover {
+    border-top-color: #ffffff; border-left-color: #ffffff;
+    border-right-color: #404040; border-bottom-color: #404040;
+}
+.ie-btn:not([disabled]):active {
+    border-top-color: #404040; border-left-color: #404040;
+    border-right-color: #ffffff; border-bottom-color: #ffffff;
+}
+.ie-btn[disabled] { color: #808080; cursor: default; }
+.ie-btn[disabled] .ie-ico { opacity: 0.4; filter: grayscale(1); }
+.ie-ico { width: 20px; height: 18px; flex-shrink: 0; background: center/contain no-repeat; }
+.ie-ico-back    { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><path d='M9 4 L3 9 L9 14 L9 11 L16 11 L16 7 L9 7 Z' fill='%231a4a8a'/></svg>"); }
+.ie-ico-fwd     { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><path d='M11 4 L17 9 L11 14 L11 11 L4 11 L4 7 L11 7 Z' fill='%231a4a8a'/></svg>"); }
+.ie-ico-stop    { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><circle cx='10' cy='9' r='6' fill='%23c43025'/><path d='M7 6 L13 12 M13 6 L7 12' stroke='%23fff' stroke-width='1.6'/></svg>"); }
+.ie-ico-refresh { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><path d='M14 5 a6 6 0 1 0 1.5 4' fill='none' stroke='%23159a3a' stroke-width='1.8'/><path d='M14 3 L15 6 L11.7 6 Z' fill='%23159a3a'/></svg>"); }
+.ie-ico-home    { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><path d='M10 3 L4 8 L5 8 L5 14 L15 14 L15 8 L16 8 Z' fill='%23c98a23'/><rect x='8.5' y='10' width='3' height='4' fill='%23ffffff'/></svg>"); }
+
+.ie-address { display: flex; align-items: center; gap: 6px; background: #d4d0c8; padding: 3px 8px 5px; border-bottom: 1px solid #808080; }
+.ie-addr-label { font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #404040; flex-shrink: 0; }
+.ie-url {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+    background: #ffffff; padding: 2px 6px; text-decoration: none;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.ie-favicon {
+    width: 14px; height: 13px; flex-shrink: 0;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><ellipse cx='8' cy='7' rx='7' ry='3.1' fill='none' stroke='%23ffd200' stroke-width='1.6' transform='rotate(-20 8 7)'/><text x='8' y='11.4' font-family='Georgia,serif' font-size='12' font-weight='bold' fill='%231560bd' text-anchor='middle'>e</text></svg>") center/contain no-repeat;
+}
+.ie-url-text { font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; color: #000000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ie-url:hover .ie-url-text { text-decoration: underline; }
+.ie-go {
+    flex-shrink: 0; padding: 2px 12px; background: #d4d0c8; text-decoration: none; color: #000000;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
+    border-right: 1px solid #404040; border-bottom: 1px solid #404040;
+}
+.ie-go:active { border-top-color: #404040; border-left-color: #404040; border-right-color: #ffffff; border-bottom-color: #ffffff; }
+
+.ie-page {
+    flex: 1 1 auto; min-height: 0; max-height: 62vh; overflow-y: auto;
+    background: #ffffff; padding: 6px 0 0;
+    border-left: 1px solid #808080; border-right: 1px solid #ffffff;
+}
+.block[data-app="ie"].win-max .ie-page { max-height: none; }
+
+.ie-statusbar {
+    display: flex; justify-content: space-between; gap: 6px;
+    background: #d4d0c8; border-top: 1px solid #ffffff; padding: 2px 4px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; color: #404040;
+}
+.ie-statusbar span {
+    padding: 1px 8px;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.ie-status-text { flex: 1; }
+.ie-zone::before { content: ''; display: inline-block; width: 11px; height: 11px; margin-right: 5px; vertical-align: -2px;
+    background: radial-gradient(circle at 50% 40%, #7fd0ff 0 40%, #2a7fd0 55%, #155a9e 100%); border-radius: 50%; }
+
+/* ── Project cards rendered as blog posts inside the IE page ──── */
+[data-app="ie"] .ls-meta { display: none; }
+[data-app="ie"] .cards-grid { gap: 0; padding: 0; }
+[data-app="ie"] .card {
+    background: #ffffff; border: none; box-shadow: none; animation: none;
+    border-bottom: 1px dashed #b8b8b8; padding: 16px 22px 18px;
+}
+[data-app="ie"] .card:last-child { border-bottom: none; }
+[data-app="ie"] .card-bar { background: none; padding: 0; display: block; }
+[data-app="ie"] .card-bar::before { content: none; }
+[data-app="ie"] .card-title {
+    font-family: Georgia, 'Times New Roman', serif; font-size: 1.25rem; font-weight: 700;
+    color: #0b3d91; text-decoration: none; letter-spacing: 0; white-space: normal;
+}
+[data-app="ie"] .card-main { display: flex; align-items: flex-start; padding: 10px 0 0; gap: 16px; }
+[data-app="ie"] .card-shot { flex: 0 0 38%; align-self: flex-start; border: 1px solid #808080; }
+[data-app="ie"] .card-img { min-height: 0; max-height: 150px; }
+[data-app="ie"] .card-body { padding: 0; }
+[data-app="ie"] .card-subtitle { color: #7a7a7a; font-size: 0.62rem; margin-bottom: 8px; }
+[data-app="ie"] .card-desc { font-family: Georgia, 'Times New Roman', serif; font-size: 0.92rem; line-height: 1.6; color: #1a1a1a; }
+[data-app="ie"] .card-commit { color: #777777; }
+[data-app="ie"] .card-commit .cc-label::before { content: 'posted by Damien · '; text-transform: none; color: #999; }
+[data-app="ie"] .card-tag { background: #eef0f4; border-color: #c0c4cc; color: #334; }
+[data-app="ie"] .card-tag-mobile { background: #0a7a0a; color: #fff; }
+[data-app="ie"] .card-demo, [data-app="ie"] .card-gh { font-family: Tahoma, Arial, sans-serif; color: #0b3d91; }
+[data-app="ie"] .card-demo::after { content: ' »'; }
