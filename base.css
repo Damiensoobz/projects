@@ -273,3 +273,67 @@ body.has-max { overflow: hidden; }
 /* "Activate Windows" desktop watermark + footer (sits behind the windows) */
 .activate-wm { position: fixed; right: 22px; bottom: 44px; z-index: 2; pointer-events: none; user-select: none; text-align: center; }
 .activate-foot a { pointer-events: auto; }
+
+/* ═══════════════════════════════════════════════════════════════
+   EASTER EGGS — system-style UI (intentionally fixed colors so it
+   reads the same under any skin: a BSOD is always blue, etc.)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Generic floating window (Minesweeper etc.) */
+.fw { position: fixed; z-index: 600; background: #d4d0c8;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040; border-bottom: 2px solid #404040;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4); }
+.fw-bar { display: flex; align-items: center; gap: 6px; cursor: move; user-select: none;
+    background: linear-gradient(to right, #000080, #1084d0); padding: 3px 4px 3px 7px; }
+.fw-title { flex: 1; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; font-weight: 700; color: #ffffff; }
+.fw-x { position: relative; width: 16px; height: 14px; flex-shrink: 0; cursor: pointer; background: #d4d0c8;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.fw-x::before { content: '\2715'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: #000000; }
+.fw-body { padding: 8px; }
+
+/* Minesweeper */
+.ms { padding: 5px; background: #c0c0c0; border-top: 2px solid #ffffff; border-left: 2px solid #ffffff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; }
+.ms-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px; margin-bottom: 5px;
+    border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff; }
+.ms-led { background: #000000; color: #ff2200; font-family: 'Courier New', monospace; font-weight: 700; font-size: 1.1rem; padding: 1px 4px; letter-spacing: 1px; }
+.ms-face { width: 27px; height: 27px; font-size: 0.95rem; line-height: 1; cursor: pointer; background: #c0c0c0;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; }
+.ms-face:active { border-top-color: #808080; border-left-color: #808080; border-right-color: #ffffff; border-bottom-color: #ffffff; }
+.ms-grid { display: grid; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff; }
+.ms-cell { width: 20px; height: 20px; padding: 0; cursor: pointer; font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.82rem; line-height: 1;
+    background: #c0c0c0; border-top: 2px solid #ffffff; border-left: 2px solid #ffffff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; }
+.ms-cell.ms-rev { border: 1px solid #999999; background: #c0c0c0; }
+.ms-cell.ms-boom { background: #ff0000; }
+.ms-flag { color: #000000; }
+.ms-n1 { color: #0000ff; } .ms-n2 { color: #008000; } .ms-n3 { color: #ff0000; } .ms-n4 { color: #000080; }
+.ms-n5 { color: #800000; } .ms-n6 { color: #008080; } .ms-n7 { color: #000000; } .ms-n8 { color: #808080; }
+
+/* Shut Down "safe to turn off" screen */
+.shutdown-screen { position: fixed; inset: 0; z-index: 100001; background: #000000; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.shutdown-text { color: #ffb000; font-family: 'Courier New', monospace; font-size: 1.7rem; line-height: 1.5; text-shadow: 0 0 10px rgba(255,176,0,0.5); }
+.shutdown-sub { color: #7a5400; font-family: 'Courier New', monospace; font-size: 0.82rem; margin-top: 18px; }
+
+/* Blue Screen of Death */
+.bsod { position: fixed; inset: 0; z-index: 100001; background: #0000aa; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 30px; }
+.bsod-inner { max-width: 660px; color: #ffffff; font-family: 'Lucida Console', 'Courier New', monospace; font-size: 0.82rem; line-height: 1.5; }
+.bsod-inner p { margin-bottom: 12px; }
+.bsod-h { background: #aaaaaa; color: #0000aa; display: inline-block; padding: 0 3px; font-weight: 700; }
+.bsod-blink { animation: blink 1s step-end infinite; }
+
+/* Clippy-style helper */
+.clippy { position: fixed; right: 18px; bottom: 46px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.clippy-bubble { display: none; max-width: 232px; background: #ffffe1; border: 1px solid #000000; border-radius: 7px;
+    padding: 10px 12px; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; line-height: 1.45; color: #000000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+.clippy.open .clippy-bubble { display: block; }
+.clippy-bubble a { color: #0000cc; }
+.clippy-actions { display: flex; gap: 6px; margin-top: 9px; }
+.clippy-actions button { font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; padding: 2px 8px; cursor: pointer; background: #d4d0c8;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.clippy-guy { width: 46px; height: 54px; padding: 0; cursor: pointer; border: none; background: transparent center/contain no-repeat;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='54' viewBox='0 0 46 54'><path d='M15 13 v24 a9 9 0 0 0 18 0 V12 a6 6 0 0 0 -12 0 v24 a3 3 0 0 0 6 0 V16' fill='none' stroke='%239aa6bb' stroke-width='4.5' stroke-linecap='round'/><circle cx='19' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='29' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='20.5' cy='14' r='2.2' fill='%23000'/><circle cx='30.5' cy='14' r='2.2' fill='%23000'/></svg>");
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35)); }
+
+/* Start menu separator */
+.sm-sep { height: 0; }

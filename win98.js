@@ -55,6 +55,9 @@
                 return '<button class="sm-item" data-target="' + b.dataset.winId + '">' +
                        '<span class="sm-ico"></span>' + esc(b.dataset.winName) + '</button>';
             }).join('') +
+            '<div class="sm-sep"></div>' +
+            '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
+            '<button class="sm-item" data-sm="shutdown"><span class="sm-ico sm-ico-shut"></span>Shut Down&hellip;</button>' +
         '</div>';
     document.body.appendChild(menu);
 
@@ -224,7 +227,13 @@
     document.addEventListener('click', function () { setMenu(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
     [].forEach.call(menu.querySelectorAll('.sm-item'), function (it) {
-        it.addEventListener('click', function () { openFromMenu(it.dataset.target); setMenu(false); });
+        it.addEventListener('click', function () {
+            var sm = it.getAttribute('data-sm');
+            if (sm === 'mines') { if (window.launchMinesweeper) window.launchMinesweeper(); }
+            else if (sm === 'shutdown') shutDownGag();
+            else openFromMenu(it.dataset.target);
+            setMenu(false);
+        });
     });
 
     // ── Live tray clock ─────────────────────────────────────────
@@ -275,9 +284,11 @@
 
     // ── Desktop icons ───────────────────────────────────────────
     var deskIcons = [
-        { kind: 'computer', label: 'My Computer', action: function () { openDialog('My Computer', sysInfoHtml()); } },
-        { kind: 'note',     label: 'readme.txt',  action: function () { openFromMenu(blocks[0] && blocks[0].dataset.winId); } },
-        { kind: 'bin',      label: 'Recycle Bin', action: function () { openDialog('Recycle Bin', '<p class="dlg-p">The Recycle Bin is empty.<br>(No regrets in here.)</p>'); } }
+        { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
+        { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
+        { kind: 'mine',     label: 'Minesweeper',   action: function () { if (window.launchMinesweeper) window.launchMinesweeper(); } },
+        { kind: 'secret',   label: 'TopSecret.exe', action: function () { openDialog('TopSecret.exe', '<p class="dlg-p"><b>ACCESS DENIED.</b><br><br>Nice try. The good stuff is still in the cauldron &mdash; <a href="mailto:hello@damienbuilds.dev">ask nicely</a>.</p>'); } },
+        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openDialog('Recycle Bin', '<p class="dlg-p">Recycle Bin contents:<br>&bull; 0 regrets<br>&bull; 3 abandoned side-projects<br>&bull; 1 New Year&rsquo;s resolution (2019)</p>'); } }
     ];
     var deskWrap = document.createElement('div');
     deskWrap.className = 'desktop-icons';
@@ -372,4 +383,97 @@
             if (page) page.scrollTop = 0;
         });
     }
+
+    // ── Generic draggable floating window (games / gags) ────────
+    var fwZ = 600;
+    function createWindow(title, contentHtml, cls) {
+        var w = document.createElement('div');
+        w.className = 'fw' + (cls ? ' ' + cls : '');
+        w.style.zIndex = ++fwZ;
+        w.innerHTML =
+            '<div class="fw-bar"><span class="fw-title">' + esc(title) + '</span>' +
+                '<button class="fw-x" aria-label="Close"></button></div>' +
+            '<div class="fw-body">' + contentHtml + '</div>';
+        document.body.appendChild(w);
+        w.style.left = Math.max(8, Math.round((window.innerWidth - w.offsetWidth) / 2 + (Math.random() * 50 - 25))) + 'px';
+        w.style.top  = Math.max(8, Math.round((window.innerHeight - w.offsetHeight) / 2 - 50)) + 'px';
+        var bar = w.querySelector('.fw-bar');
+        bar.addEventListener('mousedown', function (e) {
+            if (e.target.closest('.fw-x')) return;
+            w.style.zIndex = ++fwZ; e.preventDefault();
+            var sx = e.clientX, sy = e.clientY, l = parseFloat(w.style.left), t = parseFloat(w.style.top);
+            function mv(ev) { w.style.left = (l + ev.clientX - sx) + 'px'; w.style.top = (t + ev.clientY - sy) + 'px'; }
+            function up() { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up); }
+            document.addEventListener('mousemove', mv); document.addEventListener('mouseup', up);
+        });
+        function close() { w.remove(); }
+        w.querySelector('.fw-x').addEventListener('click', close);
+        return { el: w, body: w.querySelector('.fw-body'), close: close };
+    }
+    window.win98 = { openDialog: openDialog, createWindow: createWindow };
+
+    // ── Shut Down gag ───────────────────────────────────────────
+    function shutDownGag() {
+        var s = document.createElement('div');
+        s.className = 'shutdown-screen';
+        s.innerHTML = '<div class="shutdown-text">It&rsquo;s now safe to turn off your portfolio.</div>' +
+                      '<div class="shutdown-sub">(click anywhere to power back on)</div>';
+        document.body.appendChild(s);
+        setTimeout(function () { s.addEventListener('click', function () { s.remove(); }); }, 400);
+    }
+
+    // ── Konami code → (harmless) Blue Screen of Death ───────────
+    function bsod() {
+        if (document.querySelector('.bsod')) return;
+        var b = document.createElement('div');
+        b.className = 'bsod';
+        b.innerHTML =
+            '<div class="bsod-inner">' +
+                '<p class="bsod-h">&nbsp;DAMIEN&nbsp;</p>' +
+                '<p>A problem has been detected and your good time has been shut down to prevent damage to your productivity.</p>' +
+                '<p>The problem seems to be caused by: <b>TOO_MUCH_FUN.SYS</b></p>' +
+                '<p>If this is the first time you have seen this screen, relax &mdash; it&rsquo;s a bit. Damien is fine. Probably.</p>' +
+                '<p>&nbsp;</p>' +
+                '<p>* Press any key to continue</p>' +
+                '<p>* Or just hire him: hello@damienbuilds.dev</p>' +
+                '<p class="bsod-blink">_</p>' +
+            '</div>';
+        document.body.appendChild(b);
+        function dismiss() { b.remove(); document.removeEventListener('keydown', onk); }
+        function onk() { dismiss(); }
+        setTimeout(function () { document.addEventListener('keydown', onk); b.addEventListener('click', dismiss); }, 700);
+    }
+    var konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65], kpos = 0;
+    document.addEventListener('keydown', function (e) {
+        if (e.keyCode === konami[kpos]) { kpos++; if (kpos === konami.length) { kpos = 0; bsod(); } }
+        else { kpos = (e.keyCode === konami[0]) ? 1 : 0; }
+    });
+
+    // ── Clippy-style helper ─────────────────────────────────────
+    (function initClippy() {
+        var c = document.createElement('div');
+        c.className = 'clippy';
+        c.innerHTML =
+            '<div class="clippy-bubble"><span class="clippy-text"></span>' +
+                '<div class="clippy-actions"><button class="clippy-next">Tell me more</button>' +
+                '<button class="clippy-bye">Go away</button></div></div>' +
+            '<button class="clippy-guy" title="It looks like you need help"></button>';
+        document.body.appendChild(c);
+        var tips = [
+            'It looks like you&rsquo;re trying to hire a developer. Want a hand?',
+            'Psst &mdash; right-click the desktop. There&rsquo;s a menu.',
+            'The Blog window scrolls. There&rsquo;s more in there than fits.',
+            'Drag any title bar to move a window. Double-click it to send it home.',
+            'Bored? Start &rarr; Minesweeper. You&rsquo;re welcome.',
+            'Try the skin toggle in the tray. Game Boy mode is a vibe.',
+            'Damien tests his code before it touches main. Wild, I know.',
+            'I am legally distinct from a paperclip you may remember.'
+        ];
+        var i = 0;
+        function show(msg) { c.querySelector('.clippy-text').innerHTML = msg; c.classList.add('open'); }
+        c.querySelector('.clippy-next').addEventListener('click', function () { i = (i + 1) % tips.length; show(tips[i]); });
+        c.querySelector('.clippy-bye').addEventListener('click', function () { c.remove(); });
+        c.querySelector('.clippy-guy').addEventListener('click', function () { c.classList.toggle('open'); });
+        setTimeout(function () { show(tips[0]); }, 6500);
+    })();
 })();
