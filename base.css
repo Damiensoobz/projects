@@ -259,3 +259,16 @@ body.has-max { overflow: hidden; }
 .boot-bar { width: 180px; height: 16px; overflow: hidden; }
 .boot-bar span { display: block; height: 100%; width: 0; animation: boot-load 1.6s linear forwards; }
 @keyframes boot-load { from { width: 0; } to { width: 100%; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   SINGLE-SCREEN DESKTOP (wide viewports) — windows float freely;
+   narrow screens keep the stacked flow set above.
+   ═══════════════════════════════════════════════════════════════ */
+.desktop-mode, .desktop-mode body { height: 100%; }
+.desktop-mode body { overflow: hidden; padding-bottom: 0; }
+.desktop-mode .terminal { display: contents; }
+.desktop-mode .block { position: fixed; margin: 0; }
+.desktop-mode .block > .prompt { cursor: move; }
+
+/* "Activate Windows" desktop watermark (sits behind the windows) */
+.activate-wm { position: fixed; right: 22px; bottom: 44px; z-index: 2; pointer-events: none; user-select: none; text-align: center; }

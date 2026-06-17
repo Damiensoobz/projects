@@ -1130,3 +1130,31 @@ code {
 }
 .steam-link { color: #7fd0ff; }
 .steam-link:hover { color: #a8e0ff; }
+
+/* Status apps are now their own windows — the window title bar replaces the
+   panel's built-in title, and the panel fills the window body. */
+.block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] { padding: 0; }
+.block[data-app="winamp"] > .prompt,
+.block[data-app="terminal"] > .prompt,
+.block[data-app="cdplayer"] > .prompt { margin: 0; }
+.block[data-app="winamp"] .sp-panel,
+.block[data-app="terminal"] .gh-panel,
+.block[data-app="cdplayer"] .steam-panel { border: none; box-shadow: none; }
+.block[data-app="winamp"] .sp-panel::before,
+.block[data-app="terminal"] .gh-panel::before,
+.block[data-app="cdplayer"] .steam-panel::before { display: none; }
+/* a fitting app icon in each status window's title bar */
+.block[data-app="winamp"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23202020' stroke='%23000'/><rect x='2' y='3' width='10' height='4' fill='%2325ff93'/><rect x='2' y='9' width='7' height='2' fill='%2393a9c8'/></svg>");
+}
+.block[data-app="terminal"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%2333ff66'>&gt;_</text></svg>");
+}
+.block[data-app="cdplayer"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='7' cy='7' r='6' fill='%23cfd6e4' stroke='%23454d5e'/><circle cx='7' cy='7' r='2' fill='%23454d5e'/></svg>");
+}
+
+/* "Activate Windows" watermark (Win98) */
+.activate-wm { color: rgba(255,255,255,0.5); font-family: Tahoma, Arial, sans-serif; text-shadow: 0 1px 1px rgba(0,0,0,0.25); }
+.activate-title { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.01em; }
+.activate-sub { font-size: 0.78rem; margin-top: 2px; }

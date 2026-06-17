@@ -103,7 +103,8 @@
     function restore(b) {
         b.classList.remove('win-min', 'win-closed');
         setTaskState(b, 'active');
-        b.scrollIntoView({ block: 'nearest' });
+        if (desktopMode) bringFront(b);
+        else b.scrollIntoView({ block: 'nearest' });
     }
     function toggleFromTask(b) {
         if (b.classList.contains('win-min') || b.classList.contains('win-closed')) restore(b);
@@ -124,27 +125,73 @@
         if (b) restore(b);
     }
 
-    // ── Draggable windows ───────────────────────────────────────
-    // Uses transform (not position) so the document flow — and thus the
-    // tidy default layout and mobile view — stays intact; the window just
-    // floats visually. Disabled on small screens and on maximized windows.
-    var zTop = 10;
+    // ── Desktop layout + draggable windows ──────────────────────
+    // On wide screens the sections become free-floating windows in a
+    // single-screen cascade (Blog up front). Narrow screens keep the tidy
+    // stacked flow with dragging off. Positions/widths are fractions of the
+    // desktop so the arrangement scales; each window's content area caps its
+    // own height and scrolls internally, so the desktop never page-scrolls.
+    var LAYOUT = {
+        dos:      { l: 0.085, t: 0.02, w: 440 },
+        notepad:  { l: 0.610, t: 0.03, w: 460 },
+        ie:       { l: 0.220, t: 0.07, w: 600 },
+        winamp:   { l: 0.010, t: 0.50, w: 300 },
+        terminal: { l: 0.400, t: 0.58, w: 360 },
+        cdplayer: { l: 0.715, t: 0.55, w: 310 },
+        outlook:  { l: 0.545, t: 0.40, w: 540 }
+    };
+    var Z_ORDER = ['dos', 'notepad', 'winamp', 'cdplayer', 'terminal', 'outlook', 'ie'];
+    var zTop = 20;
+    var desktopMode = false;
+
+    function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
+
+    function applyLayout() {
+        desktopMode = isDesktop();
+        document.documentElement.classList.toggle('desktop-mode', desktopMode);
+        if (!desktopMode) {
+            blocks.forEach(function (b) { b.style.left = b.style.top = b.style.width = b.style.zIndex = b.style.transform = ''; });
+            return;
+        }
+        var W = window.innerWidth, H = window.innerHeight - 30;
+        zTop = 20;
+        Z_ORDER.forEach(function (app, i) {
+            var b = document.querySelector('[data-app="' + app + '"]');
+            var L = LAYOUT[app];
+            if (!b || !L) return;
+            var left = Math.round(Math.max(2, Math.min(L.l * W, W - 90)));
+            var top  = Math.round(Math.max(2, Math.min(L.t * H, H - 60)));
+            b.style.width  = Math.min(L.w, W - 16) + 'px';
+            b.style.left   = left + 'px';
+            b.style.top    = top + 'px';
+            b.style.transform = '';
+            b.style.zIndex = 20 + i;
+            b.dataset.homeLeft = left + 'px';
+            b.dataset.homeTop  = top + 'px';
+            zTop = 20 + i;
+        });
+    }
+
+    function bringFront(b) { b.style.zIndex = ++zTop; }
+    function resetWin(b) {
+        if (desktopMode && b.dataset.homeLeft) { b.style.left = b.dataset.homeLeft; b.style.top = b.dataset.homeTop; bringFront(b); }
+        else b.style.transform = '';
+    }
+
     function makeDraggable(b) {
         var bar = b.querySelector('.prompt');
-        var tx = 0, ty = 0;
-        b._resetPos = function () { tx = ty = 0; b.style.transform = ''; b.style.zIndex = ''; };
         bar.addEventListener('mousedown', function (e) {
             if (e.button !== 0 || e.target.closest('.win-ctrls')) return;
-            if (window.innerWidth < 760 || b.classList.contains('win-max')) return;
+            if (desktopMode) bringFront(b);
+            if (!desktopMode || b.classList.contains('win-max')) return;
             e.preventDefault();
-            b.style.position = 'relative';
-            b.style.zIndex = ++zTop;                 // raise the grabbed window
             document.body.classList.add('dragging');
-            var sx = e.clientX, sy = e.clientY, bx = tx, by = ty;
+            var sx = e.clientX, sy = e.clientY;
+            var startL = parseFloat(b.style.left) || b.getBoundingClientRect().left;
+            var startT = parseFloat(b.style.top)  || b.getBoundingClientRect().top;
             function move(ev) {
-                tx = bx + (ev.clientX - sx);
-                ty = by + (ev.clientY - sy);
-                b.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+                b.style.left = (startL + ev.clientX - sx) + 'px';
+                b.style.top  = (startT + ev.clientY - sy) + 'px';
             }
             function up() {
                 document.removeEventListener('mousemove', move);
@@ -154,14 +201,17 @@
             document.addEventListener('mousemove', move);
             document.addEventListener('mouseup', up);
         });
-        // Double-click the title bar snaps the window home.
         bar.addEventListener('dblclick', function (e) {
             if (e.target.closest('.win-ctrls')) return;
-            b._resetPos();
+            resetWin(b);
         });
     }
     blocks.forEach(makeDraggable);
-    function tidyWindows() { blocks.forEach(function (b) { if (b._resetPos) b._resetPos(); }); zTop = 10; }
+    function tidyWindows() { applyLayout(); }
+
+    applyLayout();
+    var _resizeT;
+    window.addEventListener('resize', function () { clearTimeout(_resizeT); _resizeT = setTimeout(applyLayout, 150); });
 
     // ── Start menu open/close ───────────────────────────────────
     var startBtn = document.getElementById('start-btn');
@@ -239,6 +289,14 @@
         deskWrap.appendChild(b);
     });
     document.body.appendChild(deskWrap);
+
+    // ── "Activate Windows" desktop watermark (gag footer) ───────
+    var wm = document.createElement('div');
+    wm.className = 'activate-wm';
+    wm.innerHTML =
+        '<div class="activate-title">Activate Damien</div>' +
+        '<div class="activate-sub">Go to Settings to activate Damien</div>';
+    document.body.appendChild(wm);
 
     // ── Desktop right-click context menu ────────────────────────
     var ctx = document.createElement('div');

@@ -1,6 +1,7 @@
 (function () {
-    // ── Footer year ────────────────────────────────────────────
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    // ── Footer year (element may be absent in the windowed desktop) ──
+    var _fy = document.getElementById('footer-year');
+    if (_fy) _fy.textContent = new Date().getFullYear();
 
     // ── ASCII name scramble — hover or load to decode ───────────
     var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

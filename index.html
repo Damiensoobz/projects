@@ -42,14 +42,22 @@
 
     <hr class="divider">
 
-    <!-- ── Live Status ───────────────────────────────────────── -->
-    <section class="block">
-        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">status --live</span></div>
-        <div class="status-grid">
-            <div id="spotify-widget"></div>
-            <div id="github-widget"></div>
-            <div id="steam-widget"></div>
-        </div>
+    <!-- ── Now Playing (styled as Winamp) ──────────────────────── -->
+    <section class="block" data-app="winamp" data-app-title="Winamp">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">now-playing</span></div>
+        <div id="spotify-widget"></div>
+    </section>
+
+    <!-- ── Activity (styled as a terminal) ─────────────────────── -->
+    <section class="block" data-app="terminal" data-app-title="Terminal">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">github</span></div>
+        <div id="github-widget"></div>
+    </section>
+
+    <!-- ── Recently Played (styled as CD Player) ───────────────── -->
+    <section class="block" data-app="cdplayer" data-app-title="CD Player">
+        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">steam</span></div>
+        <div id="steam-widget"></div>
     </section>
 
     <hr class="divider">
@@ -125,11 +133,6 @@
         </div>
     </section>
 
-    <!-- ── Footer prompt ───────────────────────────────────── -->
-    <div class="block footer-block">
-        <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="cursor-blink">█</span></div>
-        <p class="out dim footer-note">&copy; <span id="footer-year"></span> Damien &mdash; built with care (and a fair amount of caffeine)</p>
-    </div>
 
 </div>
 
