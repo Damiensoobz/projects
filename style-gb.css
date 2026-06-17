@@ -161,8 +161,11 @@ code {
 /* ── Cards grid ─────────────────────────────────────────────── */
 .cards-grid { gap: 18px; }
 
-/* App chrome (IE etc.) is a Win98-only treatment — keep Game Boy minimal */
-[data-app] .ie-chrome, [data-app] .ie-statusbar { display: none; }
+/* App chrome (IE/Notepad/Outlook menubars etc.) is a Win98-only treatment —
+   keep Game Boy minimal: hide the decorative bars, keep the content. */
+[data-app] .ie-chrome, [data-app] .ie-statusbar,
+[data-app] .np-menubar, [data-app] .oe-menubar, [data-app] .oe-toolbar { display: none; }
+.dos-cursor { display: none; }
 
 /* ── Card — chunky GB panel ─────────────────────────────────── */
 .card {

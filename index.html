@@ -23,18 +23,21 @@
 
 <div class="terminal">
 
-    <!-- ── Welcome ─────────────────────────────────────────── -->
-    <section class="block">
+    <!-- ── Welcome (styled as an MS-DOS Prompt) ────────────────── -->
+    <section class="block" data-app="dos" data-app-title="MS-DOS Prompt">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">welcome</span></div>
-        <pre class="ascii-art" aria-label="Damien">
+        <div class="dos-screen">
+            <pre class="ascii-art" aria-label="Damien">
  ██████╗  █████╗ ███╗   ███╗██╗███████╗███╗   ██╗
  ██╔══██╗██╔══██╗████╗ ████║██║██╔════╝████╗  ██║
  ██║  ██║███████║██╔████╔██║██║█████╗  ██╔██╗ ██║
  ██║  ██║██╔══██║██║╚██╔╝██║██║██╔══╝  ██║╚██╗██║
  ██████╔╝██║  ██║██║ ╚═╝ ██║██║███████╗██║ ╚████║
  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚══════╝╚═╝  ╚═══╝</pre>
-        <p class="out">developer &amp; code wizard &mdash; v1.0.0</p>
-        <p class="out dim">scroll to explore &nbsp;&middot;&nbsp; pick your flavor with the skin toggle</p>
+            <p class="out">developer &amp; code wizard &mdash; v1.0.0</p>
+            <p class="out dim">scroll to explore &nbsp;&middot;&nbsp; pick your flavor with the skin toggle</p>
+            <p class="dos-line">C:\DAMIEN&gt;<span class="dos-cursor">█</span></p>
+        </div>
     </section>
 
     <hr class="divider">
@@ -51,13 +54,16 @@
 
     <hr class="divider">
 
-    <!-- ── About ───────────────────────────────────────────── -->
-    <section class="block">
+    <!-- ── About (styled as Notepad) ───────────────────────────── -->
+    <section class="block" data-app="notepad" data-app-title="readme.txt - Notepad">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">about</span></div>
-        <p class="out"><span class="caret">&gt;</span> Hi, I'm <strong>Damien</strong> — a guy who works in tech because the first time I made a computer do what I wanted, I got so drunk off the absolute power that I've never come back down. Not to mention technology is the backbone of modern civilization too.</p>
-        <p class="out"><span class="caret">&gt;</span> I enjoy the idea of conjuring up things out of space - rather wizardlike, no? Powered by caffeine, delusion, and a healthy respect for the test suite before anything touches <code>main</code>.</p>
-        <p class="out"><span class="caret">&gt;</span> Need a website perchance? Check out <a href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">damienbuilds.dev</a>. Or stay a while, you are an esteemed guest.</p>
-        <p class="out quote"><span class="caret">&gt;&gt;</span> &ldquo;It&rsquo;s dangerous to go alone. Take this <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub link!</a>.&rdquo;</p>
+        <div class="np-menubar"><span>File</span><span>Edit</span><span>Search</span><span>Help</span></div>
+        <div class="np-page">
+            <p class="out"><span class="caret">&gt;</span> Hi, I'm <strong>Damien</strong> — a guy who works in tech because the first time I made a computer do what I wanted, I got so drunk off the absolute power that I've never come back down. Not to mention technology is the backbone of modern civilization too.</p>
+            <p class="out"><span class="caret">&gt;</span> I enjoy the idea of conjuring up things out of space - rather wizardlike, no? Powered by caffeine, delusion, and a healthy respect for the test suite before anything touches <code>main</code>.</p>
+            <p class="out"><span class="caret">&gt;</span> Need a website perchance? Check out <a href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">damienbuilds.dev</a>. Or stay a while, you are an esteemed guest.</p>
+            <p class="out quote"><span class="caret">&gt;&gt;</span> &ldquo;It&rsquo;s dangerous to go alone. Take this <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub link!</a>.&rdquo;</p>
+        </div>
     </section>
 
     <hr class="divider">
@@ -101,14 +107,21 @@
 
     <hr class="divider">
 
-    <!-- ── Contact ─────────────────────────────────────────── -->
-    <section class="block">
+    <!-- ── Contact (styled as Outlook Express compose) ─────────── -->
+    <section class="block" data-app="outlook" data-app-title="New Message - Outlook Express">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">contact</span></div>
-        <p class="out"><span class="caret">&gt;</span> Got something that needs building? Whether it&rsquo;s a web app, a tool, or an idea still taking shape — I&rsquo;m open to freelance and collaboration.</p>
-        <div class="contact-actions">
-            <a class="contact-cta" href="mailto:hello@damienbuilds.dev">&rarr; hello@damienbuilds.dev</a>
-            <a class="contact-link" href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-            <a class="contact-link" href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">damienbuilds.dev ↗</a>
+        <div class="oe-menubar"><span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Message</span><span>Help</span></div>
+        <div class="oe-toolbar">
+            <a class="oe-send" href="mailto:hello@damienbuilds.dev?subject=Let%27s%20build%20something"><span class="oe-send-ico"></span>Send</a>
+        </div>
+        <div class="oe-headers">
+            <div class="oe-row"><span class="oe-label">To:</span><a class="oe-field oe-to" href="mailto:hello@damienbuilds.dev">hello@damienbuilds.dev</a></div>
+            <div class="oe-row"><span class="oe-label">Cc:</span><span class="oe-field oe-cc"><a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">github.com/Damiensoobz</a>; <a href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">damienbuilds.dev</a></span></div>
+            <div class="oe-row"><span class="oe-label">Subject:</span><span class="oe-field oe-subject">Let's build something</span></div>
+        </div>
+        <div class="oe-body">
+            <p class="out">Got something that needs building? Whether it&rsquo;s a web app, a tool, or an idea still taking shape — I&rsquo;m open to freelance and collaboration.</p>
+            <p class="out">Hit <strong>Send</strong> and let&rsquo;s talk. &mdash; Damien</p>
         </div>
     </section>
 

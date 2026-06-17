@@ -976,3 +976,86 @@ code {
 [data-app="ie"] .card-tag-mobile { background: #0a7a0a; color: #fff; }
 [data-app="ie"] .card-demo, [data-app="ie"] .card-gh { font-family: Tahoma, Arial, sans-serif; color: #0b3d91; }
 [data-app="ie"] .card-demo::after { content: ' »'; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP: Welcome → MS-DOS Prompt
+   ═══════════════════════════════════════════════════════════════ */
+.block[data-app="dos"] { display: flex; flex-direction: column; padding: 0; }
+.block[data-app="dos"] > .prompt { margin: 0; }
+.block[data-app="dos"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14' shape-rendering='crispEdges'><rect width='16' height='14' fill='%23000000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%23c0c0c0'>C:\</text></svg>");
+}
+.dos-screen { background: #000000; padding: 12px 16px 16px; overflow-x: auto; }
+.dos-screen .ascii-art { background: none; border: none; margin: 4px 0 12px; padding: 0; color: #c0c0c0; }
+.dos-screen .out { color: #c0c0c0; font-family: 'Courier New', monospace; font-size: 0.8rem; }
+.dos-screen .out.dim { color: #7a7a7a; }
+.dos-line { font-family: 'Courier New', monospace; color: #c0c0c0; font-size: 0.85rem; margin-top: 16px; }
+.dos-cursor { color: #c0c0c0; animation: dos-blink 1s step-end infinite; }
+@keyframes dos-blink { 50% { opacity: 0; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP: About → Notepad
+   ═══════════════════════════════════════════════════════════════ */
+.block[data-app="notepad"] { display: flex; flex-direction: column; padding: 0; }
+.block[data-app="notepad"] > .prompt { margin: 0; }
+.block[data-app="notepad"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect x='2' y='1' width='10' height='12' fill='%23ffffff' stroke='%23000000'/><rect x='2' y='1' width='10' height='2' fill='%231560bd'/><line x1='4' y1='6' x2='10' y2='6' stroke='%23808080'/><line x1='4' y1='8' x2='10' y2='8' stroke='%23808080'/><line x1='4' y1='10' x2='8' y2='10' stroke='%23808080'/></svg>");
+}
+.np-menubar { display: flex; gap: 14px; background: #d4d0c8; padding: 3px 8px; border-bottom: 1px solid #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
+.np-menubar span:first-letter { text-decoration: underline; }
+.np-page {
+    flex: 1 1 auto; min-height: 0; max-height: 60vh; overflow-y: auto;
+    background: #ffffff; padding: 10px 12px;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+}
+.block[data-app="notepad"].win-max .np-page { max-height: none; }
+.np-page .out { font-family: 'Lucida Console', 'Courier New', monospace; font-size: 0.76rem; color: #000000; line-height: 1.75; margin-bottom: 12px; }
+.np-page .caret { color: #008000; }
+.np-page .out.quote { background: #ffffff; border: none; border-left: 3px solid #b0b0b0; padding: 2px 0 2px 12px; margin-top: 6px; font-size: 0.76rem; }
+.np-page a { color: #0000cc; }
+.np-page strong { color: #000080; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP: Contact → Outlook Express (New Message)
+   ═══════════════════════════════════════════════════════════════ */
+.block[data-app="outlook"] { display: flex; flex-direction: column; padding: 0; }
+.block[data-app="outlook"] > .prompt { margin: 0; }
+.block[data-app="outlook"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='15' height='14' viewBox='0 0 15 14' shape-rendering='crispEdges'><rect x='1' y='3' width='13' height='9' fill='%23fdf6c9' stroke='%23806000'/><path d='M1 3 L7.5 8 L14 3' fill='none' stroke='%23806000'/></svg>");
+}
+.oe-menubar { display: flex; flex-wrap: wrap; gap: 12px; background: #d4d0c8; padding: 3px 8px; border-bottom: 1px solid #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
+.oe-menubar span:first-letter { text-decoration: underline; }
+.oe-toolbar { display: flex; gap: 4px; background: #d4d0c8; padding: 4px 6px; border-bottom: 1px solid #808080; }
+.oe-send {
+    display: inline-flex; align-items: center; gap: 7px; padding: 4px 14px;
+    background: #d4d0c8; text-decoration: none; color: #000000;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.76rem; font-weight: 700;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040; border-bottom: 2px solid #404040;
+}
+.oe-send:active { border-top-color: #404040; border-left-color: #404040; border-right-color: #ffffff; border-bottom-color: #ffffff; }
+.oe-send-ico {
+    width: 20px; height: 14px; flex-shrink: 0;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='14' viewBox='0 0 20 14'><path d='M1 12 L19 2 L13 13 L9 9 Z' fill='%23ffd200' stroke='%23806000' stroke-width='0.6'/></svg>") center/contain no-repeat;
+}
+.oe-headers { background: #d4d0c8; padding: 6px 8px; border-bottom: 1px solid #808080; display: flex; flex-direction: column; gap: 4px; }
+.oe-row { display: flex; align-items: center; gap: 8px; }
+.oe-label { flex: 0 0 54px; text-align: right; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
+.oe-field {
+    flex: 1; min-width: 0; background: #ffffff; padding: 2px 6px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; color: #000000;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.oe-field, .oe-to { text-decoration: none; }
+.oe-field a, .oe-to { color: #0000cc; }
+.oe-field a:hover, .oe-to:hover { text-decoration: underline; }
+.oe-subject { font-weight: 700; }
+.oe-body {
+    flex: 1 1 auto; min-height: 0; max-height: 46vh; overflow-y: auto;
+    background: #ffffff; padding: 12px 14px;
+}
+.block[data-app="outlook"].win-max .oe-body { max-height: none; }
+.oe-body .out { font-family: Tahoma, Arial, sans-serif; font-size: 0.82rem; color: #000000; line-height: 1.6; }
+.oe-body strong { color: #000080; }
