@@ -290,12 +290,16 @@
     });
     document.body.appendChild(deskWrap);
 
-    // ── "Activate Windows" desktop watermark (gag footer) ───────
+    // ── "Activate Windows" desktop watermark (also the footer) ──
     var wm = document.createElement('div');
     wm.className = 'activate-wm';
     wm.innerHTML =
         '<div class="activate-title">Activate Damien</div>' +
-        '<div class="activate-sub">Go to Settings to activate Damien</div>';
+        '<div class="activate-sub">Go to Settings to activate Damien</div>' +
+        '<div class="activate-foot">&copy; ' + new Date().getFullYear() +
+            ' Damien &middot; built with caffeine &amp; questionable decisions' +
+            ' &middot; <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>' +
+            ' &middot; <a href="mailto:hello@damienbuilds.dev">hire me</a></div>';
     document.body.appendChild(wm);
 
     // ── Desktop right-click context menu ────────────────────────

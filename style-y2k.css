@@ -1154,7 +1154,16 @@ code {
     content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='7' cy='7' r='6' fill='%23cfd6e4' stroke='%23454d5e'/><circle cx='7' cy='7' r='2' fill='%23454d5e'/></svg>");
 }
 
-/* "Activate Windows" watermark (Win98) */
+/* "Activate Windows" watermark + footer (Win98) */
 .activate-wm { color: rgba(255,255,255,0.5); font-family: Tahoma, Arial, sans-serif; text-shadow: 0 1px 1px rgba(0,0,0,0.25); }
 .activate-title { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.01em; }
 .activate-sub { font-size: 0.78rem; margin-top: 2px; }
+.activate-foot { font-size: 0.66rem; margin-top: 8px; color: rgba(255,255,255,0.4); }
+.activate-foot a { color: rgba(255,255,255,0.6); text-decoration: underline; }
+.activate-foot a:hover { color: #ffffff; }
+
+/* Blog "coming soon" teaser post */
+.ie-teaser { padding: 16px 22px 22px; border-top: 1px dashed #b8b8b8; }
+.ie-teaser-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.1rem; font-weight: 700; color: #7a7a7a; font-style: italic; margin-bottom: 6px; }
+.ie-teaser-body { font-family: Georgia, 'Times New Roman', serif; font-size: 0.88rem; line-height: 1.6; color: #555555; }
+.ie-teaser-body a { color: #0b3d91; }

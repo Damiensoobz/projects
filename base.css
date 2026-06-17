@@ -270,5 +270,6 @@ body.has-max { overflow: hidden; }
 .desktop-mode .block { position: fixed; margin: 0; }
 .desktop-mode .block > .prompt { cursor: move; }
 
-/* "Activate Windows" desktop watermark (sits behind the windows) */
+/* "Activate Windows" desktop watermark + footer (sits behind the windows) */
 .activate-wm { position: fixed; right: 22px; bottom: 44px; z-index: 2; pointer-events: none; user-select: none; text-align: center; }
+.activate-foot a { pointer-events: auto; }
