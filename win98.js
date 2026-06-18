@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────────────────────────
 //  win98.js  —  desktop environment: taskbar, Start menu, live
 //  tray clock, and a tiny window manager (minimize / maximize /
-//  close ↔ taskbar). Chrome is skin-themed via CSS; the behavior
-//  is skin-agnostic. Loads after theme.js.
+//  close ↔ taskbar). Chrome is styled by the Win98 skin via CSS;
+//  the behavior here is presentation-agnostic.
 // ─────────────────────────────────────────────────────────────
 (function () {
     function esc(s) {
@@ -37,11 +37,6 @@
         '<div class="task-buttons" id="task-buttons"></div>' +
         '<div class="tray" id="tray"><span class="tray-clock" id="tray-clock"></span></div>';
     document.body.appendChild(bar);
-
-    // Relocate the existing skin toggle into the system tray.
-    var toggle = document.getElementById('theme-toggle');
-    var tray   = document.getElementById('tray');
-    if (toggle && tray) tray.insertBefore(toggle, document.getElementById('tray-clock'));
 
     // ── Start menu ──────────────────────────────────────────────
     var menu = document.createElement('div');
@@ -140,10 +135,9 @@
         ie:       { l: 0.220, t: 0.07, w: 600 },
         winamp:   { l: 0.010, t: 0.50, w: 300 },
         terminal: { l: 0.400, t: 0.58, w: 360 },
-        cdplayer: { l: 0.715, t: 0.55, w: 310 },
-        outlook:  { l: 0.545, t: 0.40, w: 540 }
+        cdplayer: { l: 0.715, t: 0.55, w: 310 }
     };
-    var Z_ORDER = ['dos', 'notepad', 'winamp', 'cdplayer', 'terminal', 'outlook', 'ie'];
+    var Z_ORDER = ['dos', 'notepad', 'winamp', 'cdplayer', 'terminal', 'ie'];
     var zTop = 20;
     var desktopMode = false;
 
@@ -287,7 +281,6 @@
         { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
         { kind: 'mine',     label: 'Minesweeper',   action: function () { if (window.launchMinesweeper) window.launchMinesweeper(); } },
-        { kind: 'secret',   label: 'TopSecret.exe', action: function () { openDialog('TopSecret.exe', '<p class="dlg-p"><b>ACCESS DENIED.</b><br><br>Nice try. The good stuff is still in the cauldron &mdash; <a href="mailto:hello@damienbuilds.dev">ask nicely</a>.</p>'); } },
         { kind: 'bin',      label: 'Recycle Bin',   action: function () { openDialog('Recycle Bin', '<p class="dlg-p">Recycle Bin contents:<br>&bull; 0 regrets<br>&bull; 3 abandoned side-projects<br>&bull; 1 New Year&rsquo;s resolution (2019)</p>'); } }
     ];
     var deskWrap = document.createElement('div');
@@ -465,7 +458,7 @@
             'The Blog window scrolls. There&rsquo;s more in there than fits.',
             'Drag any title bar to move a window. Double-click it to send it home.',
             'Bored? Start &rarr; Minesweeper. You&rsquo;re welcome.',
-            'Try the skin toggle in the tray. Game Boy mode is a vibe.',
+            'That CD Player is spinning a real game disc. Give it a click.',
             'Damien tests his code before it touches main. Wild, I know.',
             'I am legally distinct from a paperclip you may remember.'
         ];

@@ -221,23 +221,28 @@
         const artist   = first.artist?.['#text'] || '—';
         const art      = lfmArt(first);
         const status   = playing ? 'now playing' : 'last played';
-        const rows = tracks.slice(0, 5).map((t, i) => {
-            const n = t.name || '—';
-            const a = t.artist?.['#text'] || '';
-            return `<li class="sp-row${i === 0 ? ' on' : ''}"><span class="sp-row-name">${esc(n)}</span><span class="sp-row-artist">${esc(a)}</span></li>`;
-        }).join('');
+        // The previous track becomes the small "last listened" footnote.
+        const prev    = tracks[1];
+        const prevTxt = prev ? `${prev.name || '—'} — ${prev.artist?.['#text'] || ''}` : '';
         spotifyEl.innerHTML = `
-<div class="sp-panel${playing ? ' playing' : ''}">
-  <div class="sp-now">
+<div class="sp-panel wmp${playing ? ' playing' : ''}">
+  <div class="sp-art-wrap">
     ${art ? `<img class="sp-art" src="${esc(art)}" alt="" loading="lazy">` : '<div class="sp-art sp-art-empty"></div>'}
-    <div class="sp-meta">
-      <div class="sp-status"><span class="sp-dot"></span>${status}</div>
-      <div class="sp-track">${esc(name)}</div>
-      <div class="sp-artist">${esc(artist)}</div>
-    </div>
+    <div class="sp-nowtag"><span class="sp-dot"></span>${status}</div>
   </div>
-  <ol class="sp-list">${rows}</ol>
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
+  <div class="sp-info">
+    <div class="sp-track">${esc(name)}</div>
+    <div class="sp-artist">${esc(artist)}</div>
+  </div>
+  <div class="sp-seek"><span class="sp-seek-fill"></span></div>
+  <div class="sp-transport" aria-hidden="true">
+    <span class="sp-tb sp-prev"></span>
+    <span class="sp-tb sp-stop"></span>
+    <span class="sp-tb sp-play"></span>
+    <span class="sp-tb sp-next"></span>
+  </div>
+  ${prevTxt ? `<div class="sp-last">last: <span>${esc(prevTxt)}</span></div>` : ''}
+  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open last.fm') : ''}
 </div>`;
     }
 
@@ -372,8 +377,9 @@
         stEl.innerHTML =
             '<div class="steam-panel active">' +
                 '<div class="steam-status"><span class="steam-dot"></span>recently played</div>' +
-                '<a href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
+                '<a class="steam-disc" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
                     '<img class="steam-img" src="' + esc(imgUrl) + '" alt="' + esc(name) + '" loading="lazy">' +
+                    '<span class="steam-disc-hub"></span>' +
                 '</a>' +
                 '<div class="steam-info">' +
                     '<div class="steam-game">' + esc(name) + '</div>' +

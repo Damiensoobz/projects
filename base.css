@@ -146,29 +146,10 @@ body { min-height: 100vh; }
 
 .steam-img { width: 100%; object-fit: cover; display: block; }
 
-/* ── Contact ───────────────────────────────────────────────── */
-.contact-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-}
-.contact-cta { display: inline-flex; align-items: center; text-decoration: none; }
-.contact-link { text-decoration: underline; }
-
 /* ── Footer ────────────────────────────────────────────────── */
 .footer-block { text-align: center; }
 .footer-note { margin-top: 12px; }
 .cursor-blink { display: none; }
-
-/* ── Theme toggle ──────────────────────────────────────────── */
-.theme-toggle {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 999;
-    cursor: pointer;
-}
 
 /* ── Shared animation + motion prefs ───────────────────────── */
 @keyframes blink {
@@ -322,8 +303,8 @@ body.has-max { overflow: hidden; }
 .bsod-h { background: #aaaaaa; color: #0000aa; display: inline-block; padding: 0 3px; font-weight: 700; }
 .bsod-blink { animation: blink 1s step-end infinite; }
 
-/* Clippy-style helper */
-.clippy { position: fixed; right: 18px; bottom: 46px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+/* Clippy-style helper — bottom-LEFT so he never blocks the corner watermark */
+.clippy { position: fixed; left: 18px; bottom: 46px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .clippy-bubble { display: none; max-width: 232px; background: #ffffe1; border: 1px solid #000000; border-radius: 7px;
     padding: 10px 12px; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; line-height: 1.45; color: #000000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
 .clippy.open .clippy-bubble { display: block; }
