@@ -941,23 +941,25 @@ code {
 .sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #4dffa0; font-weight: 700; font-size: 0.82rem; text-shadow: 0 0 6px rgba(77,255,160,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #2fae73; font-size: 0.68rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Seek bar */
-.sp-seek { height: 5px; margin: 7px 10px 0; border-radius: 3px; background: #11141c; box-shadow: inset 0 0 0 1px #0a0c12; overflow: hidden; }
-.sp-seek-fill { display: block; width: 42%; height: 100%; background: linear-gradient(90deg, #2f7fd8, #6fb4ff); }
+/* Mini EQ visualizer in the LCD (animates only while actually playing) */
+.sp-eq { display: flex; align-items: flex-end; gap: 2px; height: 13px; float: right; margin: 2px 0 0 8px; }
+.sp-eq i { width: 3px; background: linear-gradient(#4dffa0, #1d8a55); opacity: 0.85; }
+.sp-eq i:nth-child(1) { height: 35%; } .sp-eq i:nth-child(2) { height: 70%; } .sp-eq i:nth-child(3) { height: 50%; }
+.sp-eq i:nth-child(4) { height: 90%; } .sp-eq i:nth-child(5) { height: 45%; } .sp-eq i:nth-child(6) { height: 65%; }
+.sp-eq i:nth-child(7) { height: 30%; }
+.sp-panel.wmp.playing .sp-eq i { animation: sp-eq 0.85s ease-in-out infinite alternate; }
+.sp-panel.wmp.playing .sp-eq i:nth-child(odd) { animation-duration: 0.65s; }
+.sp-panel.wmp.playing .sp-eq i:nth-child(3n) { animation-duration: 1.05s; }
+@keyframes sp-eq { from { height: 15%; } to { height: 100%; } }
 
-/* Glassy WMP transport controls */
-.sp-transport { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 9px 0; }
-.sp-tb { position: relative; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(180deg, #4a5266, #232838); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 1px 2px rgba(0,0,0,0.5); }
-.sp-tb::before { content: ''; position: absolute; inset: 0; margin: auto; }
-.sp-prev::before { width: 0; height: 0; border: 4px solid transparent; border-right-color: #dde6f6; border-left: 0; transform: translateX(-1px); }
-.sp-next::before { width: 0; height: 0; border: 4px solid transparent; border-left-color: #dde6f6; border-right: 0; transform: translateX(1px); }
-.sp-stop::before { width: 7px; height: 7px; background: #dde6f6; }
-.sp-play { width: 28px; height: 28px; background: linear-gradient(180deg, #5aa0ee, #2160b8); box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.55); }
-.sp-play::before { width: 0; height: 0; border: 6px solid transparent; border-left-color: #ffffff; border-right: 0; transform: translateX(2px); }
+/* Seek bar with a chrome knob */
+.sp-seek { position: relative; height: 5px; margin: 9px 10px 11px; border-radius: 3px; background: #11141c; box-shadow: inset 0 0 0 1px #0a0c12; }
+.sp-seek-fill { display: block; width: 42%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #2f7fd8, #6fb4ff); box-shadow: 0 0 6px rgba(111,180,255,0.6); }
+.sp-seek-fill::after { content: ''; position: absolute; top: 50%; left: 42%; width: 9px; height: 9px; margin: -4.5px 0 0 -4px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #eaf3ff, #7fa8d8); box-shadow: 0 0 4px rgba(0,0,0,0.5); }
 
-/* "Last listened" footnote */
-.sp-last { padding: 0 10px 8px; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; color: #7e879a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-last span { color: #aeb8cc; }
+/* "Last played" footnote */
+.sp-last { padding: 0 10px 9px; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #aeb8cc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-last-k { color: #7e879a; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.54rem; margin-right: 4px; }
 
 .sp-panel .sp-link { color: #9fb6da; background: transparent; border-top: 1px solid #2a3040; padding: 6px 10px; }
 .sp-panel .sp-link:hover { color: #dde6f6; }
@@ -1053,12 +1055,21 @@ code {
 .steam-link { color: #7fd0ff; justify-content: center; }
 .steam-link:hover { color: #a8e0ff; }
 
-/* Status apps are now their own windows — the window title bar replaces the
-   panel's built-in title, and the panel fills the window body. */
-.block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] { padding: 0; }
+/* Status apps shed the chunky Win98 frame and wear their own app skin —
+   the slim title bar (drag handle + controls) is restyled per app. */
+.block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] {
+    padding: 0; border: 1px solid #000000; box-shadow: 0 2px 7px rgba(0,0,0,0.45);
+}
+.block[data-app="winamp"]   { border-color: #0a0c12; }
+.block[data-app="terminal"] { border-color: #061206; border-radius: 9px; overflow: hidden; }
+.block[data-app="cdplayer"] { border-color: #20242e; }
 .block[data-app="winamp"] > .prompt,
 .block[data-app="terminal"] > .prompt,
 .block[data-app="cdplayer"] > .prompt { margin: 0; }
+.block[data-app="winamp"] > .prompt   { background: linear-gradient(180deg, #3a4055, #20242f); border-bottom: 1px solid #0a0c12; }
+.block[data-app="terminal"] > .prompt { background: #0a1a0e; border-bottom: 1px solid #0a3a18; }
+.block[data-app="cdplayer"] > .prompt { background: linear-gradient(180deg, #7a8498, #454d5e); border-bottom: 1px solid #20242e; }
+.block[data-app="terminal"] > .prompt .p-cmd { font-family: 'Courier New', monospace; color: #33ff66; text-shadow: 0 0 4px rgba(51,255,102,0.4); }
 .block[data-app="winamp"] .sp-panel,
 .block[data-app="terminal"] .gh-panel,
 .block[data-app="cdplayer"] .steam-panel { border: none; box-shadow: none; }
@@ -1097,4 +1108,7 @@ code {
 }
 .sm-ico-shut {
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='9' r='5' fill='none' stroke='%23c00000' stroke-width='2'/><line x1='8' y1='2' x2='8' y2='9' stroke='%23c00000' stroke-width='2'/></svg>") center/contain no-repeat;
+}
+.sm-ico-restart {
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M12.5 8 a4.5 4.5 0 1 1 -1.4 -3.3' fill='none' stroke='%23006000' stroke-width='1.8'/><path d='M11.4 1.6 l0.7 3.3 -3.3 -0.5 z' fill='%23006000'/></svg>") center/contain no-repeat;
 }

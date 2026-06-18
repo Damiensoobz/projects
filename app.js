@@ -231,17 +231,12 @@
     <div class="sp-nowtag"><span class="sp-dot"></span>${status}</div>
   </div>
   <div class="sp-info">
+    <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="sp-track">${esc(name)}</div>
     <div class="sp-artist">${esc(artist)}</div>
   </div>
   <div class="sp-seek"><span class="sp-seek-fill"></span></div>
-  <div class="sp-transport" aria-hidden="true">
-    <span class="sp-tb sp-prev"></span>
-    <span class="sp-tb sp-stop"></span>
-    <span class="sp-tb sp-play"></span>
-    <span class="sp-tb sp-next"></span>
-  </div>
-  ${prevTxt ? `<div class="sp-last">last: <span>${esc(prevTxt)}</span></div>` : ''}
+  ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last played</span> ${esc(prevTxt)}</div>` : ''}
   ${profileUrl ? spotifyLinkHtml(profileUrl, 'open last.fm') : ''}
 </div>`;
     }

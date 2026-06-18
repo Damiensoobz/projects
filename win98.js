@@ -52,6 +52,7 @@
             }).join('') +
             '<div class="sm-sep"></div>' +
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
+            '<button class="sm-item" data-sm="restart"><span class="sm-ico sm-ico-restart"></span>Restart</button>' +
             '<button class="sm-item" data-sm="shutdown"><span class="sm-ico sm-ico-shut"></span>Shut Down&hellip;</button>' +
         '</div>';
     document.body.appendChild(menu);
@@ -130,14 +131,15 @@
     // desktop so the arrangement scales; each window's content area caps its
     // own height and scrolls internally, so the desktop never page-scrolls.
     var LAYOUT = {
-        dos:      { l: 0.085, t: 0.02, w: 440 },
-        notepad:  { l: 0.610, t: 0.03, w: 460 },
-        ie:       { l: 0.220, t: 0.07, w: 600 },
-        winamp:   { l: 0.010, t: 0.50, w: 300 },
-        terminal: { l: 0.400, t: 0.58, w: 360 },
-        cdplayer: { l: 0.715, t: 0.55, w: 310 }
+        ie:       { l: 0.129, t: 0.178, w: 600 },
+        dos:      { l: 0.266, t: 0.010, w: 440 },
+        notepad:  { l: 0.366, t: 0.340, w: 460 },
+        winamp:   { l: 0.612, t: 0.123, w: 300 },
+        cdplayer: { l: 0.779, t: 0.412, w: 310 },
+        terminal: { l: 0.627, t: 0.697, w: 360 }
     };
-    var Z_ORDER = ['dos', 'notepad', 'winamp', 'cdplayer', 'terminal', 'ie'];
+    // Back-to-front: IE under DOS under Notepad; the right-hand apps sit on top.
+    var Z_ORDER = ['ie', 'dos', 'notepad', 'winamp', 'cdplayer', 'terminal'];
     var zTop = 20;
     var desktopMode = false;
 
@@ -224,6 +226,7 @@
         it.addEventListener('click', function () {
             var sm = it.getAttribute('data-sm');
             if (sm === 'mines') { if (window.launchMinesweeper) window.launchMinesweeper(); }
+            else if (sm === 'restart') restartGag();
             else if (sm === 'shutdown') shutDownGag();
             else openFromMenu(it.dataset.target);
             setMenu(false);
@@ -281,7 +284,7 @@
         { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
         { kind: 'mine',     label: 'Minesweeper',   action: function () { if (window.launchMinesweeper) window.launchMinesweeper(); } },
-        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openDialog('Recycle Bin', '<p class="dlg-p">Recycle Bin contents:<br>&bull; 0 regrets<br>&bull; 3 abandoned side-projects<br>&bull; 1 New Year&rsquo;s resolution (2019)</p>'); } }
+        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } }
     ];
     var deskWrap = document.createElement('div');
     deskWrap.className = 'desktop-icons';
@@ -352,7 +355,7 @@
             boot.classList.add('boot-done');
             setTimeout(function () { if (boot.parentNode) boot.remove(); }, 500);
         };
-        setTimeout(killBoot, 1900);          // fail-safe auto-dismiss
+        setTimeout(killBoot, 3000);          // a proper few-second boot (click to skip)
         boot.addEventListener('click', killBoot);
     }
 
@@ -405,6 +408,62 @@
     }
     window.win98 = { openDialog: openDialog, createWindow: createWindow };
 
+    // ── Recycle Bin → faux explorer of "deleted" things ─────────
+    function openRecycleBin() {
+        var files = [
+            { ic: 'html', name: 'portfolio_v1_FINAL_final.html', meta: 'HTML Document &middot; 4 KB' },
+            { ic: 'txt',  name: 'good_intentions.txt',           meta: 'Text Document &middot; 0 KB' },
+            { ic: 'exe',  name: 'free_time.exe',                 meta: 'Application &middot; 404 KB' },
+            { ic: 'log',  name: 'that_one_bug.log',              meta: 'Log File &middot; 666 KB' },
+            { ic: 'dll',  name: 'motivation.dll',               meta: 'status: missing' },
+            { ic: 'txt',  name: 'NYE_resolution_2019.doc',       meta: 'never opened' }
+        ];
+        var rowsHtml = files.map(function (f) {
+            return '<li class="rb-row"><span class="rb-ico rb-ico-' + f.ic + '"></span>' +
+                   '<span class="rb-name">' + esc(f.name) + '</span>' +
+                   '<span class="rb-meta">' + f.meta + '</span></li>';
+        }).join('');
+        var html =
+            '<div class="rb">' +
+                '<div class="rb-toolbar">' +
+                    '<button class="rb-empty">Empty Recycle Bin</button>' +
+                    '<button class="rb-restore">Restore</button>' +
+                '</div>' +
+                '<ul class="rb-list">' + rowsHtml + '</ul>' +
+                '<div class="rb-status"><span class="rb-count">' + files.length + ' object(s)</span></div>' +
+            '</div>';
+        var w = createWindow('Recycle Bin', html, 'rb-win');
+        var list   = w.body.querySelector('.rb-list');
+        var status = w.body.querySelector('.rb-status');
+        w.body.querySelector('.rb-empty').addEventListener('click', function () {
+            list.classList.add('rb-emptying');
+            setTimeout(function () {
+                list.innerHTML = '<li class="rb-zero">This folder is empty.</li>';
+                list.classList.remove('rb-emptying');
+                status.innerHTML = '<span class="rb-count">0 object(s)</span>';
+                setTimeout(function () {                 // gag: nothing is ever truly deleted
+                    list.innerHTML = rowsHtml;
+                    status.innerHTML = '<span class="rb-count">' + files.length +
+                        ' object(s)</span> &middot; nothing is ever <i>really</i> deleted';
+                }, 1700);
+            }, 450);
+        });
+        w.body.querySelector('.rb-restore').addEventListener('click', function () {
+            openDialog('Restore File', '<p class="dlg-p">Restore <b>free_time.exe</b>?<br><br>' +
+                'Error 0x1A4: file is currently in use by <i>adult life</i> and cannot be restored.</p>');
+        });
+    }
+
+    // ── Restart → black "Restarting…" then a fresh boot splash ──
+    function restartGag() {
+        var s = document.createElement('div');
+        s.className = 'shutdown-screen';
+        s.innerHTML = '<div class="shutdown-text">Restarting&hellip;</div>';
+        document.body.appendChild(s);
+        sessionStorage.removeItem('booted');   // so the boot splash replays on reload
+        setTimeout(function () { location.reload(); }, 1100);
+    }
+
     // ── Shut Down gag ───────────────────────────────────────────
     function shutDownGag() {
         var s = document.createElement('div');
@@ -442,31 +501,151 @@
         else { kpos = (e.keyCode === konami[0]) ? 1 : 0; }
     });
 
-    // ── Clippy-style helper ─────────────────────────────────────
+    // ── "Clippit": draggable, context-aware, far too opinionated ─
     (function initClippy() {
         var c = document.createElement('div');
         c.className = 'clippy';
         c.innerHTML =
+            '<button class="clippy-guy" title="It looks like you need help"></button>' +
             '<div class="clippy-bubble"><span class="clippy-text"></span>' +
-                '<div class="clippy-actions"><button class="clippy-next">Tell me more</button>' +
-                '<button class="clippy-bye">Go away</button></div></div>' +
-            '<button class="clippy-guy" title="It looks like you need help"></button>';
+                '<div class="clippy-actions"></div></div>';
         document.body.appendChild(c);
+
+        var guy    = c.querySelector('.clippy-guy');
+        var textEl = c.querySelector('.clippy-text');
+        var actsEl = c.querySelector('.clippy-actions');
+
+        // Restore a remembered drop position (defaults to top-right via CSS).
+        try {
+            var saved = JSON.parse(localStorage.getItem('clippyPos') || 'null');
+            if (saved && typeof saved.left === 'number') {
+                c.style.left = saved.left + 'px'; c.style.top = saved.top + 'px'; c.style.right = 'auto';
+            }
+        } catch (e) {}
+
+        // ── Speech ──────────────────────────────────────────────
+        var hideT;
+        function addBtn(label, fn) {
+            var b = document.createElement('button');
+            b.innerHTML = label;
+            b.addEventListener('click', function (ev) { ev.stopPropagation(); fn(); });
+            actsEl.appendChild(b);
+        }
+        function say(msg, opts) {
+            opts = opts || {};
+            textEl.innerHTML = msg;
+            actsEl.innerHTML = '';
+            (opts.actions || [['Tell me more', nextTip], ['Go away', dismiss]]).forEach(function (a) { addBtn(a[0], a[1]); });
+            c.classList.add('open');
+            guy.classList.remove('clippy-tap'); void guy.offsetWidth; guy.classList.add('clippy-tap');
+            clearTimeout(hideT);
+            if (opts.sticky !== true) hideT = setTimeout(close, opts.ttl || 12000);
+        }
+        function close() { c.classList.remove('open'); clearTimeout(hideT); }
+        function dismiss() {
+            close();
+            setTimeout(function () { say('Did you miss me? Of course you did.', { ttl: 7000 }); }, 90000);
+        }
+
+        // ── Rotating tips ───────────────────────────────────────
         var tips = [
-            'It looks like you&rsquo;re trying to hire a developer. Want a hand?',
             'Psst &mdash; right-click the desktop. There&rsquo;s a menu.',
             'The Blog window scrolls. There&rsquo;s more in there than fits.',
             'Drag any title bar to move a window. Double-click it to send it home.',
             'Bored? Start &rarr; Minesweeper. You&rsquo;re welcome.',
             'That CD Player is spinning a real game disc. Give it a click.',
             'Damien tests his code before it touches main. Wild, I know.',
-            'I am legally distinct from a paperclip you may remember.'
+            'I am legally distinct from a paperclip you may remember.',
+            'You can drag me anywhere. Drop me &mdash; I&rsquo;ll remember the spot.',
+            'Try the &uarr;&uarr;&darr;&darr;&larr;&rarr;&larr;&rarr;BA thing. Trust me.'
         ];
-        var i = 0;
-        function show(msg) { c.querySelector('.clippy-text').innerHTML = msg; c.classList.add('open'); }
-        c.querySelector('.clippy-next').addEventListener('click', function () { i = (i + 1) % tips.length; show(tips[i]); });
-        c.querySelector('.clippy-bye').addEventListener('click', function () { c.remove(); });
-        c.querySelector('.clippy-guy').addEventListener('click', function () { c.classList.toggle('open'); });
-        setTimeout(function () { show(tips[0]); }, 6500);
+        var ti = -1;
+        function nextTip() { ti = (ti + 1) % tips.length; say(tips[ti]); }
+
+        // ── The classic "do you want help?" gag ─────────────────
+        function helpGag() {
+            say('It looks like you&rsquo;re trying to hire a developer. Would you like help?', {
+                sticky: true,
+                actions: [
+                    ['Yes, please', reallyHelp],
+                    ['No thanks', function () { say('Too bad. Help is on the way!', { ttl: 2200 }); setTimeout(reallyHelp, 2300); }]
+                ]
+            });
+        }
+        function reallyHelp() {
+            say('Step 1: email <a href="mailto:hello@damienbuilds.dev">hello@damienbuilds.dev</a>.<br>Step 2: there is no step 2. That was the whole trick.',
+                { actions: [['Helpful!', dismiss], ['Tell me more', nextTip]], ttl: 14000 });
+        }
+
+        // ── Context-aware reactions ─────────────────────────────
+        var ctxByApp = {
+            ie:       'Ah, Internet Explorer. Bold. The blog posts are real, though.',
+            dos:      'C:\\&gt; feeling nostalgic? Same.',
+            notepad:  'aboutMe.txt: unsaved changes since roughly birth.',
+            winamp:   'It really whips the llama&rsquo;s&hellip; wait, wrong player.',
+            terminal: 'That green glow is terrible for your eyes and great for your vibe.',
+            cdplayer: 'Insert disc 2 to continue. (There is no disc 2.)'
+        };
+        var lastCtx = 0;
+        function maybeReact(app) {
+            var now = Date.now();
+            if (now - lastCtx < 20000 || !ctxByApp[app]) return;
+            lastCtx = now;
+            say(ctxByApp[app], { ttl: 6500 });
+        }
+        document.addEventListener('mousedown', function (e) {
+            var p = e.target.closest && e.target.closest('.block[data-app] > .prompt');
+            if (p) maybeReact(p.parentNode.getAttribute('data-app'));
+        }, true);
+        if (window.launchMinesweeper) {
+            var origMines = window.launchMinesweeper;
+            window.launchMinesweeper = function () {
+                origMines.apply(this, arguments);
+                lastCtx = Date.now();
+                say('Minesweeper! The corners are statistically safer. Probably.', { ttl: 7000 });
+            };
+        }
+
+        // ── Idle nudge ──────────────────────────────────────────
+        var idleT;
+        function resetIdle() {
+            clearTimeout(idleT);
+            idleT = setTimeout(function () {
+                if (!c.classList.contains('open')) say('Still there? I&rsquo;ll wait. I have nothing but time.', { ttl: 7000 });
+            }, 60000);
+        }
+        ['mousemove', 'keydown', 'click'].forEach(function (ev) { document.addEventListener(ev, resetIdle, { passive: true }); });
+        resetIdle();
+
+        // ── Dragging — remembers where you drop him ─────────────
+        var moved = false;
+        guy.addEventListener('mousedown', function (e) {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            var r = c.getBoundingClientRect();
+            var ox = e.clientX - r.left, oy = e.clientY - r.top;
+            moved = false;
+            c.classList.add('clippy-drag');
+            function mv(ev) {
+                moved = true;
+                c.style.left  = Math.max(2, Math.min(ev.clientX - ox, window.innerWidth - 60)) + 'px';
+                c.style.top   = Math.max(2, Math.min(ev.clientY - oy, window.innerHeight - 70)) + 'px';
+                c.style.right = 'auto';
+            }
+            function up() {
+                document.removeEventListener('mousemove', mv);
+                document.removeEventListener('mouseup', up);
+                c.classList.remove('clippy-drag');
+                if (moved) { try { localStorage.setItem('clippyPos', JSON.stringify({ left: parseFloat(c.style.left), top: parseFloat(c.style.top) })); } catch (e2) {} }
+            }
+            document.addEventListener('mousemove', mv);
+            document.addEventListener('mouseup', up);
+        });
+        guy.addEventListener('click', function () {
+            if (moved) { moved = false; return; }   // swallow the click that ends a drag
+            if (c.classList.contains('open')) close(); else nextTip();
+        });
+
+        setTimeout(helpGag, 6500);                  // open with the help gag
     })();
 })();

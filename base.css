@@ -303,18 +303,56 @@ body.has-max { overflow: hidden; }
 .bsod-h { background: #aaaaaa; color: #0000aa; display: inline-block; padding: 0 3px; font-weight: 700; }
 .bsod-blink { animation: blink 1s step-end infinite; }
 
-/* Clippy-style helper — bottom-LEFT so he never blocks the corner watermark */
-.clippy { position: fixed; left: 18px; bottom: 46px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.clippy-bubble { display: none; max-width: 232px; background: #ffffe1; border: 1px solid #000000; border-radius: 7px;
-    padding: 10px 12px; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; line-height: 1.45; color: #000000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
-.clippy.open .clippy-bubble { display: block; }
+/* "Clippit" helper — top-right by default; bubble hangs underneath him */
+.clippy { position: fixed; top: 64px; right: 16px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.clippy-guy {
+    width: 46px; height: 54px; padding: 0; cursor: grab; border: none; background: transparent center/contain no-repeat;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='54' viewBox='0 0 46 54'><path d='M15 13 v24 a9 9 0 0 0 18 0 V12 a6 6 0 0 0 -12 0 v24 a3 3 0 0 0 6 0 V16' fill='none' stroke='%239aa6bb' stroke-width='4.5' stroke-linecap='round'/><circle cx='19' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='29' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='20.5' cy='14' r='2.2' fill='%23000'/><circle cx='30.5' cy='14' r='2.2' fill='%23000'/></svg>");
+    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35));
+    animation: clippy-idle 5s ease-in-out infinite;
+}
+.clippy-drag { cursor: grabbing; }
+.clippy-drag .clippy-guy { cursor: grabbing; animation: none; }
+.clippy-tap { animation: clippy-wiggle 0.5s ease; }
+@keyframes clippy-idle { 0%, 90%, 100% { transform: translateY(0) rotate(0); } 95% { transform: translateY(-2px) rotate(-4deg); } }
+@keyframes clippy-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 60% { transform: rotate(7deg); } }
+.clippy-bubble {
+    display: none; position: relative; max-width: 240px; background: #ffffe1; border: 1px solid #000000; border-radius: 7px;
+    padding: 10px 12px; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; line-height: 1.45; color: #000000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+.clippy.open .clippy-bubble { display: block; animation: clippy-pop 0.16s ease both; }
+@keyframes clippy-pop { from { opacity: 0; transform: translateY(-4px) scale(0.96); } to { opacity: 1; transform: none; } }
+.clippy-bubble::before {   /* little tail pointing up at the guy */
+    content: ''; position: absolute; top: -7px; right: 15px; width: 12px; height: 12px;
+    background: #ffffe1; border-left: 1px solid #000; border-top: 1px solid #000; transform: rotate(45deg);
+}
 .clippy-bubble a { color: #0000cc; }
-.clippy-actions { display: flex; gap: 6px; margin-top: 9px; }
+.clippy-actions { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
 .clippy-actions button { font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; padding: 2px 8px; cursor: pointer; background: #d4d0c8;
     border-top: 1px solid #ffffff; border-left: 1px solid #ffffff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
-.clippy-guy { width: 46px; height: 54px; padding: 0; cursor: pointer; border: none; background: transparent center/contain no-repeat;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='54' viewBox='0 0 46 54'><path d='M15 13 v24 a9 9 0 0 0 18 0 V12 a6 6 0 0 0 -12 0 v24 a3 3 0 0 0 6 0 V16' fill='none' stroke='%239aa6bb' stroke-width='4.5' stroke-linecap='round'/><circle cx='19' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='29' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='20.5' cy='14' r='2.2' fill='%23000'/><circle cx='30.5' cy='14' r='2.2' fill='%23000'/></svg>");
-    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35)); }
+
+/* Recycle Bin — faux explorer window */
+.rb-win .fw-body { padding: 0; }
+.rb { width: 296px; }
+.rb-toolbar { display: flex; gap: 6px; padding: 5px 7px; background: #d4d0c8; border-bottom: 1px solid #808080; }
+.rb-toolbar button { font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; padding: 3px 9px; cursor: pointer; background: #d4d0c8;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.rb-toolbar button:active { border-color: #404040 #fff #fff #404040; }
+.rb-list { list-style: none; margin: 0; padding: 4px; background: #fff; min-height: 156px; max-height: 230px; overflow-y: auto; transition: opacity 0.4s; }
+.rb-list.rb-emptying { opacity: 0; }
+.rb-row { display: flex; align-items: center; gap: 8px; padding: 3px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000; cursor: default; }
+.rb-row:hover { background: #000080; color: #fff; }
+.rb-ico { width: 18px; height: 18px; flex-shrink: 0; background: center/contain no-repeat; }
+.rb-ico-txt, .rb-ico-log { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' shape-rendering='crispEdges'><path d='M3 1 H11 L15 5 V17 H3 Z' fill='%23fff' stroke='%23000'/><path d='M11 1 V5 H15' fill='none' stroke='%23000'/><line x1='5' y1='8' x2='13' y2='8' stroke='%23000080'/><line x1='5' y1='11' x2='13' y2='11' stroke='%23000080'/><line x1='5' y1='14' x2='10' y2='14' stroke='%23000080'/></svg>"); }
+.rb-ico-html { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><path d='M3 1 H11 L15 5 V17 H3 Z' fill='%23fff' stroke='%23000' stroke-width='1'/><circle cx='9' cy='10' r='3.6' fill='none' stroke='%231084d0'/><path d='M5.4 10 H12.6 M9 6.4 V13.6' stroke='%231084d0'/></svg>"); }
+.rb-ico-exe { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18' shape-rendering='crispEdges'><rect x='2' y='3' width='14' height='12' fill='%23d4d0c8' stroke='%23000'/><rect x='2' y='3' width='14' height='3' fill='%23000080'/><rect x='4' y='8' width='6' height='5' fill='%231084d0'/></svg>"); }
+.rb-ico-dll { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='5' fill='%23c8c8c8' stroke='%23000'/><circle cx='9' cy='9' r='1.8' fill='%23808080'/><g stroke='%23000' stroke-width='1.4'><line x1='9' y1='2' x2='9' y2='4'/><line x1='9' y1='14' x2='9' y2='16'/><line x1='2' y1='9' x2='4' y2='9'/><line x1='14' y1='9' x2='16' y2='9'/></g></svg>"); }
+.rb-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rb-meta { color: #808080; font-size: 0.62rem; flex-shrink: 0; }
+.rb-row:hover .rb-meta { color: #c8d0ec; }
+.rb-zero { padding: 58px 10px; text-align: center; color: #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; }
+.rb-status { padding: 3px 8px; background: #d4d0c8; border-top: 1px solid #fff; font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; color: #000; }
+.rb-status i { color: #555; }
 
 /* Start menu separator */
 .sm-sep { height: 0; }
