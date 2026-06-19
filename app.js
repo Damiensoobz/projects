@@ -1,8 +1,4 @@
 (function () {
-    // ── Footer year (element may be absent in the windowed desktop) ──
-    var _fy = document.getElementById('footer-year');
-    if (_fy) _fy.textContent = new Date().getFullYear();
-
     // ── ASCII name scramble — hover or load to decode ───────────
     var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var _art  = document.querySelector('.ascii-art');
@@ -41,6 +37,89 @@
         _art.addEventListener('mouseenter', _scramble);  // hover to re-trigger
         window.triggerScramble = _scramble;      // expose for theme switcher
     }
+
+    // ── Interactive MS-DOS prompt ───────────────────────────────
+    (function dosShell() {
+        var screen = document.getElementById('dos-screen');
+        var out    = document.getElementById('dos-out');
+        var input  = document.getElementById('dos-input');
+        var cursor = document.getElementById('dos-cursor');
+        if (!screen || !out || !input) return;
+
+        function grow() { input.style.width = Math.max(1, input.value.length) + 'ch'; }
+        input.addEventListener('input', grow); grow();
+
+        // Clicking anywhere on the screen (except a link) focuses the prompt.
+        screen.addEventListener('mousedown', function (e) {
+            if (e.target.closest('a')) return;
+            if (e.target !== input) { setTimeout(function () { input.focus(); }, 0); }
+        });
+        input.addEventListener('focus', function () { if (cursor) cursor.style.visibility = 'visible'; });
+
+        function line(html, cls) {
+            var p = document.createElement('p');
+            p.className = 'out' + (cls ? ' ' + cls : '');
+            p.innerHTML = html;
+            out.appendChild(p);
+        }
+        function multiline(text) { return esc(text).replace(/\n/g, '<br>'); }
+
+        var commands = {
+            help: function () {
+                return 'Available commands:\n' +
+                    '  about      who you\'re dealing with\n' +
+                    '  projects   list the builds\n' +
+                    '  skills     the toolbox\n' +
+                    '  contact    how to reach me\n' +
+                    '  hire       smartest command here\n' +
+                    '  whoami     existential check\n' +
+                    '  ls / dir   look around\n' +
+                    '  date       what year is it\n' +
+                    '  cls        clear the screen';
+            },
+            about: function () {
+                return "Damien — developer & code wizard. Conjures web things out of " +
+                    "caffeine and spite; refuses to ship before the test suite is green.";
+            },
+            projects: function () {
+                var ps = window.projects || [];
+                if (!ps.length) return 'see the Blog window — it has the full list.';
+                return ps.map(function (p) { return '  ' + p.title + ' — ' + p.subtitle; }).join('\n');
+            },
+            skills: function () { return 'JavaScript · HTML/CSS · Python · APIs · pixel-pushing · questionable humor'; },
+            contact: function () { return 'hello@damienbuilds.dev'; },
+            hire: function () { return 'Excellent choice. → hello@damienbuilds.dev'; },
+            whoami: function () { return 'visitor (esteemed guest)'; },
+            ls: function () { return 'projects/   about.txt   status/   secrets/   [try the Blog window]'; },
+            date: function () { return new Date().toString(); },
+            echo: function (a) { return a.join(' '); },
+            secret: function () { return 'Hint: up up down down left right left right B A.'; },
+            cls: function () { out.innerHTML = ''; return null; }
+        };
+        commands.dir = commands.ls;
+        commands.clear = commands.cls;
+
+        var history = [], hpos = -1;
+        function run(raw) {
+            var text = raw.trim();
+            line('<span class="dos-echo">C:\\DAMIEN&gt; ' + esc(raw) + '</span>');
+            if (text) {
+                history.unshift(raw);
+                var parts = text.split(/\s+/);
+                var cmd = parts.shift().toLowerCase();
+                var fn = commands[cmd];
+                if (fn) { var r = fn(parts); if (r != null) line(multiline(r), 'dim'); }
+                else line("'" + esc(cmd) + "' is not recognized as a command. Type <b>help</b>.", 'dim');
+            }
+            hpos = -1;
+            screen.scrollTop = screen.scrollHeight;
+        }
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); run(input.value); input.value = ''; grow(); }
+            else if (e.key === 'ArrowUp')   { e.preventDefault(); if (hpos < history.length - 1) { hpos++; input.value = history[hpos]; grow(); } }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); if (hpos > 0) { hpos--; input.value = history[hpos]; } else { hpos = -1; input.value = ''; } grow(); }
+        });
+    })();
 
     // ── Projects ────────────────────────────────────────────────
     const grid  = document.getElementById('cards-grid');
@@ -226,17 +305,16 @@
         const prevTxt = prev ? `${prev.name || '—'} — ${prev.artist?.['#text'] || ''}` : '';
         spotifyEl.innerHTML = `
 <div class="sp-panel wmp${playing ? ' playing' : ''}">
-  <div class="sp-art-wrap">
+  <div class="sp-now">
     ${art ? `<img class="sp-art" src="${esc(art)}" alt="" loading="lazy">` : '<div class="sp-art sp-art-empty"></div>'}
-    <div class="sp-nowtag"><span class="sp-dot"></span>${status}</div>
+    <div class="sp-meta">
+      <div class="sp-status"><span class="sp-dot"></span>${status}</div>
+      <div class="sp-track">${esc(name)}</div>
+      <div class="sp-artist">${esc(artist)}</div>
+    </div>
+    <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
-  <div class="sp-info">
-    <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="sp-track">${esc(name)}</div>
-    <div class="sp-artist">${esc(artist)}</div>
-  </div>
-  <div class="sp-seek"><span class="sp-seek-fill"></span></div>
-  ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last played</span> ${esc(prevTxt)}</div>` : ''}
+  ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last</span> ${esc(prevTxt)}</div>` : ''}
   ${profileUrl ? spotifyLinkHtml(profileUrl, 'open last.fm') : ''}
 </div>`;
     }

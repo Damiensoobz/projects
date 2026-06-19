@@ -68,15 +68,6 @@ body {
     vertical-align: middle;
 }
 
-/* Footer prompt */
-.footer-block .prompt { background: #000080; }
-
-/* Crisp SVG floppy disk icon — footer */
-.footer-block .prompt::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23d4d0c8'/><rect x='1' y='1' width='12' height='5' fill='%23b8ac80'/><rect x='2' y='2' width='4' height='3' fill='%23282828'/><rect x='9' y='1' width='4' height='5' fill='%23806020'/><rect x='2' y='7' width='10' height='6' fill='%23f0ece4'/><rect width='14' height='14' fill='none' stroke='%23404040' stroke-width='1'/></svg>");
-}
-.footer-block .prompt::after { display: none; }
-
 /* ── Divider — Win98 separator ──────────────────────────────── */
 .divider {
     border: none;
@@ -253,8 +244,6 @@ code {
 /* ═══════════════════════════════════════════════════════════════
    STATUS  WIDGETS  —  unified Win98 mini-window style
    ═══════════════════════════════════════════════════════════════ */
-
-.status-grid { gap: 6px; }
 
 /* ── Shared panel base ───────────────────────────────────────── */
 .sp-panel,
@@ -522,24 +511,10 @@ code {
 .steam-link svg { width: 13px; height: 13px; }
 .steam-link:hover { color: #79c8f0; text-decoration: underline; }
 
-.contact-link {
-    font-family: Tahoma, Arial, sans-serif;
-    font-size: 0.78rem;
-    color: #0000cc;
-}
-.contact-link:hover { color: #cc0000; }
-
-/* ── Footer ─────────────────────────────────────────────────── */
-.footer-note  { font-size: 0.72rem; color: #808080; font-style: normal; }
-
 /* ── Animations (skin-specific) ─────────────────────────────── */
 @keyframes winIn {
     from { opacity: 0; transform: scale(0.97); }
     to   { opacity: 1; transform: scale(1); }
-}
-@keyframes ledPulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
 }
 @keyframes pulse {
     0%, 100% { opacity: 1; }
@@ -871,11 +846,18 @@ code {
 .block[data-app="dos"] > .prompt::before {
     content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14' shape-rendering='crispEdges'><rect width='16' height='14' fill='%23000000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%23c0c0c0'>C:\</text></svg>");
 }
-.dos-screen { background: #000000; padding: 12px 16px 16px; overflow-x: auto; }
+.dos-screen { background: #000000; padding: 12px 16px 16px; overflow: auto; max-height: 58vh; cursor: text; }
+.block[data-app="dos"].win-max .dos-screen { max-height: none; }
 .dos-screen .ascii-art { background: none; border: none; margin: 4px 0 12px; padding: 0; color: #c0c0c0; }
 .dos-screen .out { color: #c0c0c0; font-family: 'Courier New', monospace; font-size: 0.8rem; }
 .dos-screen .out.dim { color: #7a7a7a; }
-.dos-line { font-family: 'Courier New', monospace; color: #c0c0c0; font-size: 0.85rem; margin-top: 16px; }
+.dos-echo { color: #e0e0e0; }
+.dos-line { display: flex; align-items: baseline; font-family: 'Courier New', monospace; color: #c0c0c0; font-size: 0.85rem; margin-top: 12px; white-space: pre; }
+.dos-input {
+    background: transparent; border: 0; outline: 0; padding: 0; margin: 0;
+    font-family: 'Courier New', monospace; font-size: 0.85rem; color: #c0c0c0;
+    caret-color: transparent; min-width: 1ch;
+}
 .dos-cursor { color: #c0c0c0; animation: dos-blink 1s step-end infinite; }
 @keyframes dos-blink { 50% { opacity: 0; } }
 
@@ -905,7 +887,7 @@ code {
    STATUS APPS — each widget styled as its own 98-era program
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Now Playing → Windows Media Player ─────────────────────── */
+/* ── Now Playing → Windows Media Player (compact / minimal) ─── */
 .sp-panel {
     background: linear-gradient(180deg, #34394a 0%, #1f2330 100%);
     border-top-color: #5a6076; border-left-color: #5a6076;
@@ -919,49 +901,31 @@ code {
     color: #aebbd2; letter-spacing: 0.06em;
     border-bottom: 1px solid #0a0c12;
 }
-.sp-panel .sp-status { color: #8fa0bc; }
-.sp-panel .sp-dot, .sp-panel.playing .sp-dot { background: #25e07a; }
 
-/* Album art replaces the title strip — full-width hero banner */
-.sp-art-wrap { position: relative; width: 100%; height: 116px; overflow: hidden; background: #000; border-bottom: 1px solid #0a0c12; }
-.sp-panel.wmp .sp-art { width: 100%; height: 100%; border: 0; object-fit: cover; display: block; }
+/* Compact now-playing row: small cover + meta + mini EQ */
+.sp-now { display: flex; align-items: center; gap: 9px; padding: 8px 9px; }
+.sp-panel.wmp .sp-art { width: 46px; height: 46px; flex-shrink: 0; border: 1px solid #0a0c12; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 .sp-panel.wmp .sp-art-empty { background-color: #11141c; }
-.sp-nowtag {
-    position: absolute; left: 0; bottom: 0; width: 100%;
-    display: flex; align-items: center; gap: 6px;
-    padding: 4px 8px; font-family: Tahoma, Arial, sans-serif; font-size: 0.56rem;
-    letter-spacing: 0.06em; text-transform: uppercase; color: #e3ecfb;
-    background: linear-gradient(0deg, rgba(0,0,0,0.82), transparent);
-}
-.sp-panel.wmp .sp-dot { width: 7px; height: 7px; border-radius: 50%; background: #8a93a8; }
+.sp-meta { min-width: 0; flex: 1; }
+.sp-panel.wmp .sp-status { display: flex; align-items: center; gap: 5px; padding: 0 0 2px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; letter-spacing: 0.06em; text-transform: uppercase; color: #8fa0bc; }
+.sp-panel.wmp .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: #8a93a8; }
 .sp-panel.wmp.playing .sp-dot { background: #25e07a; box-shadow: 0 0 5px rgba(37,224,122,0.7); animation: blink 1.4s step-end infinite; }
+.sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #4dffa0; font-weight: 700; font-size: 0.78rem; text-shadow: 0 0 6px rgba(77,255,160,0.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #2fae73; font-size: 0.66rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* Green LCD info strip */
-.sp-info { padding: 7px 10px 5px; background: linear-gradient(180deg, #15241c, #0e1813); }
-.sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #4dffa0; font-weight: 700; font-size: 0.82rem; text-shadow: 0 0 6px rgba(77,255,160,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #2fae73; font-size: 0.68rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Mini EQ visualizer in the LCD (animates only while actually playing) */
-.sp-eq { display: flex; align-items: flex-end; gap: 2px; height: 13px; float: right; margin: 2px 0 0 8px; }
+/* Mini EQ (animates only while actually playing) */
+.sp-eq { display: flex; align-items: flex-end; gap: 2px; height: 18px; flex-shrink: 0; }
 .sp-eq i { width: 3px; background: linear-gradient(#4dffa0, #1d8a55); opacity: 0.85; }
-.sp-eq i:nth-child(1) { height: 35%; } .sp-eq i:nth-child(2) { height: 70%; } .sp-eq i:nth-child(3) { height: 50%; }
-.sp-eq i:nth-child(4) { height: 90%; } .sp-eq i:nth-child(5) { height: 45%; } .sp-eq i:nth-child(6) { height: 65%; }
-.sp-eq i:nth-child(7) { height: 30%; }
+.sp-eq i:nth-child(1) { height: 40%; } .sp-eq i:nth-child(2) { height: 75%; } .sp-eq i:nth-child(3) { height: 50%; }
+.sp-eq i:nth-child(4) { height: 90%; } .sp-eq i:nth-child(5) { height: 35%; }
 .sp-panel.wmp.playing .sp-eq i { animation: sp-eq 0.85s ease-in-out infinite alternate; }
-.sp-panel.wmp.playing .sp-eq i:nth-child(odd) { animation-duration: 0.65s; }
-.sp-panel.wmp.playing .sp-eq i:nth-child(3n) { animation-duration: 1.05s; }
+.sp-panel.wmp.playing .sp-eq i:nth-child(odd) { animation-duration: 0.6s; }
 @keyframes sp-eq { from { height: 15%; } to { height: 100%; } }
 
-/* Seek bar with a chrome knob */
-.sp-seek { position: relative; height: 5px; margin: 9px 10px 11px; border-radius: 3px; background: #11141c; box-shadow: inset 0 0 0 1px #0a0c12; }
-.sp-seek-fill { display: block; width: 42%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #2f7fd8, #6fb4ff); box-shadow: 0 0 6px rgba(111,180,255,0.6); }
-.sp-seek-fill::after { content: ''; position: absolute; top: 50%; left: 42%; width: 9px; height: 9px; margin: -4.5px 0 0 -4px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #eaf3ff, #7fa8d8); box-shadow: 0 0 4px rgba(0,0,0,0.5); }
-
-/* "Last played" footnote */
-.sp-last { padding: 0 10px 9px; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #aeb8cc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-last-k { color: #7e879a; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.54rem; margin-right: 4px; }
-
-.sp-panel .sp-link { color: #9fb6da; background: transparent; border-top: 1px solid #2a3040; padding: 6px 10px; }
+/* "last" footnote + profile link */
+.sp-last { padding: 0 9px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; color: #9aa6bc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-last-k { color: #6f7a90; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 4px; }
+.sp-panel .sp-link { color: #9fb6da; background: transparent; border-top: 1px solid #2a3040; padding: 5px 9px; }
 .sp-panel .sp-link:hover { color: #dde6f6; }
 
 /* ── GitHub → warped retro CRT terminal ────────────────────── */
@@ -1070,6 +1034,22 @@ code {
 .block[data-app="terminal"] > .prompt { background: #0a1a0e; border-bottom: 1px solid #0a3a18; }
 .block[data-app="cdplayer"] > .prompt { background: linear-gradient(180deg, #7a8498, #454d5e); border-bottom: 1px solid #20242e; }
 .block[data-app="terminal"] > .prompt .p-cmd { font-family: 'Courier New', monospace; color: #33ff66; text-shadow: 0 0 4px rgba(51,255,102,0.4); }
+/* Flat, color-matched window buttons — the chunky beige ones clash on dark bars */
+.block[data-app="winamp"] .wc,
+.block[data-app="terminal"] .wc,
+.block[data-app="cdplayer"] .wc { background: transparent; border: 1px solid transparent; }
+.block[data-app="winamp"] .wc:hover,
+.block[data-app="terminal"] .wc:hover,
+.block[data-app="cdplayer"] .wc:hover { background: rgba(255,255,255,0.14); }
+.block[data-app="winamp"] .wc:active,
+.block[data-app="terminal"] .wc:active,
+.block[data-app="cdplayer"] .wc:active { background: rgba(0,0,0,0.25); border-color: transparent; }
+.block[data-app="winamp"] .wc-min::before,  .block[data-app="cdplayer"] .wc-min::before  { background: #e6ecf6; }
+.block[data-app="winamp"] .wc-max::before,  .block[data-app="cdplayer"] .wc-max::before  { border-color: #e6ecf6; }
+.block[data-app="winamp"] .wc-close::before, .block[data-app="cdplayer"] .wc-close::before { color: #e6ecf6; }
+.block[data-app="terminal"] .wc-min::before  { background: #33ff66; }
+.block[data-app="terminal"] .wc-max::before  { border-color: #33ff66; }
+.block[data-app="terminal"] .wc-close::before { color: #33ff66; }
 .block[data-app="winamp"] .sp-panel,
 .block[data-app="terminal"] .gh-panel,
 .block[data-app="cdplayer"] .steam-panel { border: none; box-shadow: none; }

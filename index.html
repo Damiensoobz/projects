@@ -26,7 +26,7 @@
     <!-- ── Welcome (styled as an MS-DOS Prompt) ────────────────── -->
     <section class="block" data-app="dos" data-app-title="MS-DOS Prompt">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">welcome</span></div>
-        <div class="dos-screen">
+        <div class="dos-screen" id="dos-screen">
             <pre class="ascii-art" aria-label="Damien">
  ██████╗  █████╗ ███╗   ███╗██╗███████╗███╗   ██╗
  ██╔══██╗██╔══██╗████╗ ████║██║██╔════╝████╗  ██║
@@ -34,10 +34,12 @@
  ██║  ██║██╔══██║██║╚██╔╝██║██║██╔══╝  ██║╚██╗██║
  ██████╔╝██║  ██║██║ ╚═╝ ██║██║███████╗██║ ╚████║
  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚══════╝╚═╝  ╚═══╝</pre>
-            <p class="out">developer &amp; code wizard &mdash; v1.0.0 <span class="dim">(beta, like the rest of us)</span></p>
-            <p class="out dim">drag the windows around &nbsp;&middot;&nbsp; double-click a title bar to send it home &nbsp;&middot;&nbsp; poke at things &mdash; some of them poke back</p>
-            <p class="out dim">tip: right-click the desktop &mdash; there&rsquo;s a thing. (try the &uarr;&uarr;&darr;&darr;&larr;&rarr;&larr;&rarr;BA thing too)</p>
-            <p class="dos-line">C:\DAMIEN&gt; <span class="dos-cursor">█</span></p>
+            <div class="dos-out" id="dos-out">
+                <p class="out">developer &amp; code wizard &mdash; v1.0.0 <span class="dim">(beta, like the rest of us)</span></p>
+                <p class="out dim">A desktop museum of half-finished magic: real projects, a live now-playing/activity feed, and a few things that bite back. Click around &mdash; or just type below.</p>
+                <p class="out dim">Type <b>help</b> for a list of commands.</p>
+            </div>
+            <div class="dos-line">C:\DAMIEN&gt; <input class="dos-input" id="dos-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="MS-DOS command line"><span class="dos-cursor" id="dos-cursor">█</span></div>
         </div>
     </section>
 

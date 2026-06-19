@@ -32,7 +32,6 @@ body { min-height: 100vh; }
 }
 /* Hide raw terminal chrome — the command becomes the window title */
 .p-user, .p-at, .p-host, .p-sep, .p-path, .p-dim, .p-sym { display: none; }
-.footer-block .prompt { justify-content: center; }
 
 /* ── Output text ───────────────────────────────────────────── */
 .out { margin-bottom: 6px; }
@@ -145,11 +144,6 @@ body { min-height: 100vh; }
 .sp-link svg, .gh-repo svg, .gh-branch svg, .gh-link svg, .steam-link svg { flex-shrink: 0; }
 
 .steam-img { width: 100%; object-fit: cover; display: block; }
-
-/* ── Footer ────────────────────────────────────────────────── */
-.footer-block { text-align: center; }
-.footer-note { margin-top: 12px; }
-.cursor-blink { display: none; }
 
 /* ── Shared animation + motion prefs ───────────────────────── */
 @keyframes blink {
@@ -302,34 +296,6 @@ body.has-max { overflow: hidden; }
 .bsod-inner p { margin-bottom: 12px; }
 .bsod-h { background: #aaaaaa; color: #0000aa; display: inline-block; padding: 0 3px; font-weight: 700; }
 .bsod-blink { animation: blink 1s step-end infinite; }
-
-/* "Clippit" helper — top-right by default; bubble hangs underneath him */
-.clippy { position: fixed; top: 64px; right: 16px; z-index: 9500; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-.clippy-guy {
-    width: 46px; height: 54px; padding: 0; cursor: grab; border: none; background: transparent center/contain no-repeat;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='46' height='54' viewBox='0 0 46 54'><path d='M15 13 v24 a9 9 0 0 0 18 0 V12 a6 6 0 0 0 -12 0 v24 a3 3 0 0 0 6 0 V16' fill='none' stroke='%239aa6bb' stroke-width='4.5' stroke-linecap='round'/><circle cx='19' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='29' cy='13' r='5.5' fill='%23fff' stroke='%23000' stroke-width='1.2'/><circle cx='20.5' cy='14' r='2.2' fill='%23000'/><circle cx='30.5' cy='14' r='2.2' fill='%23000'/></svg>");
-    filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35));
-    animation: clippy-idle 5s ease-in-out infinite;
-}
-.clippy-drag { cursor: grabbing; }
-.clippy-drag .clippy-guy { cursor: grabbing; animation: none; }
-.clippy-tap { animation: clippy-wiggle 0.5s ease; }
-@keyframes clippy-idle { 0%, 90%, 100% { transform: translateY(0) rotate(0); } 95% { transform: translateY(-2px) rotate(-4deg); } }
-@keyframes clippy-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 60% { transform: rotate(7deg); } }
-.clippy-bubble {
-    display: none; position: relative; max-width: 240px; background: #ffffe1; border: 1px solid #000000; border-radius: 7px;
-    padding: 10px 12px; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; line-height: 1.45; color: #000000; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-}
-.clippy.open .clippy-bubble { display: block; animation: clippy-pop 0.16s ease both; }
-@keyframes clippy-pop { from { opacity: 0; transform: translateY(-4px) scale(0.96); } to { opacity: 1; transform: none; } }
-.clippy-bubble::before {   /* little tail pointing up at the guy */
-    content: ''; position: absolute; top: -7px; right: 15px; width: 12px; height: 12px;
-    background: #ffffe1; border-left: 1px solid #000; border-top: 1px solid #000; transform: rotate(45deg);
-}
-.clippy-bubble a { color: #0000cc; }
-.clippy-actions { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
-.clippy-actions button { font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; padding: 2px 8px; cursor: pointer; background: #d4d0c8;
-    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
 
 /* Recycle Bin — faux explorer window */
 .rb-win .fw-body { padding: 0; }
