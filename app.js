@@ -46,6 +46,15 @@
         var cursor = document.getElementById('dos-cursor');
         if (!screen || !out || !input) return;
 
+        var bootOut = out.innerHTML;             // snapshot of the initial "script" output
+        // Re-running AUTOEXEC.BAT (used when the window is closed → relaunched).
+        window.dosRerun = function () {
+            out.innerHTML = '<p class="out dim">Running AUTOEXEC.BAT&hellip;</p>' + bootOut;
+            input.value = ''; grow();
+            screen.scrollTop = 0;
+            input.focus();
+        };
+
         function grow() { input.style.width = Math.max(1, input.value.length) + 'ch'; }
         input.addEventListener('input', grow); grow();
 

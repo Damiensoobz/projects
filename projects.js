@@ -116,3 +116,14 @@ var steamConfig = {
     steamId:    "76561198823151635",
     profileUrl: "https://steamcommunity.com/profiles/76561198823151635",
 };
+
+// ─────────────────────────────────────────────────────────────
+//  Socials — branded desktop shortcut icons. Paste your full
+//  profile URLs here; leave "" to hide that icon.
+// ─────────────────────────────────────────────────────────────
+
+var socialConfig = {
+    instagram: "",   // e.g. "https://instagram.com/yourhandle"
+    linkedin:  "",   // e.g. "https://linkedin.com/in/yourhandle"
+    facebook:  "",   // e.g. "https://facebook.com/yourhandle"
+};

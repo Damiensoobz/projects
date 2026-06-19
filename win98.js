@@ -52,6 +52,7 @@
             }).join('') +
             '<div class="sm-sep"></div>' +
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
+            '<button class="sm-item" data-sm="taskmgr"><span class="sm-ico sm-ico-task"></span>Task Manager</button>' +
             '<button class="sm-item" data-sm="restart"><span class="sm-ico sm-ico-restart"></span>Restart</button>' +
             '<button class="sm-item" data-sm="shutdown"><span class="sm-ico sm-ico-shut"></span>Shut Down&hellip;</button>' +
         '</div>';
@@ -118,6 +119,10 @@
         if (b.classList.contains('win-max')) toggleMax(b);
         b.classList.add('win-closed');
         setTaskState(b, 'gone');
+        // AUTOEXEC.BAT is a startup script — you can't kill it, it just runs again.
+        if (b.getAttribute('data-app') === 'dos') {
+            setTimeout(function () { restore(b); if (window.dosRerun) window.dosRerun(); }, 750);
+        }
     }
     function openFromMenu(id) {
         var b = document.querySelector('[data-win-id="' + id + '"]');
@@ -226,6 +231,7 @@
         it.addEventListener('click', function () {
             var sm = it.getAttribute('data-sm');
             if (sm === 'mines') { if (window.launchMinesweeper) window.launchMinesweeper(); }
+            else if (sm === 'taskmgr') openTaskManager();
             else if (sm === 'restart') restartGag();
             else if (sm === 'shutdown') shutDownGag();
             else openFromMenu(it.dataset.target);
@@ -284,8 +290,16 @@
         { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
         { kind: 'mine',     label: 'Minesweeper',   action: function () { if (window.launchMinesweeper) window.launchMinesweeper(); } },
-        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } }
+        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
+        { kind: 'instagram', label: 'Instagram', action: function () { openSocial('Instagram', social('instagram')); } },
+        { kind: 'linkedin',  label: 'LinkedIn',  action: function () { openSocial('LinkedIn',  social('linkedin')); } },
+        { kind: 'facebook',  label: 'Facebook',  action: function () { openSocial('Facebook',  social('facebook')); } }
     ];
+    function social(key) { return (typeof socialConfig !== 'undefined' && socialConfig[key]) || ''; }
+    function openSocial(name, url) {
+        if (url) { window.open(url, '_blank', 'noopener,noreferrer'); }
+        else { openDialog(name, '<p class="dlg-p">No ' + esc(name) + ' profile set yet.<br><br>Add your URL to <b>socialConfig</b> in <code>projects.js</code>.</p>'); }
+    }
     var deskWrap = document.createElement('div');
     deskWrap.className = 'desktop-icons';
     deskIcons.forEach(function (ic) {
@@ -451,6 +465,94 @@
         w.body.querySelector('.rb-restore').addEventListener('click', function () {
             openDialog('Restore File', '<p class="dlg-p">Restore <b>free_time.exe</b>?<br><br>' +
                 'Error 0x1A4: file is currently in use by <i>adult life</i> and cannot be restored.</p>');
+        });
+    }
+
+    // ── Gag Task Manager ────────────────────────────────────────
+    function openTaskManager() {
+        var procs = [
+            ['caffeine.exe',             '420', '1,024,000 K'],
+            ['imposter_syndrome.dll',    '99',  '6,666,666 K'],
+            ['chrome.exe',               '88',  '9,999,999 K'],
+            ['chrome.exe',               '88',  '9,999,998 K'],
+            ['chrome.exe',               '88',  '9,999,997 K'],
+            ['stack_overflow_tabs (47)', '45',  '3,500,000 K'],
+            ['existential_dread.exe',    '73',  '512,000 K'],
+            ['one_more_episode.exe',     '56',  '2,048,000 K'],
+            ['procrastination.exe',      '02',  '8,008,135 K'],
+            ['meeting_was_an_email.exe', '33',  '404,000 K'],
+            ['vibes.dll',                '100', '1 K'],
+            ['snacks.exe',               '17',  '256,000 K'],
+            ['looking_busy.exe',         '12',  '64 K'],
+            ['motivation.exe',           '00',  'Not Responding'],
+            ['System Idle Process',      '-7',  '0 K']
+        ];
+        var apps = [
+            ['Damien&rsquo;s Portfolio',   'Running'],
+            ['Damien&rsquo;s Blog',        'Not Responding'],
+            ['Minesweeper',                'Running (badly)'],
+            ['Doing the dishes',           'Suspended'],
+            ['Replying to that text',      'Not Responding'],
+            ['Going to the gym (2019)',    'Stopped']
+        ];
+        var perf = [
+            ['CPU Usage',      100, '420%'],
+            ['Memory',          99, '99%'],
+            ['Caffeine',       100, 'CRITICAL'],
+            ['Vibes',          100, 'immaculate'],
+            ['Productivity',     3, '3%'],
+            ['Bugs Remaining', 100, '&infin;']
+        ];
+        var procRows = procs.map(function (p) {
+            return '<tr><td>' + esc(p[0]) + '</td><td class="tm-num">' + p[1] + '</td><td class="tm-num">' + p[2] + '</td></tr>';
+        }).join('');
+        var appRows = apps.map(function (a) {
+            return '<li><span class="tm-app-ico"></span><span class="tm-app-name">' + a[0] +
+                   '</span><span class="tm-app-status">' + a[1] + '</span></li>';
+        }).join('');
+        var perfBars = perf.map(function (g) {
+            return '<div class="tm-gauge"><span class="tm-gauge-label">' + g[0] + '</span>' +
+                   '<span class="tm-gauge-bar"><i style="width:' + Math.min(100, g[1]) + '%"></i></span>' +
+                   '<span class="tm-gauge-val">' + g[2] + '</span></div>';
+        }).join('');
+        var html =
+            '<div class="tm">' +
+                '<div class="tm-tabs">' +
+                    '<button class="tm-tab active" data-tab="proc">Processes</button>' +
+                    '<button class="tm-tab" data-tab="apps">Applications</button>' +
+                    '<button class="tm-tab" data-tab="perf">Performance</button>' +
+                '</div>' +
+                '<div class="tm-body">' +
+                    '<div class="tm-pane" data-pane="proc"><table class="tm-proc">' +
+                        '<thead><tr><th>Image Name</th><th class="tm-num">CPU</th><th class="tm-num">Mem Usage</th></tr></thead>' +
+                        '<tbody>' + procRows + '</tbody></table></div>' +
+                    '<div class="tm-pane" data-pane="apps" hidden><ul class="tm-applist">' + appRows + '</ul></div>' +
+                    '<div class="tm-pane" data-pane="perf" hidden>' + perfBars + '</div>' +
+                '</div>' +
+                '<div class="tm-foot"><span class="tm-count">Processes: ' + procs.length + '</span>' +
+                    '<button class="tm-end">End Task</button></div>' +
+            '</div>';
+        var w = createWindow('Task Manager', html, 'tm-win');
+        var tabs = w.body.querySelectorAll('.tm-tab');
+        [].forEach.call(tabs, function (t) {
+            t.addEventListener('click', function () {
+                [].forEach.call(tabs, function (x) { x.classList.remove('active'); });
+                t.classList.add('active');
+                [].forEach.call(w.body.querySelectorAll('.tm-pane'), function (p) {
+                    p.hidden = (p.getAttribute('data-pane') !== t.getAttribute('data-tab'));
+                });
+            });
+        });
+        var sel = null;
+        [].forEach.call(w.body.querySelectorAll('.tm-proc tbody tr'), function (tr) {
+            tr.addEventListener('click', function () {
+                if (sel) sel.classList.remove('sel');
+                sel = tr; tr.classList.add('sel');
+            });
+        });
+        w.body.querySelector('.tm-end').addEventListener('click', function () {
+            var name = sel ? sel.firstElementChild.textContent : 'caffeine.exe';
+            openDialog('End Program', '<p class="dlg-p">Ending <b>' + esc(name) + '</b> may destabilize the entire personality and any unsaved vibes will be lost.<br><br>End it anyway?</p>');
         });
     }
 
