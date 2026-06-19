@@ -230,7 +230,7 @@
     [].forEach.call(menu.querySelectorAll('.sm-item'), function (it) {
         it.addEventListener('click', function () {
             var sm = it.getAttribute('data-sm');
-            if (sm === 'mines') { if (window.launchMinesweeper) window.launchMinesweeper(); }
+            if (sm === 'mines') { openMinesweeper(); }
             else if (sm === 'taskmgr') openTaskManager();
             else if (sm === 'restart') restartGag();
             else if (sm === 'shutdown') shutDownGag();
@@ -289,7 +289,7 @@
     var deskIcons = [
         { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
-        { kind: 'mine',     label: 'Minesweeper',   action: function () { if (window.launchMinesweeper) window.launchMinesweeper(); } },
+        { kind: 'mine',     label: 'Minesweeper',   action: function () { openMinesweeper(); } },
         { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
         { kind: 'instagram', label: 'Instagram', action: function () { openSocial('Instagram', social('instagram')); } },
         { kind: 'linkedin',  label: 'LinkedIn',  action: function () { openSocial('LinkedIn',  social('linkedin')); } },
@@ -331,6 +331,8 @@
         '<button class="ctx-item" data-act="refresh">Refresh</button>' +
         '<button class="ctx-item" data-act="tidy">Tidy Windows</button>' +
         '<div class="ctx-sep"></div>' +
+        '<button class="ctx-item" data-act="taskmgr">Task Manager</button>' +
+        '<div class="ctx-sep"></div>' +
         '<button class="ctx-item" data-act="props">Properties</button>';
     document.body.appendChild(ctx);
     function hideCtx() { ctx.hidden = true; }
@@ -348,6 +350,7 @@
         var act = e.target.getAttribute('data-act');
         if (act === 'refresh' && window.triggerScramble) window.triggerScramble();
         else if (act === 'tidy') tidyWindows();
+        else if (act === 'taskmgr') openTaskManager();
         else if (act === 'props') openDialog('Display Properties', sysInfoHtml());
         hideCtx();
     });
@@ -424,6 +427,7 @@
 
     // ── Recycle Bin → faux explorer of "deleted" things ─────────
     function openRecycleBin() {
+        if (document.querySelector('.rb-win')) { alreadyRunning('Recycle Bin'); return; }
         var files = [
             { ic: 'html', name: 'portfolio_v1_FINAL_final.html', meta: 'HTML Document &middot; 4 KB' },
             { ic: 'txt',  name: 'good_intentions.txt',           meta: 'Text Document &middot; 0 KB' },
@@ -468,72 +472,116 @@
         });
     }
 
+    // ── Error gags: no admin rights / single instance ───────────
+    function adminError(verb, name) {
+        openDialog(verb + ' Process',
+            '<div class="dlg-err"><span class="dlg-err-ico"></span>' +
+            '<p class="dlg-p">Unable to ' + verb.toLowerCase() + ' <b>' + esc(name) + '</b>.<br><br>' +
+            'Access is denied &mdash; you do not have administrator privileges on this machine. (You never did.)</p></div>');
+    }
+    function alreadyRunning(name) {
+        openDialog(name,
+            '<div class="dlg-err"><span class="dlg-err-ico"></span>' +
+            '<p class="dlg-p"><b>' + esc(name) + '</b> is already running.<br><br>' +
+            'Only one instance may be open at a time.</p></div>');
+    }
+    function openMinesweeper() {
+        if (document.querySelector('.ms-win')) { alreadyRunning('Minesweeper'); return; }
+        if (window.launchMinesweeper) window.launchMinesweeper();
+    }
+
     // ── Gag Task Manager ────────────────────────────────────────
-    function openTaskManager() {
-        var procs = [
-            ['caffeine.exe',             '420', '1,024,000 K'],
-            ['imposter_syndrome.dll',    '99',  '6,666,666 K'],
-            ['chrome.exe',               '88',  '9,999,999 K'],
-            ['chrome.exe',               '88',  '9,999,998 K'],
-            ['chrome.exe',               '88',  '9,999,997 K'],
-            ['stack_overflow_tabs (47)', '45',  '3,500,000 K'],
-            ['existential_dread.exe',    '73',  '512,000 K'],
-            ['one_more_episode.exe',     '56',  '2,048,000 K'],
-            ['procrastination.exe',      '02',  '8,008,135 K'],
-            ['meeting_was_an_email.exe', '33',  '404,000 K'],
-            ['vibes.dll',                '100', '1 K'],
-            ['snacks.exe',               '17',  '256,000 K'],
-            ['looking_busy.exe',         '12',  '64 K'],
-            ['motivation.exe',           '00',  'Not Responding'],
-            ['System Idle Process',      '-7',  '0 K']
-        ];
-        var apps = [
-            ['Damien&rsquo;s Portfolio',   'Running'],
-            ['Damien&rsquo;s Blog',        'Not Responding'],
-            ['Minesweeper',                'Running (badly)'],
-            ['Doing the dishes',           'Suspended'],
-            ['Replying to that text',      'Not Responding'],
-            ['Going to the gym (2019)',    'Stopped']
-        ];
-        var perf = [
-            ['CPU Usage',      100, '420%'],
-            ['Memory',          99, '99%'],
-            ['Caffeine',       100, 'CRITICAL'],
-            ['Vibes',          100, 'immaculate'],
-            ['Productivity',     3, '3%'],
-            ['Bugs Remaining', 100, '&infin;']
-        ];
-        var procRows = procs.map(function (p) {
+    // Open windows are mapped to plausible process names; closing/reopening an
+    // app is reflected live. The outrageous ones are always there for flavor.
+    var TM_APP = {
+        dos:      ['command.com',  '04', '1,180 K'],
+        winamp:   ['wmplayer.exe', '06', '14,200 K'],
+        terminal: ['telnet.exe',   '02', '3,900 K'],
+        cdplayer: ['cdplayer.exe', '03', '5,600 K'],
+        notepad:  ['notepad.exe',  '00', '2,040 K'],
+        ie:       ['iexplore.exe', '23', '88,000 K']
+    };
+    var TM_FW = {
+        'ms-win': ['winmine.exe',  '01', '1,400 K'],
+        'tm-win': ['taskmgr.exe',  '08', '4,200 K'],
+        'rb-win': ['explorer.exe', '05', '12,000 K']
+    };
+    var TM_GAG = [
+        ['caffeine.exe',             '420', '1,024,000 K'],
+        ['imposter_syndrome.dll',    '99',  '6,666,666 K'],
+        ['chrome.exe',               '88',  '9,999,999 K'],
+        ['chrome.exe',               '88',  '9,999,998 K'],
+        ['chrome.exe',               '88',  '9,999,997 K'],
+        ['stack_overflow_tabs (47)', '45',  '3,500,000 K'],
+        ['existential_dread.exe',    '73',  '512,000 K'],
+        ['one_more_episode.exe',     '56',  '2,048,000 K'],
+        ['procrastination.exe',      '02',  '8,008,135 K'],
+        ['meeting_was_an_email.exe', '33',  '404,000 K'],
+        ['vibes.dll',                '100', '1 K'],
+        ['snacks.exe',               '17',  '256,000 K'],
+        ['motivation.exe',           '00',  'Not Responding'],
+        ['System Idle Process',      '-7',  '0 K']
+    ];
+    function tmProcesses() {
+        var rows = [];
+        [].forEach.call(document.querySelectorAll('.block[data-app]'), function (b) {
+            if (b.classList.contains('win-closed')) return;
+            var m = TM_APP[b.getAttribute('data-app')];
+            if (m) rows.push(m);
+        });
+        [].forEach.call(document.querySelectorAll('.fw'), function (f) {
+            for (var k in TM_FW) { if (f.classList.contains(k)) { rows.push(TM_FW[k]); break; } }
+        });
+        return rows.concat(TM_GAG);
+    }
+    function tmRowsHtml(rows) {
+        return rows.map(function (p) {
             return '<tr><td>' + esc(p[0]) + '</td><td class="tm-num">' + p[1] + '</td><td class="tm-num">' + p[2] + '</td></tr>';
         }).join('');
-        var appRows = apps.map(function (a) {
-            return '<li><span class="tm-app-ico"></span><span class="tm-app-name">' + a[0] +
-                   '</span><span class="tm-app-status">' + a[1] + '</span></li>';
+    }
+
+    function openTaskManager() {
+        if (document.querySelector('.tm-win')) { alreadyRunning('Task Manager'); return; }
+        // [label, in-use, total, bar%, over-capacity?]
+        var perf = [
+            ['CPU Usage',       '420%',       '100%',       100, true],
+            ['Physical Memory', '63,901 MB',  '64 MB',      100, true],
+            ['Commit Charge',   '999,999 K',  '512 K',      100, true],
+            ['Caffeine',        '6 cups',     '2 cups',     100, true],
+            ['Vibes',           'immaculate', 'immaculate', 100, false],
+            ['Productivity',    '3%',         '100%',         3, false],
+            ['Free Time',       '0 ms',       '0 ms',         0, false]
+        ];
+        var perfRows = perf.map(function (g) {
+            return '<div class="tm-perf-row"><span class="tm-perf-label">' + g[0] + '</span>' +
+                   '<span class="tm-perf-bar' + (g[4] ? ' over' : '') + '"><i style="width:' + g[3] + '%"></i></span>' +
+                   '<span class="tm-perf-use">' + g[1] + '</span>' +
+                   '<span class="tm-perf-tot">/ ' + g[2] + '</span></div>';
         }).join('');
-        var perfBars = perf.map(function (g) {
-            return '<div class="tm-gauge"><span class="tm-gauge-label">' + g[0] + '</span>' +
-                   '<span class="tm-gauge-bar"><i style="width:' + Math.min(100, g[1]) + '%"></i></span>' +
-                   '<span class="tm-gauge-val">' + g[2] + '</span></div>';
-        }).join('');
+        var rows0 = tmProcesses();
         var html =
             '<div class="tm">' +
                 '<div class="tm-tabs">' +
                     '<button class="tm-tab active" data-tab="proc">Processes</button>' +
-                    '<button class="tm-tab" data-tab="apps">Applications</button>' +
                     '<button class="tm-tab" data-tab="perf">Performance</button>' +
                 '</div>' +
                 '<div class="tm-body">' +
                     '<div class="tm-pane" data-pane="proc"><table class="tm-proc">' +
                         '<thead><tr><th>Image Name</th><th class="tm-num">CPU</th><th class="tm-num">Mem Usage</th></tr></thead>' +
-                        '<tbody>' + procRows + '</tbody></table></div>' +
-                    '<div class="tm-pane" data-pane="apps" hidden><ul class="tm-applist">' + appRows + '</ul></div>' +
-                    '<div class="tm-pane" data-pane="perf" hidden>' + perfBars + '</div>' +
+                        '<tbody>' + tmRowsHtml(rows0) + '</tbody></table></div>' +
+                    '<div class="tm-pane" data-pane="perf" hidden>' +
+                        '<div class="tm-perf-head"><span>Resource</span><span>In&nbsp;Use&nbsp; / &nbsp;Total</span></div>' +
+                        perfRows + '</div>' +
                 '</div>' +
-                '<div class="tm-foot"><span class="tm-count">Processes: ' + procs.length + '</span>' +
+                '<div class="tm-foot"><span class="tm-count"></span>' +
                     '<button class="tm-end">End Task</button></div>' +
             '</div>';
         var w = createWindow('Task Manager', html, 'tm-win');
-        var tabs = w.body.querySelectorAll('.tm-tab');
+        var tabs    = w.body.querySelectorAll('.tm-tab');
+        var tbody   = w.body.querySelector('.tm-proc tbody');
+        var countEl = w.body.querySelector('.tm-count');
+        var sel = null, sig = rows0.map(function (r) { return r[0]; }).join('|');
+
         [].forEach.call(tabs, function (t) {
             t.addEventListener('click', function () {
                 [].forEach.call(tabs, function (x) { x.classList.remove('active'); });
@@ -543,16 +591,31 @@
                 });
             });
         });
-        var sel = null;
-        [].forEach.call(w.body.querySelectorAll('.tm-proc tbody tr'), function (tr) {
-            tr.addEventListener('click', function () {
-                if (sel) sel.classList.remove('sel');
-                sel = tr; tr.classList.add('sel');
+        function bindRows() {
+            [].forEach.call(tbody.querySelectorAll('tr'), function (tr) {
+                tr.addEventListener('click', function () {
+                    if (sel) sel.classList.remove('sel');
+                    sel = tr; tr.classList.add('sel');
+                });
             });
-        });
+        }
+        // Reflect apps being closed/reopened, without churning the DOM when nothing changed.
+        function refresh() {
+            var rows = tmProcesses();
+            var newSig = rows.map(function (r) { return r[0]; }).join('|');
+            if (newSig !== sig) { sig = newSig; tbody.innerHTML = tmRowsHtml(rows); bindRows(); sel = null; }
+            countEl.textContent = 'Processes: ' + rows.length;
+        }
+        bindRows();
+        refresh();          // include the Task Manager itself + anything opened since snapshot
+        var poll = setInterval(function () {
+            if (!document.body.contains(w.el)) { clearInterval(poll); return; }
+            refresh();
+        }, 1200);
         w.body.querySelector('.tm-end').addEventListener('click', function () {
-            var name = sel ? sel.firstElementChild.textContent : 'caffeine.exe';
-            openDialog('End Program', '<p class="dlg-p">Ending <b>' + esc(name) + '</b> may destabilize the entire personality and any unsaved vibes will be lost.<br><br>End it anyway?</p>');
+            var first = tbody.querySelector('td');
+            var name = sel ? sel.firstElementChild.textContent : (first ? first.textContent : 'caffeine.exe');
+            adminError('End', name);
         });
     }
 
