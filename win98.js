@@ -35,7 +35,11 @@
     bar.innerHTML =
         '<button class="start-btn" id="start-btn"><span class="start-logo"></span>Start</button>' +
         '<div class="task-buttons" id="task-buttons"></div>' +
-        '<div class="tray" id="tray"><span class="tray-clock" id="tray-clock"></span></div>';
+        '<div class="tray" id="tray">' +
+            '<button class="tray-ico tray-modem" id="tray-modem" title="Dial-Up Networking"></button>' +
+            '<button class="tray-ico tray-vol" id="tray-vol" title="Volume"></button>' +
+            '<span class="tray-clock" id="tray-clock"></span>' +
+        '</div>';
     document.body.appendChild(bar);
 
     // ── Start menu ──────────────────────────────────────────────
@@ -48,9 +52,10 @@
             '<div class="sm-head">Programs</div>' +
             blocks.map(function (b) {
                 return '<button class="sm-item" data-target="' + b.dataset.winId + '">' +
-                       '<span class="sm-ico"></span>' + esc(b.dataset.winName) + '</button>';
+                       '<span class="sm-ico sm-ico-' + b.getAttribute('data-app') + '"></span>' + esc(b.dataset.winName) + '</button>';
             }).join('') +
             '<div class="sm-sep"></div>' +
+            '<button class="sm-item" data-sm="calc"><span class="sm-ico sm-ico-calc"></span>Calculator</button>' +
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
             '<button class="sm-item" data-sm="taskmgr"><span class="sm-ico sm-ico-task"></span>Task Manager</button>' +
             '<button class="sm-item" data-sm="restart"><span class="sm-ico sm-ico-restart"></span>Restart</button>' +
@@ -231,6 +236,7 @@
         it.addEventListener('click', function () {
             var sm = it.getAttribute('data-sm');
             if (sm === 'mines') { openMinesweeper(); }
+            else if (sm === 'calc') { openCalc(); }
             else if (sm === 'taskmgr') openTaskManager();
             else if (sm === 'restart') restartGag();
             else if (sm === 'shutdown') shutDownGag();
@@ -251,6 +257,62 @@
     }
     tick();
     setInterval(tick, 15000);
+
+    // ── Tray: volume control + dial-up modem ────────────────────
+    (function tray() {
+        var vol   = document.getElementById('tray-vol');
+        var modem = document.getElementById('tray-modem');
+        var pop = null;
+
+        function buildPop() {
+            pop = document.createElement('div');
+            pop.className = 'vol-pop';
+            pop.innerHTML =
+                '<div class="vol-title">Volume</div>' +
+                '<input class="vol-slider" type="range" min="0" max="11" value="11" aria-label="Volume">' +
+                '<div class="vol-val">11</div>' +
+                '<label class="vol-mute"><input type="checkbox" class="vol-mute-cb"> Mute</label>';
+            document.body.appendChild(pop);
+            pop.addEventListener('click', function (e) { e.stopPropagation(); });
+            var slider = pop.querySelector('.vol-slider');
+            var valEl  = pop.querySelector('.vol-val');
+            var muteCb = pop.querySelector('.vol-mute-cb');
+            function sync() {
+                var v = +slider.value;
+                var muted = muteCb.checked || v === 0;
+                valEl.textContent = muted ? 'Mute' : (v === 11 ? '11 ♫' : v);
+                if (vol) vol.classList.toggle('muted', muted);
+            }
+            slider.addEventListener('input', function () { if (muteCb.checked) muteCb.checked = false; sync(); });
+            muteCb.addEventListener('change', sync);
+            sync();
+        }
+        function toggleVol() {
+            if (!pop) buildPop();
+            var open = !pop.classList.contains('open');
+            pop.classList.toggle('open', open);
+            if (open) {
+                var r = vol.getBoundingClientRect();
+                pop.style.left   = Math.max(4, Math.min(r.left - 20, window.innerWidth - 84)) + 'px';
+                pop.style.bottom = (window.innerHeight - r.top + 5) + 'px';
+            }
+        }
+        if (vol) vol.addEventListener('click', function (e) { e.stopPropagation(); toggleVol(); });
+        document.addEventListener('click', function () { if (pop) pop.classList.remove('open'); });
+
+        if (modem) {
+            modem.title = 'Dial-Up Networking — Connected at 56,600 bps';
+            modem.addEventListener('click', function (e) {
+                e.stopPropagation();
+                openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
+                    '<p><b>Connected to The Internet</b></p>' +
+                    '<p>Speed: 56,600 bps (allegedly)</p>' +
+                    '<p>Duration: 004:20:00</p>' +
+                    '<p>Bytes received: a worrying amount</p>' +
+                    '<p class="dim">Do not pick up the phone.</p></div></div>');
+            });
+        }
+    })();
 
     // ── Reusable Win98 dialog ───────────────────────────────────
     function openDialog(title, bodyHtml) {
@@ -469,6 +531,10 @@
     function openMinesweeper() {
         if (document.querySelector('.ms-win')) { alreadyRunning('Minesweeper'); return; }
         if (window.launchMinesweeper) window.launchMinesweeper();
+    }
+    function openCalc() {
+        if (document.querySelector('.calc-win')) { alreadyRunning('Calculator'); return; }
+        if (window.launchCalculator) window.launchCalculator();
     }
 
     // ── Gag Task Manager ────────────────────────────────────────
