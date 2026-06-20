@@ -6,10 +6,11 @@
       revocation is the only real fix. (Code no longer reads a client-side key.)
 
 ## 🟡 Features
-- [ ] **Steam serverless proxy** — small Vercel/Cloudflare Worker holding
-      `STEAM_API_KEY` as an env var, returning `GetRecentlyPlayedGames` JSON with
-      CORS headers + a ~5 min cache. Then set `steamConfig.proxyUrl` in
-      `projects.js`. Until then the CD Player shows the "away" state (no disc).
+- [x] **Steam serverless proxy — scaffolded** in `steam-proxy/` (Cloudflare
+      Worker + Vercel alternative + README). **You still need to:** revoke the
+      old key, make a new one, deploy the proxy with `STEAM_API_KEY`/`STEAM_ID`
+      secrets, and set `steamConfig.proxyUrl` in `projects.js`. Until then the
+      CD Player shows the "away" state.
 - [ ] **Fill `socialConfig`** in `projects.js` with real Instagram/LinkedIn/
       Facebook URLs (icons are wired but inert until then).
 - [ ] **Favicon** — currently none; a 16×16 pixel-art floppy/folder would fit.
