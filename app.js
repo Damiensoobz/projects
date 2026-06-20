@@ -131,16 +131,20 @@
     })();
 
     // ── Projects ────────────────────────────────────────────────
-    const grid  = document.getElementById('cards-grid');
-    const count = document.getElementById('project-count');
-
-    if (typeof projects === 'undefined' || projects.length === 0) {
-        grid.innerHTML = '<p class="empty-state">// no modules found — database may be offline</p>';
-    } else {
+    // The project cards are the IE browser's "home" page; browser.js calls
+    // this whenever that page is (re)rendered, so #cards-grid exists then.
+    window.renderPortfolio = function () {
+        var grid  = document.getElementById('cards-grid');
+        if (!grid) return;
+        var count = document.getElementById('project-count');
+        if (typeof projects === 'undefined' || projects.length === 0) {
+            grid.innerHTML = '<p class="empty-state">// no modules found — database may be offline</p>';
+            return;
+        }
         if (count) count.textContent = projects.length;
         grid.innerHTML = projects.map(buildCard).join('');
         hydrateCommits();
-    }
+    };
 
     // Extract "owner/repo" from a GitHub URL.
     function repoSlug(url) {
@@ -183,13 +187,6 @@
                 .catch(function () { /* leave the line hidden on error */ });
         });
     }
-
-    // Re-render the project "posts" (used by the IE Refresh button).
-    window.reloadBlog = function () {
-        if (!grid || typeof projects === 'undefined') return;
-        grid.innerHTML = projects.map(buildCard).join('');
-        hydrateCommits();
-    };
 
     function buildCard(project, index) {
         const hasLink = project.link && project.link !== '#';

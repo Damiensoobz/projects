@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>damien@portfolio:~$</title>
-    <meta name="description" content="Damien — developer portfolio. A browser snake game, a memento mori calendar, a fantasy map generator, and live now-playing / last-push status. Comes in Windows 98 and Game Boy flavors.">
+    <meta name="description" content="Damien — developer portfolio reimagined as a Windows 98 desktop: a browser snake game, a memento-mori calendar, a fantasy map generator, live now-playing &amp; GitHub activity, and a few easter eggs.">
     <meta property="og:title" content="Damien — developer & code wizard">
     <meta property="og:description" content="Retro-skinned developer portfolio: projects, live GitHub activity, and questionable wizard humor.">
     <meta property="og:type" content="website">
@@ -12,10 +12,6 @@
     <meta property="og:image" content="https://damiensoobz.github.io/projects/images/map.png">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://damiensoobz.github.io/projects/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Only Press Start 2P is used (Game Boy skin); the active Win98 skin uses system fonts. -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="base.css">
     <link id="main-style" rel="stylesheet" href="style-y2k.css">
 </head>
@@ -79,30 +75,28 @@
 
     <hr class="divider">
 
-    <!-- ── Projects (styled as Internet Explorer + a blog) ─────── -->
-    <section class="block" data-app="ie" data-app-title="Damien's Blog - Microsoft Internet Explorer">
+    <!-- ── Projects (styled as a Microsoft Internet Explorer browser) ── -->
+    <section class="block" data-app="ie" data-app-title="Microsoft Internet Explorer">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">ls -la projects/</span></div>
         <div class="ie-chrome">
             <div class="ie-menubar"><span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span></div>
             <div class="ie-toolbar">
                 <button class="ie-btn" type="button" data-ie="back" disabled><span class="ie-ico ie-ico-back"></span>Back</button>
                 <button class="ie-btn" type="button" data-ie="fwd" disabled><span class="ie-ico ie-ico-fwd"></span>Forward</button>
-                <button class="ie-btn" type="button" data-ie="stop" disabled><span class="ie-ico ie-ico-stop"></span>Stop</button>
+                <button class="ie-btn" type="button" data-ie="stop"><span class="ie-ico ie-ico-stop"></span>Stop</button>
                 <button class="ie-btn" type="button" data-ie="refresh"><span class="ie-ico ie-ico-refresh"></span>Refresh</button>
                 <button class="ie-btn" type="button" data-ie="home"><span class="ie-ico ie-ico-home"></span>Home</button>
             </div>
             <div class="ie-address">
                 <span class="ie-addr-label">Address</span>
-                <a class="ie-url" href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">
-                    <span class="ie-favicon"></span><span class="ie-url-text">http://damienbuilds.dev/blog</span>
-                </a>
-                <a class="ie-go" href="https://damienbuilds.dev" target="_blank" rel="noopener noreferrer">Go</a>
+                <span class="ie-favicon"></span>
+                <input class="ie-url" id="ie-url" type="text" spellcheck="false" autocomplete="off" aria-label="Address">
+                <button class="ie-go" type="button" data-ie="go">Go</button>
             </div>
         </div>
-        <div class="ie-page">
-            <p class="out dim ls-meta">total <span id="project-count">5</span></p>
-            <div class="cards-grid" id="cards-grid"></div>
+        <div class="ie-page" id="ie-page">
             <noscript>
+                <p class="out dim">total 5</p>
                 <ul class="out">
                     <li>The Serpent's Trial &mdash; browser snake game</li>
                     <li>Memento Mori &mdash; life-in-weeks calendar</li>
@@ -112,10 +106,6 @@
                 </ul>
                 <p class="out dim">Enable JavaScript for the full experience, or browse the source on <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
             </noscript>
-            <div class="ie-teaser">
-                <h3 class="ie-teaser-title">Currently conjuring&hellip;</h3>
-                <p class="ie-teaser-body">Something new is in the cauldron. Bookmark the blog (Ctrl&#8209;D, it&rsquo;ll pretend to work) and check back &mdash; or just <a href="mailto:hello@damienbuilds.dev">email me</a> and beat the queue.</p>
-            </div>
         </div>
         <div class="ie-statusbar"><span class="ie-status-text">Done</span><span class="ie-zone">Internet</span></div>
     </section>
@@ -127,5 +117,6 @@
 <script src="app.js"></script>
 <script src="win98.js"></script>
 <script src="minesweeper.js"></script>
+<script src="browser.js"></script>
 </body>
 </html>

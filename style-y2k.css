@@ -382,40 +382,6 @@ code {
     box-shadow: 0 0 5px rgba(63,185,80,0.5);
     animation: pulse 2.5s ease-in-out infinite;
 }
-.gh-repo {
-    font-family: 'Courier New', monospace;
-    color: #3fb950;
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 8px 10px 2px;
-    gap: 6px;
-}
-.gh-repo svg { width: 13px; height: 13px; color: #3fb950; }
-.gh-branch {
-    font-family: 'Courier New', monospace;
-    color: #6e7681;             /* GitHub dimmer text */
-    font-size: 0.58rem;
-    padding: 1px 10px 5px;
-    gap: 4px;
-}
-.gh-branch svg { width: 10px; height: 10px; }
-.gh-commit {
-    font-family: 'Courier New', monospace;
-    color: #c9d1d9;
-    font-size: 0.62rem;
-    padding: 2px 10px 8px;
-    flex: 1;
-}
-.gh-sha {
-    font-family: 'Courier New', monospace;
-    font-size: 0.58rem;
-    color: #3fb950;             /* commit hash in GitHub green */
-    text-decoration: none;
-    background: rgba(63,185,80,0.1);
-    padding: 0 3px;
-    border-radius: 2px;
-}
-.gh-sha:hover { background: rgba(63,185,80,0.2); }
 .gh-meta {
     gap: 10px;
     padding: 6px 10px;
@@ -423,7 +389,6 @@ code {
     margin-top: auto;
     background: #161b22;
 }
-.gh-time { font-family: 'Courier New', monospace; color: #8b949e; font-size: 0.58rem; }
 .gh-link {
     font-family: 'Courier New', monospace;
     font-size: 0.58rem;
@@ -771,8 +736,9 @@ code {
 .ie-address { display: flex; align-items: center; gap: 6px; background: #d4d0c8; padding: 3px 8px 5px; border-bottom: 1px solid #808080; }
 .ie-addr-label { font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #404040; flex-shrink: 0; }
 .ie-url {
-    flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
-    background: #ffffff; padding: 2px 6px; text-decoration: none;
+    flex: 1; min-width: 0;
+    background: #ffffff; padding: 2px 6px; outline: none;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; color: #000000;
     border-top: 1px solid #808080; border-left: 1px solid #808080;
     border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
 }
@@ -780,8 +746,6 @@ code {
     width: 14px; height: 13px; flex-shrink: 0;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><ellipse cx='8' cy='7' rx='7' ry='3.1' fill='none' stroke='%23ffd200' stroke-width='1.6' transform='rotate(-20 8 7)'/><text x='8' y='11.4' font-family='Georgia,serif' font-size='12' font-weight='bold' fill='%231560bd' text-anchor='middle'>e</text></svg>") center/contain no-repeat;
 }
-.ie-url-text { font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; color: #000000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ie-url:hover .ie-url-text { text-decoration: underline; }
 .ie-go {
     flex-shrink: 0; padding: 2px 12px; background: #d4d0c8; text-decoration: none; color: #000000;
     font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem;
@@ -1077,6 +1041,87 @@ code {
 .ie-teaser-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.1rem; font-weight: 700; color: #7a7a7a; font-style: italic; margin-bottom: 6px; }
 .ie-teaser-body { font-family: Georgia, 'Times New Roman', serif; font-size: 0.88rem; line-height: 1.6; color: #555555; }
 .ie-teaser-body a { color: #0b3d91; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BROWSER PAGES — the IE window's internal "web" (portfolio + gags)
+   ═══════════════════════════════════════════════════════════════ */
+.bw-page { padding: 12px 20px 22px; font-family: Tahoma, Arial, sans-serif; color: #000000; }
+.bw-page [data-link] { cursor: pointer; }
+.bw-page .ie-teaser { margin: 18px -20px -22px; }
+
+/* Retro nav strip */
+.bw-nav { text-align: center; padding: 4px 0 10px; margin-bottom: 14px; border-bottom: 1px solid #d0d0d0; font-size: 0.78rem; }
+.bw-navlink { color: #0b3d91; text-decoration: underline; }
+.bw-navlink.on { color: #000000; font-weight: 700; text-decoration: none; }
+.bw-navsep { color: #b0b0b0; margin: 0 7px; }
+
+/* AltaVista-style search */
+.bw-av { text-align: center; padding: 14px 0 6px; }
+.bw-av-logo { font-family: Georgia, 'Times New Roman', serif; font-size: 1.9rem; font-style: italic; color: #1560bd; letter-spacing: -1px; }
+.bw-av-logo b { color: #cc0000; }
+.bw-av-form { margin: 12px 0 6px; }
+.bw-av-input { width: 58%; min-width: 160px; padding: 3px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.8rem;
+    border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.bw-av-btn { padding: 3px 14px; margin-left: 5px; cursor: pointer; background: #d4d0c8; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.bw-av-btn:active { border-color: #404040 #fff #fff #404040; }
+.bw-av-tip { color: #999; font-size: 0.7rem; font-style: italic; margin-top: 6px; }
+.bw-results { margin-top: 16px; border-top: 1px solid #d0d0d0; padding-top: 12px; }
+.bw-results-meta { font-size: 0.7rem; color: #888; margin-bottom: 12px; }
+.bw-result { margin-bottom: 13px; }
+.bw-result-title { color: #0b3d91; text-decoration: underline; font-size: 0.95rem; }
+.bw-result-url { color: #007800; font-size: 0.7rem; margin: 1px 0; }
+.bw-result-desc { color: #333; font-size: 0.78rem; line-height: 1.4; }
+
+/* 90s guestbook */
+.bw-guestbook { text-align: center; }
+.bw-gb-title { font-family: 'Comic Sans MS', 'Comic Sans', cursive; color: #cc00cc; font-size: 1.4rem; margin-bottom: 4px; }
+.bw-gb-sub { font-size: 0.78rem; color: #555; margin-bottom: 14px; }
+.bw-counter { font-family: 'Courier New', monospace; background: #000; color: #00ff00; padding: 1px 5px; letter-spacing: 2px; }
+.bw-gb-list { text-align: left; margin-bottom: 14px; }
+.bw-gb-entry { border: 1px solid #d8c8e8; background: #fffdf2; padding: 6px 9px; margin-bottom: 8px; }
+.bw-gb-head { display: flex; justify-content: space-between; font-size: 0.68rem; color: #999; margin-bottom: 2px; }
+.bw-gb-head b { color: #cc00cc; font-family: 'Comic Sans MS', cursive; }
+.bw-gb-entry p { font-size: 0.82rem; color: #222; line-height: 1.4; }
+.bw-gb-form { display: flex; gap: 6px; align-items: flex-start; }
+.bw-gb-input { flex: 1; padding: 4px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.78rem; resize: vertical;
+    border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.bw-gb-btn { padding: 4px 12px; cursor: pointer; background: #d4d0c8; font-family: 'Comic Sans MS', cursive; font-size: 0.74rem;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.bw-gb-btn:active { border-color: #404040 #fff #fff #404040; }
+
+/* Conspiracy page */
+.bw-truth { background: #000000; color: #2bff2b; margin: -12px -20px -22px; padding: 16px 20px 24px; text-align: center;
+    font-family: 'Comic Sans MS', 'Times New Roman', serif; }
+.bw-truth .bw-nav { border-bottom-color: #333; }
+.bw-truth .bw-navlink { color: #ffff00; }
+.bw-truth .bw-navlink.on { color: #ffffff; }
+.bw-truth-h { color: #ff2020; font-family: Impact, 'Arial Black', sans-serif; font-size: 2.3rem; letter-spacing: 2px; margin: 6px 0 12px; text-shadow: 0 0 8px rgba(255,0,0,0.6); }
+.bw-truth-p { color: #33ff33; margin: 10px auto; max-width: 500px; line-height: 1.5; }
+.bw-truth-p s { color: #777; }
+.bw-truth-list { text-align: left; max-width: 480px; margin: 14px auto; color: #ffe400; list-style: none; }
+.bw-truth-list li { margin: 7px 0; line-height: 1.4; }
+.bw-truth-foot { color: #ff8800; margin-top: 16px; font-size: 0.82rem; line-height: 1.5; }
+.bw-blink { color: #ff2020; font-weight: 700; animation: bw-blink 0.8s step-end infinite; }
+@keyframes bw-blink { 50% { opacity: 0; } }
+
+/* Under construction */
+.bw-construct { text-align: center; }
+.bw-barrier { height: 16px; margin: 14px 0; border-top: 1px solid #000; border-bottom: 1px solid #000;
+    background: repeating-linear-gradient(45deg, #ffcc00 0 14px, #1a1a1a 14px 28px); background-size: 40px 40px;
+    animation: bw-barrier 1.2s linear infinite; }
+@keyframes bw-barrier { from { background-position: 0 0; } to { background-position: 40px 0; } }
+.bw-construct-h { color: #cc0000; font-family: Impact, 'Arial Black', sans-serif; font-size: 1.7rem; letter-spacing: 1px; }
+.bw-construct-p { margin: 6px auto; max-width: 420px; }
+.bw-construct-foot { color: #666; font-size: 0.78rem; margin-top: 10px; line-height: 1.5; }
+.bw-construct-foot a { color: #0b3d91; }
+
+/* 404 */
+.bw-404-h { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+.bw-404-p { margin: 8px 0; font-size: 0.85rem; line-height: 1.5; }
+.bw-404-list { margin: 8px 0 8px 24px; font-size: 0.85rem; line-height: 1.7; }
+.bw-404-list a { color: #0b3d91; }
+.bw-404-code { margin-top: 16px; color: #888; font-size: 0.72rem; font-family: 'Courier New', monospace; line-height: 1.5; }
 
 /* New desktop icons + Start-menu extras (Win98) */
 .icon-mine .desk-glyph {
