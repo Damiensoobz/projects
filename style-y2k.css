@@ -901,7 +901,7 @@ code {
 
 /* Compact now-playing row: small cover + meta + mini EQ */
 .sp-now { display: flex; align-items: center; gap: 9px; padding: 8px 9px; }
-.sp-panel.wmp .sp-art { width: 46px; height: 46px; flex-shrink: 0; border: 1px solid #0a0c12; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.sp-panel.wmp .sp-art { width: 72px; height: 72px; flex-shrink: 0; border: 1px solid #0a0c12; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 .sp-panel.wmp .sp-art-empty { background-color: #11141c; }
 .sp-meta { min-width: 0; flex: 1; }
 .sp-panel.wmp .sp-status { display: flex; align-items: center; gap: 5px; padding: 0 0 2px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; letter-spacing: 0.06em; text-transform: uppercase; color: #8fa0bc; }
@@ -958,21 +958,27 @@ code {
 .gh-link { color: #5cd8ff; text-shadow: 0 0 4px rgba(92,216,255,0.4); }
 .gh-link:hover { color: #9be3ff; }
 
-/* ── Steam → CD Player, art rendered as a video-game disc ──── */
-.steam-panel { background: linear-gradient(180deg, #30353f 0%, #20242c 100%); border-color: #5a6478; box-shadow: none; }
-.steam-panel::before {
-    content: 'CD Player';
-    background: linear-gradient(to bottom, #7a8498, #454d5e); color: #ffffff;
-    border-bottom: 1px solid #20242e;
+/* ── Steam → floating disc (no window chrome) ────────────────── */
+.steam-panel {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 16px 0 20px;
 }
-.steam-status { background: transparent; color: #aeb8cc; border-bottom-color: #4a5266; }
+.steam-panel::before,
+.steam-status { display: none; }
 
-/* The game header art becomes a shiny disc spinning in the tray */
+/* Large disc — always spinning slowly */
 .steam-disc {
     display: block; position: relative;
-    width: 124px; height: 124px; margin: 14px auto 8px;
+    width: 190px; height: 190px; margin: 0 auto;
     border-radius: 50%; background: #0c0f15;
-    box-shadow: 0 3px 7px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.06);
+    animation: disc-spin 9s linear infinite;
+    cursor: pointer;
 }
 .steam-disc .steam-img {
     width: 100%; height: 100%; border: 0; border-radius: 50%;
@@ -994,42 +1000,72 @@ code {
 }
 .steam-disc-hub {       /* metal hub + spindle hole */
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 38px; height: 38px; border-radius: 50%; pointer-events: none; z-index: 2;
+    width: 46px; height: 46px; border-radius: 50%; pointer-events: none; z-index: 2;
     background: radial-gradient(circle at 50% 50%,
-        #0c0f15 0 8px, rgba(190,200,220,0.9) 8px 13px,
-        rgba(90,100,120,0.55) 13px 18px, transparent 18px);
+        #0c0f15 0 10px, rgba(190,200,220,0.9) 10px 16px,
+        rgba(90,100,120,0.55) 16px 22px, transparent 22px);
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5);
 }
-.steam-disc:hover { animation: disc-spin 3.2s linear infinite; }
 @keyframes disc-spin { to { transform: rotate(360deg); } }
 
-.steam-info { background: transparent; }
-.steam-game { color: #9fe8a0; font-family: 'Courier New', monospace; text-align: center; }
-.steam-meta { color: #7fd0a0; font-family: 'Courier New', monospace; text-align: center; }
-.steam-meta::before { content: '\25B6  '; }
-.steam-info::after {    /* faux transport bar */
-    content: '\25C0\25C0   \25B6   \25A0   \25B6\25B6';
-    display: block; text-align: center; color: #cfd6e4;
-    font-size: 0.72rem; letter-spacing: 2px; margin-top: 10px; padding-top: 7px;
-    border-top: 1px solid #4a5266;
+/* Info bubble — appears on hover above the disc */
+.steam-info {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12, 15, 21, 0.94);
+    border: 1px solid #5a6478;
+    border-radius: 6px;
+    padding: 9px 16px 10px;
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+    z-index: 10;
 }
-.steam-link { color: #7fd0ff; justify-content: center; }
-.steam-link:hover { color: #a8e0ff; }
+.steam-info::after {    /* downward caret */
+    content: '';
+    position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #5a6478;
+}
+.steam-panel:hover .steam-info { opacity: 1; pointer-events: auto; }
+/* Static / away state — no disc, so show info inline instead of as a tooltip */
+.steam-panel:not(.active) .steam-info {
+    position: static;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 4px 0 8px;
+    white-space: normal;
+}
+.steam-panel:not(.active) .steam-info::after { display: none; }
+.steam-game { color: #9fe8a0; font-family: 'Courier New', monospace; font-size: 0.78rem; font-weight: 700; margin-bottom: 3px; text-align: center; }
+.steam-meta { color: #7fd0a0; font-family: 'Courier New', monospace; font-size: 0.68rem; text-align: center; margin-bottom: 0; flex: none; }
+.steam-meta::before { content: '\25B6  '; }
+.steam-link { color: #7fd0ff; justify-content: center; font-size: 0.66rem; margin-top: 8px; padding-top: 7px; border-top: 1px solid #3a4254; }
+.steam-link:hover { color: #a8e0ff; text-decoration: underline; }
 
 /* Status apps shed the chunky Win98 frame and wear their own app skin —
    the slim title bar (drag handle + controls) is restyled per app. */
-.block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] {
+.block[data-app="winamp"], .block[data-app="terminal"] {
     padding: 0; border: 1px solid #000000; box-shadow: 0 2px 7px rgba(0,0,0,0.45);
 }
 .block[data-app="winamp"]   { border-color: #0a0c12; }
 .block[data-app="terminal"] { border-color: #061206; border-radius: 9px; overflow: hidden; }
-.block[data-app="cdplayer"] { border-color: #20242e; }
+/* cdplayer sheds its window frame — the disc floats directly on the desktop */
+.block[data-app="cdplayer"] { padding: 0; background: transparent; border: none; box-shadow: none; }
+.block[data-app="cdplayer"] > .prompt { display: none; }
 .block[data-app="winamp"] > .prompt,
-.block[data-app="terminal"] > .prompt,
-.block[data-app="cdplayer"] > .prompt { margin: 0; }
+.block[data-app="terminal"] > .prompt { margin: 0; }
 .block[data-app="winamp"] > .prompt   { background: linear-gradient(180deg, #3a4055, #20242f); border-bottom: 1px solid #0a0c12; }
 .block[data-app="terminal"] > .prompt { background: #0a1a0e; border-bottom: 1px solid #0a3a18; }
-.block[data-app="cdplayer"] > .prompt { background: linear-gradient(180deg, #7a8498, #454d5e); border-bottom: 1px solid #20242e; }
 .block[data-app="terminal"] > .prompt .p-cmd { font-family: 'Courier New', monospace; color: #33ff66; text-shadow: 0 0 4px rgba(51,255,102,0.4); }
 /* Flat, color-matched window buttons — the chunky beige ones clash on dark bars */
 .block[data-app="winamp"] .wc,

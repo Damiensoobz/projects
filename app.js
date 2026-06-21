@@ -321,7 +321,7 @@
     <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
   ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last</span> ${esc(prevTxt)}</div>` : ''}
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open last.fm') : ''}
+  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
 </div>`;
     }
 
