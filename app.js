@@ -489,19 +489,40 @@
     }
 
     function fetchSteamRecent(proxyUrl, profileUrl) {
-        // proxyUrl is a serverless endpoint that holds the Steam key
-        // server-side and returns GetRecentlyPlayedGames JSON as-is
-        fetch(proxyUrl)
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
+        var profileP = cachedJson(proxyUrl + '?action=profile', 300000).catch(function () { return null; });
+        var libraryP = cachedJson(proxyUrl + '?action=library', 600000).catch(function () { return null; });
+
+        cachedJson(proxyUrl + '?action=recent', 300000)
+            .then(function (data) {
                 var games = data && data.response && data.response.games;
                 if (!games || games.length === 0) { renderSteamStatic(profileUrl); return; }
                 var g        = games[0];
-                var hrs      = g.playtime_2weeks ? (Math.round(g.playtime_2weeks / 6) / 10) : 0;
-                var totalHrs = g.playtime_forever ? Math.round(g.playtime_forever / 60) : 0;
+                var hrs      = g.playtime_2weeks  ? (Math.round(g.playtime_2weeks  / 6) / 10) : 0;
+                var totalHrs = g.playtime_forever ? Math.round(g.playtime_forever / 60)       : 0;
                 renderSteamGame(g.name, g.appid, hrs, totalHrs, profileUrl);
+
+                // Inject profile footer once profile + library resolve (doesn't re-render disc)
+                Promise.all([profileP, libraryP]).then(function (results) {
+                    var player    = results[0] && results[0].response && results[0].response.players && results[0].response.players[0];
+                    var gameCount = (results[1] && results[1].response && results[1].response.game_count) || 0;
+                    if (player) renderSteamFoot(player, gameCount);
+                });
             })
-            .catch(function() { renderSteamStatic(profileUrl); });
+            .catch(function () { renderSteamStatic(profileUrl); });
+    }
+
+    function renderSteamFoot(player, gameCount) {
+        var panel = stEl && stEl.querySelector('.steam-panel');
+        if (!panel) return;
+        var state = player.personastate || 0;
+        var foot  = document.createElement('div');
+        foot.className = 'steam-foot';
+        foot.innerHTML =
+            '<img class="steam-avatar" src="' + esc(player.avatarmedium || '') + '" alt="">' +
+            '<span class="steam-online-dot s' + state + '"></span>' +
+            '<span class="steam-persona">' + esc(player.personaname || '') + '</span>' +
+            (gameCount ? '<span class="steam-lib">' + gameCount + ' games</span>' : '');
+        panel.appendChild(foot);
     }
 
     function renderSteamGame(name, appId, hrs, totalHrs, profileUrl) {

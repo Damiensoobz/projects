@@ -1,15 +1,14 @@
 // ─────────────────────────────────────────────────────────────
-//  Cloudflare Worker — Steam "recently played" proxy.
+//  Cloudflare Worker — Steam API proxy.
 //
-//  Holds the Steam Web API key server-side (as a secret) so it
-//  never ships to the browser, and adds the CORS headers Steam
-//  itself doesn't send. Returns GetRecentlyPlayedGames JSON as-is;
-//  the site reads data.response.games[0].
+//  Routes:
+//    ?action=recent   → GetRecentlyPlayedGames  (default)
+//    ?action=profile  → GetPlayerSummaries  (online status, avatar)
+//    ?action=library  → GetOwnedGames  (game count)
 //
-//  Set two secrets (NOT in this file):
-//    STEAM_API_KEY  — from https://steamcommunity.com/dev/apikey
-//    STEAM_ID       — your 64-bit SteamID (public; e.g. 7656119…)
-//  Then set steamConfig.proxyUrl in projects.js to this Worker's URL.
+//  Secrets (set in Cloudflare dashboard, NOT in this file):
+//    STEAM_API_KEY  — https://steamcommunity.com/dev/apikey
+//    STEAM_ID       — your 64-bit SteamID
 // ─────────────────────────────────────────────────────────────
 
 const ALLOWED_ORIGINS = [
@@ -17,6 +16,12 @@ const ALLOWED_ORIGINS = [
     'https://www.damienbuilds.dev',
     'https://damienbuilds.dev'
 ];
+
+const APIS = {
+    recent:  (k, id) => `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${k}&steamid=${id}&count=5&format=json`,
+    profile: (k, id) => `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${k}&steamids=${id}&format=json`,
+    library: (k, id) => `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${k}&steamid=${id}&include_appinfo=false&include_played_free_games=true&format=json`,
+};
 
 export default {
     async fetch(request, env, ctx) {
@@ -32,24 +37,22 @@ export default {
             return json({ error: 'Worker not configured: set STEAM_API_KEY and STEAM_ID secrets.' }, 500, cors);
         }
 
-        // 5-minute edge cache so we never hammer the Steam API.
-        const cacheKey = new Request(new URL(request.url).origin + '/steam-recent');
+        const action = new URL(request.url).searchParams.get('action') || 'recent';
+        const apiBuilder = APIS[action];
+        if (!apiBuilder) return json({ error: 'Unknown action: ' + action }, 400, cors);
+
+        // Per-action edge cache key
+        const cacheKey = new Request(new URL(request.url).origin + '/steam-' + action);
         const cache = caches.default;
         const hit = await cache.match(cacheKey);
         if (hit) return withCors(hit, cors);
 
-        const api = 'https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/'
-            + '?key=' + env.STEAM_API_KEY
-            + '&steamid=' + env.STEAM_ID
-            + '&count=1&format=json';
-
         let data;
         try {
-            const r = await fetch(api, { cf: { cacheTtl: 300 } });
-            if (!r.ok) throw new Error('Steam ' + r.status);
+            const r = await fetch(apiBuilder(env.STEAM_API_KEY, env.STEAM_ID), { cf: { cacheTtl: 300 } });
+            if (!r.ok) throw new Error('Steam API returned ' + r.status);
             data = await r.json();
         } catch (e) {
-            // Hand back an empty response so the site shows its "away" state.
             return json({ response: {} }, 200, cors);
         }
 
