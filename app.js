@@ -441,16 +441,15 @@
             .then(function(data) {
                 var games = data && data.response && data.response.games;
                 if (!games || games.length === 0) { renderSteamStatic(profileUrl); return; }
-                var g   = games[0];
-                var hrs = g.playtime_2weeks
-                    ? (Math.round(g.playtime_2weeks / 6) / 10)   // minutes → hours, 1 dp
-                    : 0;
-                renderSteamGame(g.name, g.appid, hrs, profileUrl);
+                var g        = games[0];
+                var hrs      = g.playtime_2weeks ? (Math.round(g.playtime_2weeks / 6) / 10) : 0;
+                var totalHrs = g.playtime_forever ? Math.round(g.playtime_forever / 60) : 0;
+                renderSteamGame(g.name, g.appid, hrs, totalHrs, profileUrl);
             })
             .catch(function() { renderSteamStatic(profileUrl); });
     }
 
-    function renderSteamGame(name, appId, hrs, profileUrl) {
+    function renderSteamGame(name, appId, hrs, totalHrs, profileUrl) {
         var storeUrl = 'https://store.steampowered.com/app/' + appId + '/';
         var imgUrl   = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + appId + '/header.jpg';
         stEl.innerHTML =
@@ -462,7 +461,9 @@
                 '</a>' +
                 '<div class="steam-info">' +
                     '<div class="steam-game">' + esc(name) + '</div>' +
-                    '<div class="steam-meta">' + hrs + ' hrs past 2 weeks</div>' +
+                    '<div class="steam-meta">' + hrs + ' hrs / 2 wks</div>' +
+                    (totalHrs ? '<div class="steam-meta">' + totalHrs.toLocaleString() + ' hrs total</div>' : '') +
+                    '<a class="steam-store-link" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer">view on steam ↗</a>' +
                     (profileUrl
                         ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'steam profile ↗</a>'
                         : '') +

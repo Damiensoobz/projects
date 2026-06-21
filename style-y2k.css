@@ -958,7 +958,7 @@ code {
 .gh-link { color: #5cd8ff; text-shadow: 0 0 4px rgba(92,216,255,0.4); }
 .gh-link:hover { color: #9be3ff; }
 
-/* ── Steam → floating disc (no window chrome) ────────────────── */
+/* ── Steam → vinyl record (draggable, slim header) ───────────── */
 .steam-panel {
     background: transparent;
     border: none;
@@ -966,45 +966,65 @@ code {
     position: relative;
     width: fit-content;
     margin: 0 auto;
-    padding: 16px 0 20px;
+    padding: 12px 0 16px;
 }
 .steam-panel::before,
 .steam-status { display: none; }
 
-/* Large disc — always spinning slowly */
+/* Vinyl disc — concentric grooves + center label */
 .steam-disc {
     display: block; position: relative;
     width: 190px; height: 190px; margin: 0 auto;
-    border-radius: 50%; background: #0c0f15;
-    box-shadow: 0 6px 22px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.06);
-    animation: disc-spin 9s linear infinite;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        transparent 0% 20%,
+        #181818 20% 21.5%, rgba(255,255,255,0.028) 21.5% 22%,
+        #181818 22% 24.5%, rgba(255,255,255,0.028) 24.5% 25%,
+        #181818 25% 28%,   rgba(255,255,255,0.028) 28% 28.5%,
+        #181818 28.5% 32%, rgba(255,255,255,0.028) 32% 32.5%,
+        #181818 32.5% 36%, rgba(255,255,255,0.028) 36% 36.5%,
+        #181818 36.5% 40%, rgba(255,255,255,0.028) 40% 40.5%,
+        #181818 40.5% 45%, rgba(255,255,255,0.028) 45% 45.5%,
+        #181818 45.5% 50%, rgba(255,255,255,0.028) 50% 50.5%,
+        #181818 50.5% 55%, rgba(255,255,255,0.028) 55% 55.5%,
+        #181818 55.5% 60%, rgba(255,255,255,0.028) 60% 60.5%,
+        #181818 60.5% 66%, rgba(255,255,255,0.028) 66% 66.5%,
+        #181818 66.5% 72%, rgba(255,255,255,0.028) 72% 72.5%,
+        #181818 72.5% 79%, rgba(255,255,255,0.028) 79% 79.5%,
+        #181818 79.5% 86%, rgba(255,255,255,0.028) 86% 86.5%,
+        #181818 86.5% 100%
+    );
+    animation: disc-spin 16s linear infinite;
     cursor: pointer;
 }
+/* Center label — game art printed on the record */
 .steam-disc .steam-img {
-    width: 100%; height: 100%; border: 0; border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 38%; height: 38%;
+    border-radius: 50%;
     object-fit: cover; display: block;
-    filter: saturate(1.08) brightness(0.96);
+    filter: saturate(1.1) brightness(0.95);
+    z-index: 1;
 }
-.steam-disc::before {   /* iridescent data-side sheen */
-    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+.steam-disc::before {   /* subtle vinyl surface sheen */
+    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 2;
     background: conic-gradient(from 0deg,
-        rgba(255,255,255,0) 0deg, rgba(120,200,255,0.38) 60deg, rgba(255,255,255,0) 120deg,
-        rgba(255,140,220,0.32) 200deg, rgba(255,255,255,0) 260deg,
-        rgba(150,255,200,0.34) 320deg, rgba(255,255,255,0) 360deg);
-    mix-blend-mode: screen; opacity: 0.7;
+        rgba(255,255,255,0) 0deg, rgba(180,200,255,0.1) 70deg, rgba(255,255,255,0) 130deg,
+        rgba(200,160,255,0.08) 210deg, rgba(255,255,255,0) 270deg,
+        rgba(160,220,190,0.09) 330deg, rgba(255,255,255,0) 360deg);
+    mix-blend-mode: screen; opacity: 0.9;
 }
-.steam-disc::after {    /* glossy highlight */
-    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(58% 40% at 32% 24%, rgba(255,255,255,0.55), transparent 62%);
-    opacity: 0.5;
+.steam-disc::after {    /* outer edge gloss */
+    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 2;
+    background: radial-gradient(circle at 34% 26%, rgba(255,255,255,0.14), transparent 52%);
 }
-.steam-disc-hub {       /* metal hub + spindle hole */
+.steam-disc-hub {       /* spindle hole */
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 46px; height: 46px; border-radius: 50%; pointer-events: none; z-index: 2;
-    background: radial-gradient(circle at 50% 50%,
-        #0c0f15 0 10px, rgba(190,200,220,0.9) 10px 16px,
-        rgba(90,100,120,0.55) 16px 22px, transparent 22px);
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5);
+    width: 10px; height: 10px; border-radius: 50%; pointer-events: none; z-index: 3;
+    background: #0c0f15;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
 @keyframes disc-spin { to { transform: rotate(360deg); } }
 
@@ -1033,7 +1053,7 @@ code {
     border-top-color: #5a6478;
 }
 .steam-panel:hover .steam-info { opacity: 1; pointer-events: auto; }
-/* Static / away state — no disc, so show info inline instead of as a tooltip */
+/* Static / away state — no disc, show info inline */
 .steam-panel:not(.active) .steam-info {
     position: static;
     transform: none;
@@ -1046,10 +1066,12 @@ code {
     white-space: normal;
 }
 .steam-panel:not(.active) .steam-info::after { display: none; }
-.steam-game { color: #9fe8a0; font-family: 'Courier New', monospace; font-size: 0.78rem; font-weight: 700; margin-bottom: 3px; text-align: center; }
-.steam-meta { color: #7fd0a0; font-family: 'Courier New', monospace; font-size: 0.68rem; text-align: center; margin-bottom: 0; flex: none; }
+.steam-game { color: #9fe8a0; font-family: 'Courier New', monospace; font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; text-align: center; }
+.steam-meta { color: #7fd0a0; font-family: 'Courier New', monospace; font-size: 0.68rem; text-align: center; margin-bottom: 2px; flex: none; }
 .steam-meta::before { content: '\25B6  '; }
-.steam-link { color: #7fd0ff; justify-content: center; font-size: 0.66rem; margin-top: 8px; padding-top: 7px; border-top: 1px solid #3a4254; }
+.steam-store-link { color: #66c0f4; display: flex; align-items: center; justify-content: center; gap: 4px; font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; text-decoration: none; margin-top: 7px; }
+.steam-store-link:hover { color: #9ddcff; text-decoration: underline; }
+.steam-link { color: #7fd0ff; justify-content: center; font-size: 0.64rem; margin-top: 4px; padding-top: 6px; border-top: 1px solid #3a4254; }
 .steam-link:hover { color: #a8e0ff; text-decoration: underline; }
 
 /* Status apps shed the chunky Win98 frame and wear their own app skin —
@@ -1059,9 +1081,10 @@ code {
 }
 .block[data-app="winamp"]   { border-color: #0a0c12; }
 .block[data-app="terminal"] { border-color: #061206; border-radius: 9px; overflow: hidden; }
-/* cdplayer sheds its window frame — the disc floats directly on the desktop */
-.block[data-app="cdplayer"] { padding: 0; background: transparent; border: none; box-shadow: none; }
-.block[data-app="cdplayer"] > .prompt { display: none; }
+/* cdplayer: slim Steam-themed drag handle, disc floats below */
+.block[data-app="cdplayer"] { padding: 0; background: transparent; border: none; box-shadow: none; width: 230px; margin: 0 auto; }
+.block[data-app="cdplayer"] > .prompt { margin: 0; background: rgba(12,16,24,0.82); border-bottom: 1px solid rgba(102,192,244,0.18); border-radius: 4px 4px 0 0; }
+.block[data-app="cdplayer"] > .prompt .p-cmd { color: #9ab8d4; font-size: 0.7rem; }
 .block[data-app="winamp"] > .prompt,
 .block[data-app="terminal"] > .prompt { margin: 0; }
 .block[data-app="winamp"] > .prompt   { background: linear-gradient(180deg, #3a4055, #20242f); border-bottom: 1px solid #0a0c12; }
@@ -1094,7 +1117,7 @@ code {
     content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%2333ff66'>&gt;_</text></svg>");
 }
 .block[data-app="cdplayer"] > .prompt::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='7' cy='7' r='6' fill='%23cfd6e4' stroke='%23454d5e'/><circle cx='7' cy='7' r='2' fill='%23454d5e'/></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='7' cy='7' r='6.5' fill='%23181818'/><circle cx='7' cy='7' r='5.2' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='3.8' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='2.5' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='1.7' fill='%23444'/><circle cx='7' cy='7' r='0.7' fill='%23181818'/></svg>");
 }
 
 /* "Activate Windows" watermark + footer (Win98) */
