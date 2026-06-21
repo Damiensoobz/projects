@@ -710,6 +710,15 @@ code {
     width: 48px; height: 42px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><g transform='skewY(-9)' transform-origin='8 7'><rect x='1' y='4' width='6' height='4' fill='%23ff3b30'/><rect x='8' y='4' width='6' height='4' fill='%232fb344'/><rect x='1' y='9' width='6' height='4' fill='%23308cff'/><rect x='8' y='9' width='6' height='4' fill='%23ffd200'/></g></svg>") center/contain no-repeat;
 }
+/* Error-dialog layout — red icon beside the message */
+.dlg-error { display: flex; gap: 16px; align-items: flex-start; }
+.dlg-error-ico {
+    flex-shrink: 0; width: 32px; height: 32px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23d8000c'/><circle cx='16' cy='16' r='15' fill='none' stroke='%23800000' stroke-width='1'/><circle cx='16' cy='16' r='13' fill='none' stroke='%23ff8a8a' stroke-width='1' stroke-opacity='0.7'/><path d='M10 10 L22 22 M22 10 L10 22' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round'/></svg>") center/contain no-repeat;
+}
+.dlg-error-text { line-height: 1.6; }
+.dlg-error-text p { margin-bottom: 9px; }
+.dlg-error-text p:last-child { margin-bottom: 0; }
 .dlg-foot { padding: 0 16px 14px; }
 .dlg-ok {
     min-width: 72px; padding: 4px 12px; background: #d4d0c8;
@@ -721,21 +730,6 @@ code {
     border-top-color: #404040; border-left-color: #404040;
     border-right-color: #ffffff; border-bottom-color: #ffffff;
 }
-
-/* ── Boot splash — Win98 ────────────────────────────────────── */
-.boot-splash { background: #008080; }
-.boot-logo {
-    width: 60px; height: 52px;
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><g transform='skewY(-9)' transform-origin='8 7'><rect x='1' y='4' width='6' height='4' fill='%23ff3b30'/><rect x='8' y='4' width='6' height='4' fill='%232fb344'/><rect x='1' y='9' width='6' height='4' fill='%23308cff'/><rect x='8' y='9' width='6' height='4' fill='%23ffd200'/></g></svg>") center/contain no-repeat;
-}
-.boot-name { font-family: Tahoma, Arial, sans-serif; font-size: 1.7rem; font-weight: 700; color: #ffffff; letter-spacing: 0.04em; }
-.boot-name b { color: #ffd200; }
-.boot-bar {
-    border-top: 1px solid #404040; border-left: 1px solid #404040;
-    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff; background: #000000;
-}
-.boot-bar span { background: linear-gradient(to right, #000080, #1084d0); }
-.boot-tip { font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #c0c0c0; }
 
 /* ═══════════════════════════════════════════════════════════════
    APP: Projects → Internet Explorer + a blog
@@ -911,11 +905,11 @@ code {
 .sp-panel.wmp .sp-art { width: 72px; height: 72px; flex-shrink: 0; border: 1px solid #0a0c12; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 .sp-panel.wmp .sp-art-empty { background-color: #11141c; }
 .sp-meta { min-width: 0; flex: 1; }
-.sp-panel.wmp .sp-status { display: flex; align-items: center; gap: 5px; padding: 0 0 2px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; letter-spacing: 0.06em; text-transform: uppercase; color: #8fa0bc; }
-.sp-panel.wmp .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: #8a93a8; }
+.sp-panel.wmp .sp-status { display: flex; align-items: center; gap: 5px; padding: 0 0 2px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; letter-spacing: 0.06em; text-transform: uppercase; color: #aebbd2; }
+.sp-panel.wmp .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: #aab3c8; }
 .sp-panel.wmp.playing .sp-dot { background: #25e07a; box-shadow: 0 0 5px rgba(37,224,122,0.7); animation: blink 1.4s step-end infinite; }
-.sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #4dffa0; font-weight: 700; font-size: 0.78rem; text-shadow: 0 0 6px rgba(77,255,160,0.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #2fae73; font-size: 0.66rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #5dffac; font-weight: 700; font-size: 0.78rem; text-shadow: 0 0 6px rgba(77,255,160,0.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #cdd9ea; font-size: 0.66rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Mini EQ (animates only while actually playing) */
 .sp-eq { display: flex; align-items: flex-end; gap: 2px; height: 18px; flex-shrink: 0; }
@@ -927,10 +921,10 @@ code {
 @keyframes sp-eq { from { height: 15%; } to { height: 100%; } }
 
 /* "last" footnote + profile link */
-.sp-last { padding: 0 9px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; color: #9aa6bc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-last-k { color: #6f7a90; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 4px; }
-.sp-panel .sp-link { color: #9fb6da; background: transparent; border-top: 1px solid #2a3040; padding: 5px 9px; }
-.sp-panel .sp-link:hover { color: #dde6f6; }
+.sp-last { padding: 0 9px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; color: #bcc7da; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-last-k { color: #8e99af; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 4px; }
+.sp-panel .sp-link { color: #c2d4ef; background: transparent; border-top: 1px solid #2a3040; padding: 5px 9px; }
+.sp-panel .sp-link:hover { color: #ffffff; }
 
 /* ── GitHub → warped retro CRT terminal ────────────────────── */
 .gh-panel { background: #020a04; border-color: #143; box-shadow: none; position: relative; }
@@ -971,9 +965,9 @@ code {
     border: none;
     box-shadow: none;
     position: relative;
-    width: fit-content;
+    width: 100%;
     margin: 0 auto;
-    padding: 12px 0 16px;
+    padding: 14px 0 0;
 }
 .steam-panel::before,
 .steam-status { display: none; }
@@ -981,7 +975,7 @@ code {
 /* Vinyl disc — concentric grooves + center label */
 .steam-disc {
     display: block; position: relative;
-    width: 190px; height: 190px; margin: 0 auto;
+    width: 210px; height: 210px; margin: 0 auto 14px;
     border-radius: 50%;
     background: #181818;
     animation: disc-spin 16s linear infinite;
@@ -1064,17 +1058,30 @@ code {
 }
 .steam-panel:hover .steam-info { opacity: 1; pointer-events: auto; }
 /* Static / away state — no disc, show info inline */
-/* Profile footer — avatar, status, persona name, library count */
+/* Profile footer — full width, matches the title bar; avatar/status/library + profile link */
 .steam-foot {
-    display: flex; align-items: center; gap: 7px;
-    padding: 7px 12px;
-    background: #171d25;
-    border-top: 1px solid #2a3a4a;
+    display: flex; flex-direction: column; gap: 6px;
+    width: 100%;
+    padding: 8px 12px 9px;
+    background: rgba(12,16,24,0.82);
+    border-top: 1px solid rgba(102,192,244,0.18);
+    border-radius: 0 0 4px 4px;
     font-family: Arial, sans-serif;
     font-size: 0.62rem;
     color: #c6d4df;
     white-space: nowrap;
+    box-sizing: border-box;
 }
+.steam-foot-id { display: flex; align-items: center; gap: 7px; }
+.steam-foot-link {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 4px 0 1px;
+    border-top: 1px solid rgba(102,192,244,0.12);
+    color: #9ecbf0; text-decoration: none;
+    font-size: 0.6rem; letter-spacing: 0.02em;
+}
+.steam-foot-link svg { width: 12px; height: 12px; }
+.steam-foot-link:hover { color: #ffffff; }
 .steam-avatar {
     width: 22px; height: 22px;
     border-radius: 2px;
@@ -1145,10 +1152,10 @@ code {
 .block[data-app="terminal"] .wc-min::before  { background: #33ff66; }
 .block[data-app="terminal"] .wc-max::before  { border-color: #33ff66; }
 .block[data-app="terminal"] .wc-close::before { color: #33ff66; }
-.block[data-app="winamp"] .sp-panel,
 .block[data-app="terminal"] .gh-stats { background: transparent; border-bottom-color: rgba(51,255,102,0.12); }
 .block[data-app="terminal"] .gh-streak { color: #ffb800; text-shadow: 0 0 4px rgba(255,184,0,0.5); }
 .block[data-app="terminal"] .gh-top-repo { color: #1f9c43; }
+.block[data-app="winamp"] .sp-panel,
 .block[data-app="terminal"] .gh-panel,
 .block[data-app="cdplayer"] .steam-panel { border: none; box-shadow: none; }
 .block[data-app="winamp"] .sp-panel::before,
@@ -1264,9 +1271,6 @@ code {
 .sm-sep { border-top: 1px solid #808080; border-bottom: 1px solid #ffffff; margin: 3px 4px; }
 .sm-ico-mine {
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 32 32'><circle cx='16' cy='17' r='9' fill='%23111'/><g stroke='%23111' stroke-width='2'><line x1='16' y1='3' x2='16' y2='31'/><line x1='2' y1='17' x2='30' y2='17'/></g><circle cx='13' cy='14' r='2.2' fill='%23fff'/></svg>") center/contain no-repeat;
-}
-.sm-ico-shut {
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='9' r='5' fill='none' stroke='%23c00000' stroke-width='2'/><line x1='8' y1='2' x2='8' y2='9' stroke='%23c00000' stroke-width='2'/></svg>") center/contain no-repeat;
 }
 .sm-ico-restart {
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M12.5 8 a4.5 4.5 0 1 1 -1.4 -3.3' fill='none' stroke='%23006000' stroke-width='1.8'/><path d='M11.4 1.6 l0.7 3.3 -3.3 -0.5 z' fill='%23006000'/></svg>") center/contain no-repeat;

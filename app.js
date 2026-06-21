@@ -321,7 +321,7 @@
     <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
   ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last</span> ${esc(prevTxt)}</div>` : ''}
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
+  ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
     }
 
@@ -330,7 +330,7 @@
 <div class="sp-panel">
   <div class="sp-status"><span class="sp-dot"></span>spotify</div>
   <div class="sp-artist">signal lost &mdash; the bards are resting</div>
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'open spotify') : ''}
+  ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
     }
 
@@ -505,23 +505,29 @@
                 Promise.all([profileP, libraryP]).then(function (results) {
                     var player    = results[0] && results[0].response && results[0].response.players && results[0].response.players[0];
                     var gameCount = (results[1] && results[1].response && results[1].response.game_count) || 0;
-                    if (player) renderSteamFoot(player, gameCount);
+                    if (player) renderSteamFoot(player, gameCount, profileUrl);
                 });
             })
             .catch(function () { renderSteamStatic(profileUrl); });
     }
 
-    function renderSteamFoot(player, gameCount) {
+    function renderSteamFoot(player, gameCount, profileUrl) {
         var panel = stEl && stEl.querySelector('.steam-panel');
         if (!panel) return;
         var state = player.personastate || 0;
+        var url   = profileUrl || player.profileurl || '';
         var foot  = document.createElement('div');
         foot.className = 'steam-foot';
         foot.innerHTML =
-            '<img class="steam-avatar" src="' + esc(player.avatarmedium || '') + '" alt="">' +
-            '<span class="steam-online-dot s' + state + '"></span>' +
-            '<span class="steam-persona">' + esc(player.personaname || '') + '</span>' +
-            (gameCount ? '<span class="steam-lib">' + gameCount + ' games</span>' : '');
+            '<div class="steam-foot-id">' +
+                '<img class="steam-avatar" src="' + esc(player.avatarmedium || '') + '" alt="">' +
+                '<span class="steam-online-dot s' + state + '"></span>' +
+                '<span class="steam-persona">' + esc(player.personaname || '') + '</span>' +
+                (gameCount ? '<span class="steam-lib">' + gameCount + ' games</span>' : '') +
+            '</div>' +
+            (url
+                ? '<a class="steam-foot-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'View Steam Profile ↗</a>'
+                : '');
         panel.appendChild(foot);
     }
 
@@ -540,9 +546,6 @@
                     '<div class="steam-meta">' + hrs + ' hrs / 2 wks</div>' +
                     (totalHrs ? '<div class="steam-meta">' + totalHrs.toLocaleString() + ' hrs total</div>' : '') +
                     '<a class="steam-store-link" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer">view on steam ↗</a>' +
-                    (profileUrl
-                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'steam profile ↗</a>'
-                        : '') +
                 '</div>' +
             '</div>';
     }

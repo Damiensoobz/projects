@@ -230,14 +230,6 @@ body.has-max { overflow: hidden; }
 .dlg-err-ico { flex-shrink: 0; width: 32px; height: 32px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23d83030' stroke='%23ffffff' stroke-width='1.5'/><path d='M10 10 L22 22 M22 10 L10 22' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round'/></svg>") center/contain no-repeat; }
 
-/* ── Boot splash ────────────────────────────────────────────── */
-.boot-splash { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; }
-.boot-splash.boot-done { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
-.boot-box { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
-.boot-bar { width: 180px; height: 16px; overflow: hidden; }
-.boot-bar span { display: block; height: 100%; width: 0; animation: boot-load 1.6s linear forwards; }
-@keyframes boot-load { from { width: 0; } to { width: 100%; } }
-
 /* ═══════════════════════════════════════════════════════════════
    SINGLE-SCREEN DESKTOP (wide viewports) — windows float freely;
    narrow screens keep the stacked flow set above.
@@ -286,12 +278,6 @@ body.has-max { overflow: hidden; }
 .ms-flag { color: #000000; }
 .ms-n1 { color: #0000ff; } .ms-n2 { color: #008000; } .ms-n3 { color: #ff0000; } .ms-n4 { color: #000080; }
 .ms-n5 { color: #800000; } .ms-n6 { color: #008080; } .ms-n7 { color: #000000; } .ms-n8 { color: #808080; }
-
-/* Shut Down "safe to turn off" screen */
-.shutdown-screen { position: fixed; inset: 0; z-index: 100001; background: #000000; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.shutdown-text { color: #ffb000; font-family: 'Courier New', monospace; font-size: 1.7rem; line-height: 1.5; text-shadow: 0 0 10px rgba(255,176,0,0.5); }
-.shutdown-sub { color: #7a5400; font-family: 'Courier New', monospace; font-size: 0.82rem; margin-top: 18px; }
 
 /* Blue Screen of Death */
 .bsod { position: fixed; inset: 0; z-index: 100001; background: #0000aa; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 30px; }

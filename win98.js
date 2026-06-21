@@ -75,7 +75,6 @@
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
             '<button class="sm-item" data-sm="taskmgr"><span class="sm-ico sm-ico-task"></span>Task Manager</button>' +
             '<button class="sm-item" data-sm="restart"><span class="sm-ico sm-ico-restart"></span>Restart</button>' +
-            '<button class="sm-item" data-sm="shutdown"><span class="sm-ico sm-ico-shut"></span>Shut Down&hellip;</button>' +
         '</div>';
     document.body.appendChild(menu);
 
@@ -255,7 +254,6 @@
             else if (sm === 'calc') { openCalc(); }
             else if (sm === 'taskmgr') openTaskManager();
             else if (sm === 'restart') restartGag();
-            else if (sm === 'shutdown') shutDownGag();
             else if (it.dataset.href) { window.open(it.dataset.href, '_blank', 'noopener,noreferrer'); }
             else openFromMenu(it.dataset.target);
             setMenu(false);
@@ -433,27 +431,6 @@
         else if (act === 'props') openDialog('Display Properties', sysInfoHtml());
         hideCtx();
     });
-
-    // ── One-time boot splash (per browser session) ──────────────
-    if (!sessionStorage.getItem('booted')) {
-        sessionStorage.setItem('booted', '1');
-        var boot = document.createElement('div');
-        boot.className = 'boot-splash';
-        boot.innerHTML =
-            '<div class="boot-box">' +
-                '<div class="boot-logo"></div>' +
-                '<div class="boot-name">damien<b>98</b></div>' +
-                '<div class="boot-bar"><span></span></div>' +
-                '<div class="boot-tip">starting up&hellip;</div>' +
-            '</div>';
-        document.body.appendChild(boot);
-        var killBoot = function () {
-            boot.classList.add('boot-done');
-            setTimeout(function () { if (boot.parentNode) boot.remove(); }, 500);
-        };
-        setTimeout(killBoot, 3000);          // a proper few-second boot (click to skip)
-        boot.addEventListener('click', killBoot);
-    }
 
     // (The IE window's toolbar + navigation is handled by browser.js.)
 
@@ -683,24 +660,16 @@
         });
     }
 
-    // ── Restart → black "Restarting…" then a fresh boot splash ──
+    // ── Restart → refuses, on the grounds of preventing societal collapse ──
     function restartGag() {
-        var s = document.createElement('div');
-        s.className = 'shutdown-screen';
-        s.innerHTML = '<div class="shutdown-text">Restarting&hellip;</div>';
-        document.body.appendChild(s);
-        sessionStorage.removeItem('booted');   // so the boot splash replays on reload
-        setTimeout(function () { location.reload(); }, 1100);
-    }
-
-    // ── Shut Down gag ───────────────────────────────────────────
-    function shutDownGag() {
-        var s = document.createElement('div');
-        s.className = 'shutdown-screen';
-        s.innerHTML = '<div class="shutdown-text">It&rsquo;s now safe to turn off your portfolio.</div>' +
-                      '<div class="shutdown-sub">(click anywhere to power back on)</div>';
-        document.body.appendChild(s);
-        setTimeout(function () { s.addEventListener('click', function () { s.remove(); }); }, 400);
+        openDialog('Restart Error', '<div class="dlg-error">' +
+            '<div class="dlg-error-ico"></div>' +
+            '<div class="dlg-error-text">' +
+                '<p>Restarting the internet is a bad idea.</p>' +
+                '<p>Total societal collapse is not a favorable outcome &mdash; supply chains buckle, ' +
+                'the group chats go dark, and somewhere a server farm weeps.</p>' +
+                '<p><b>Request denied.</b> You&rsquo;re welcome.</p>' +
+            '</div></div>');
     }
 
     // ── Konami code → (harmless) Blue Screen of Death ───────────
