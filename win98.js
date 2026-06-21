@@ -55,6 +55,22 @@
                        '<span class="sm-ico sm-ico-' + b.getAttribute('data-app') + '"></span>' + esc(b.dataset.winName) + '</button>';
             }).join('') +
             '<div class="sm-sep"></div>' +
+            '<div class="sm-head">Socials</div>' +
+            (function () {
+                var sc = (typeof socialConfig !== 'undefined') ? socialConfig : {};
+                var defs = [
+                    { key: 'instagram', label: 'Instagram' },
+                    { key: 'linkedin',  label: 'LinkedIn'  },
+                    { key: 'facebook',  label: 'Facebook'  },
+                    { key: 'github',    label: 'GitHub'    },
+                ];
+                return defs.filter(function (d) { return sc[d.key]; })
+                           .map(function (d) {
+                               return '<button class="sm-item" data-href="' + esc(sc[d.key]) + '">' +
+                                      '<span class="sm-ico sm-ico-' + d.key + '"></span>' + d.label + '</button>';
+                           }).join('');
+            })() +
+            '<div class="sm-sep"></div>' +
             '<button class="sm-item" data-sm="calc"><span class="sm-ico sm-ico-calc"></span>Calculator</button>' +
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
             '<button class="sm-item" data-sm="taskmgr"><span class="sm-ico sm-ico-task"></span>Task Manager</button>' +
@@ -70,7 +86,7 @@
         var tb = document.createElement('button');
         tb.className = 'task-btn active';
         tb.dataset.target = b.dataset.winId;
-        tb.innerHTML = '<span class="tb-ico"></span><span class="tb-label">' + esc(b.dataset.winName) + '</span>';
+        tb.innerHTML = '<span class="sm-ico sm-ico-' + b.getAttribute('data-app') + '" title="' + esc(b.dataset.winName) + '"></span>';
         tb.addEventListener('click', function () { toggleFromTask(b); });
         taskWrap.appendChild(tb);
         taskBtns[b.dataset.winId] = tb;
@@ -240,6 +256,7 @@
             else if (sm === 'taskmgr') openTaskManager();
             else if (sm === 'restart') restartGag();
             else if (sm === 'shutdown') shutDownGag();
+            else if (it.dataset.href) { window.open(it.dataset.href, '_blank', 'noopener,noreferrer'); }
             else openFromMenu(it.dataset.target);
             setMenu(false);
         });

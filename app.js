@@ -354,17 +354,60 @@
     var BRANCH_ICON = '<svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>';
     var STEAM_ICON  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>';
 
+    var LANG_COLORS = { JavaScript:'#f1e05a', TypeScript:'#3178c6', Python:'#3572a5', HTML:'#e34c26', CSS:'#563d7c', Java:'#b07219', 'C#':'#178600', 'C++':'#f34b7d', Go:'#00add8', Rust:'#dea584', PHP:'#4f5d95', Ruby:'#701516', Swift:'#f05138', Kotlin:'#a97bff', Shell:'#89e051' };
+    var LANG_SHORT  = { JavaScript:'JS', TypeScript:'TS', Python:'Py', 'C#':'C#', 'C++':'C++', Shell:'SH', Kotlin:'KT', Swift:'SW' };
+    function langColor(l) { return LANG_COLORS[l] || '#666'; }
+    function langShort(l) { return LANG_SHORT[l] || (l && l.length > 4 ? l.slice(0, 3) : (l || '')); }
+
     function fetchGithubFeed(username, profileUrl) {
-        cachedJson('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=20', 300000)
+        cachedJson('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=30', 300000)
             .then(function (events) {
                 if (!Array.isArray(events)) { renderGithubStatic(username, profileUrl); return; }
-                var items = [];
-                for (var i = 0; i < events.length && items.length < 7; i++) {
-                    var it = describeEvent(events[i]);
-                    if (it) items.push(it);
+
+                // Streak: count consecutive days (newest-first) that have at least one PushEvent
+                var pushDaySet = {};
+                events.forEach(function (ev) {
+                    if (ev.type === 'PushEvent' && ev.created_at) pushDaySet[ev.created_at.slice(0, 10)] = true;
+                });
+                var days = Object.keys(pushDaySet).sort().reverse();
+                var streak = 0;
+                if (days.length) {
+                    streak = 1;
+                    for (var di = 1; di < days.length; di++) {
+                        var prev = new Date(days[di - 1] + 'T00:00:00Z');
+                        var curr = new Date(days[di] + 'T00:00:00Z');
+                        if ((prev.getTime() - curr.getTime()) === 86400000) { streak++; } else break;
+                    }
                 }
-                if (!items.length) { renderGithubStatic(username, profileUrl); return; }
-                renderGithubFeed(items, profileUrl);
+
+                // Most active repo by push count
+                var repoPushCount = {};
+                events.forEach(function (ev) {
+                    if (ev.type === 'PushEvent' && ev.repo) repoPushCount[ev.repo.name] = (repoPushCount[ev.repo.name] || 0) + 1;
+                });
+                var topRepo = '', topCount = 0;
+                Object.keys(repoPushCount).forEach(function (r) { if (repoPushCount[r] > topCount) { topCount = repoPushCount[r]; topRepo = r; } });
+
+                // Fetch language for top push repos (up to 4)
+                var pushRepos = Object.keys(repoPushCount).sort(function (a, b) { return repoPushCount[b] - repoPushCount[a]; }).slice(0, 4);
+                var langFetches = pushRepos.map(function (full) {
+                    return cachedJson('https://api.github.com/repos/' + full, 3600000)
+                        .then(function (d) { return { full: full, lang: d.language || null }; })
+                        .catch(function () { return { full: full, lang: null }; });
+                });
+
+                Promise.all(langFetches).then(function (results) {
+                    var langMap = {};
+                    results.forEach(function (r) { if (r.lang) langMap[r.full] = r.lang; });
+
+                    var items = [];
+                    for (var i = 0; i < events.length && items.length < 7; i++) {
+                        var it = describeEvent(events[i]);
+                        if (it) { it.lang = langMap[it.full] || null; items.push(it); }
+                    }
+                    if (!items.length) { renderGithubStatic(username, profileUrl); return; }
+                    renderGithubFeed(items, profileUrl, streak, topRepo, topCount);
+                });
             })
             .catch(function () { renderGithubStatic(username, profileUrl); });
     }
@@ -392,16 +435,28 @@
         }
     }
 
-    function renderGithubFeed(items, profileUrl) {
+    function renderGithubFeed(items, profileUrl, streak, topRepo, topCount) {
+        var topRepoShort = topRepo ? topRepo.split('/')[1] : '';
+        var statsHtml = (streak > 1 || topRepoShort)
+            ? '<div class="gh-stats">' +
+                  (streak > 1 ? '<span class="gh-streak">&#9654; ' + streak + 'd streak</span>' : '') +
+                  (topRepoShort ? '<span class="gh-top-repo">&#9733; ' + esc(topRepoShort) + (topCount > 1 ? ' &middot; ' + topCount + ' pushes' : '') + '</span>' : '') +
+              '</div>'
+            : '';
         ghEl.innerHTML =
             '<div class="gh-panel active">' +
+                statsHtml +
                 '<div class="gh-status"><span class="gh-dot"></span>recent activity</div>' +
                 '<ul class="gh-feed">' +
                     items.map(function (it) {
+                        var langHtml = it.lang
+                            ? '<span class="gh-lang" style="background:' + langColor(it.lang) + '">' + esc(langShort(it.lang)) + '</span>'
+                            : '';
                         return '<li class="gh-ev">' +
                             '<span class="gh-ev-ico gh-ev-' + it.kind + '">' + esc(it.glyph) + '</span>' +
                             '<span class="gh-ev-text">' + esc(it.text) + ' ' +
                                 '<a class="gh-ev-repo" href="https://github.com/' + esc(it.full) + '" target="_blank" rel="noopener noreferrer">' + esc(it.repo) + '</a></span>' +
+                            langHtml +
                             '<span class="gh-ev-time">' + esc(it.when) + '</span>' +
                         '</li>';
                     }).join('') +
