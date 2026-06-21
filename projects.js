@@ -128,3 +128,12 @@ var socialConfig = {
     facebook:  "https://web.facebook.com/profile.php?id=61583113542412",
     github:    "https://github.com/Damiensoobz",
 };
+
+// ─────────────────────────────────────────────────────────────
+//  Contact — the single source of truth for your email. Every
+//  "hire me" / "contact" / mailto link across the site reads it.
+// ─────────────────────────────────────────────────────────────
+
+var contactConfig = {
+    email: "damien@damienbuilds.dev",
+};

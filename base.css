@@ -32,6 +32,8 @@ body { min-height: 100vh; }
 }
 /* Hide raw terminal chrome — the command becomes the window title */
 .p-user, .p-at, .p-host, .p-sep, .p-path, .p-dim, .p-sym { display: none; }
+/* Let long window titles clip instead of forcing the bar wider */
+.p-cmd { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 /* ── Output text ───────────────────────────────────────────── */
 .out { margin-bottom: 6px; }
@@ -243,6 +245,26 @@ body.has-max { overflow: hidden; }
 /* "Activate Windows" desktop watermark + footer (sits behind the windows) */
 .activate-wm { position: fixed; right: 22px; bottom: 44px; z-index: 2; pointer-events: none; user-select: none; text-align: center; }
 .activate-foot a { pointer-events: auto; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE / STACKED FLOW (narrow viewports — desktop-mode is off
+   below 1024px, so windows stack in document flow). Reorder them:
+   opening prompt → projects → about → the remaining apps.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+    .terminal { display: flex; flex-direction: column; }
+    .terminal .divider { display: none; }   /* spacing comes from block margins instead */
+    .block                      { order: 5; }
+    .block[data-app="dos"]      { order: 1; }
+    .block[data-app="ie"]       { order: 2; }
+    .block[data-app="notepad"]  { order: 3; }
+    .block[data-app="winamp"]   { order: 4; }
+    .block[data-app="terminal"] { order: 5; }
+    .block[data-app="cdplayer"] { order: 6; }
+
+    /* "Activate" footer: centered, fixed just above the taskbar */
+    .activate-wm { left: 0; right: 0; bottom: 36px; }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    EASTER EGGS — system-style UI (intentionally fixed colors so it

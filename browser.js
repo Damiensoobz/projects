@@ -26,6 +26,8 @@
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    var CONTACT_EMAIL = (typeof contactConfig !== 'undefined' && contactConfig.email) || 'damien@damienbuilds.dev';
+
     var HOME      = 'http://www.damienbuilds.dev/projects';
     var U_SEARCH  = 'http://www.altavista.com';
     var U_GUEST   = 'http://www.damienbuilds.dev/guestbook';
@@ -51,7 +53,7 @@
             '<p class="out dim ls-meta">total <span id="project-count">' + n + '</span></p>' +
             '<div class="cards-grid" id="cards-grid"></div>' +
             '<div class="ie-teaser"><h3 class="ie-teaser-title">Currently conjuring&hellip;</h3>' +
-            '<p class="ie-teaser-body">Something new is in the cauldron. Bookmark this page (Ctrl&#8209;D, it&rsquo;ll pretend to work) and check back &mdash; or just <a href="mailto:hello@damienbuilds.dev">email me</a> and beat the queue.</p></div>' +
+            '<p class="ie-teaser-body">Something new is in the cauldron. Bookmark this page (Ctrl&#8209;D, it&rsquo;ll pretend to work) and check back &mdash; or just <a href="mailto:' + CONTACT_EMAIL + '">email me</a> and beat the queue.</p></div>' +
             '</div>';
     }
 
@@ -67,7 +69,7 @@
         if (q) {
             results = '<div class="bw-results"><p class="bw-results-meta">Results <b>1&ndash;4</b> of about <b>4,000,000,000</b> for &ldquo;' + esc(q) + '&rdquo; (0.04 seconds)</p>' +
                 searchResult('Damien &mdash; Projects', HOME, 'Browser games, a memento-mori calendar, a fantasy map generator. Exactly what you searched for. Probably.') +
-                searchResult('Hire Damien (Sponsored)', 'mailto:hello@damienbuilds.dev', 'The #1 result for &ldquo;' + esc(q) + '&rdquo;. Sponsored. (Sponsored by him.)', true) +
+                searchResult('Hire Damien (Sponsored)', 'mailto:' + CONTACT_EMAIL, 'The #1 result for &ldquo;' + esc(q) + '&rdquo;. Sponsored. (Sponsored by him.)', true) +
                 searchResult('The Truth They Don&rsquo;t Want You To See', U_TRUTH, 'We found the page they tried to bury. Click before it&rsquo;s gone.') +
                 searchResult('Guestbook', U_GUEST, 'Sign it. Visitor #1337 awaits. ~*~') +
                 '</div>';
@@ -83,7 +85,7 @@
         var entries = [
             ['xXx_n3tscape_n4vigator_xXx', 'cool site!!1! how do u make the windows move?? teach me ur ways', '08/14/1998'],
             ['HotMail_Linda', 'i was looking for casserole recipes but this is fine too. 10/10 would visit again', '12/02/1999'],
-            ['SysAdmin_Greg', 'whoever set caffeine.exe to 420% CPU, please see me. this is a final warning.', '01/01/2000'],
+            ['SysAdmin_Greg', 'whoever set tea.exe to 420% CPU, please see me. this is a final warning.', '01/01/2000'],
             ['anonymous_coward', 'the cake is a lie', '06/06/2006'],
             ['ur_mom', 'come home for dinner. you have been on this computer for 9 hours.', '&mdash;']
         ];

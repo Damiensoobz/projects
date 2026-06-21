@@ -1,4 +1,7 @@
 (function () {
+    // Single source of truth for the contact address (set in projects.js).
+    var CONTACT_EMAIL = (typeof contactConfig !== 'undefined' && contactConfig.email) || 'damien@damienbuilds.dev';
+
     // ── ASCII name scramble — hover or load to decode ───────────
     var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var _art  = document.querySelector('.ascii-art');
@@ -88,7 +91,7 @@
             },
             about: function () {
                 return "Damien — developer & code wizard. Conjures web things out of " +
-                    "caffeine and spite; refuses to ship before the test suite is green.";
+                    "tea and spite; refuses to ship before the test suite is green.";
             },
             projects: function () {
                 var ps = window.projects || [];
@@ -96,8 +99,8 @@
                 return ps.map(function (p) { return '  ' + p.title + ' — ' + p.subtitle; }).join('\n');
             },
             skills: function () { return 'JavaScript · HTML/CSS · Python · APIs · pixel-pushing · questionable humor'; },
-            contact: function () { return 'hello@damienbuilds.dev'; },
-            hire: function () { return 'Excellent choice. → hello@damienbuilds.dev'; },
+            contact: function () { return CONTACT_EMAIL; },
+            hire: function () { return 'Excellent choice. → ' + CONTACT_EMAIL; },
             whoami: function () { return 'visitor (esteemed guest)'; },
             ls: function () { return 'projects/   about.txt   status/   secrets/   [try the Blog window]'; },
             date: function () { return new Date().toString(); },
@@ -548,6 +551,23 @@
                     '<a class="steam-store-link" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer">view on steam ↗</a>' +
                 '</div>' +
             '</div>';
+        pauseDiscWhenIdle();
+    }
+
+    // Stop the vinyl spinning while it's off-screen or the tab is hidden —
+    // a continuous gradient animation is needless battery drain otherwise.
+    function pauseDiscWhenIdle() {
+        var disc = stEl && stEl.querySelector('.steam-disc');
+        if (!disc) return;
+        var onScreen = true;
+        function apply() { disc.classList.toggle('paused', document.hidden || !onScreen); }
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+                onScreen = entries[0].isIntersecting;
+                apply();
+            }).observe(disc);
+        }
+        document.addEventListener('visibilitychange', apply);
     }
 
     function renderSteamStatic(profileUrl) {

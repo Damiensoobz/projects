@@ -1,20 +1,13 @@
 # Portfolio TODO
 
-## 🔴 Urgent — outside this repo
-- [ ] **Revoke the leaked Steam API key** at https://steamcommunity.com/dev/apikey.
-      An old key shipped in `projects.js` and lives in git history forever —
-      revocation is the only real fix. (Code no longer reads a client-side key.)
-
-## 🟡 Features
-- [x] **Steam serverless proxy — scaffolded** in `steam-proxy/` (Cloudflare
-      Worker + Vercel alternative + README). **You still need to:** revoke the
-      old key, make a new one, deploy the proxy with `STEAM_API_KEY`/`STEAM_ID`
-      secrets, and set `steamConfig.proxyUrl` in `projects.js`. Until then the
-      CD Player shows the "away" state.
-- [ ] **Fill `socialConfig`** in `projects.js` with real Instagram/LinkedIn/
-      Facebook URLs (icons are wired but inert until then).
-- [ ] **Favicon** — currently none; a 16×16 pixel-art floppy/folder would fit.
-- [ ] **404.html** for GitHub Pages.
+## 🟡 Open
+- [ ] **Confirm `damien@damienbuilds.dev` is a live, monitored inbox.** Every
+      "hire me" / "contact" link now reads it from `contactConfig.email` in
+      `projects.js` (single source of truth). If the domain mailbox isn't set
+      up, either configure it or point `contactConfig.email` at your real one.
+- [ ] **`CNAME` for the custom domain.** `damienbuilds.dev` is referenced in
+      meta/links but there's no `CNAME` file in the repo — make sure the custom
+      domain is set in GitHub Pages settings so it survives redeploys.
 - [ ] **Reintroduce the desktop helper ("Clippy")** later — removed for now;
       the previous version felt clunky.
 
@@ -25,25 +18,34 @@ Deliver a forkable "Win98 desktop portfolio" template (à la cassidoo/blahg).
 - [ ] Consolidate ALL personal data into a single `config.js`: name, tagline,
       about copy, socials, projects, contact email, API config (last.fm/github/
       steam), DOS welcome + commands, and toggles for the browser gag pages.
+      (`contactConfig`, `socialConfig`, `spotifyConfig`, `githubConfig`,
+      `steamConfig` already centralize most of this.)
 - [ ] Replace Damien-specific copy in `index.html` (About/Notepad, DOS welcome)
       with config-driven or neutral placeholder text.
-- [ ] Add `README.md` (what it is + screenshots + fork → edit `config.js` →
-      deploy to GitHub Pages) and an MIT `LICENSE`.
+- [ ] Add `README.md` (what it is + screenshots + fork → edit config → deploy
+      to GitHub Pages) and an MIT `LICENSE`.
 - [ ] Keep personal screenshots optional (the placeholder generator already
       covers missing images).
 
-## ✅ Recently done
-- [x] Committed fully to the Win98 skin — dropped the skin switcher and all
-      alternate skins (Game Boy, Dark Academia, Synthwave, original terminal).
-- [x] Removed the CRT scanline/flicker overlay.
-- [x] One-screen draggable desktop with a fixed default window layout.
-- [x] Status apps restyled as standalone, frameless apps (Media Player,
-      retro terminal, CD Player with a spinning game disc).
-- [x] Easter eggs: Minesweeper, Konami → BSOD, Restart/Shut Down gags,
-      Recycle Bin explorer.
-- [x] Repo cleanup: deleted stray screenshots + empty files + dead CSS/JS;
-      removed the unused Press Start 2P web font + dead GitHub-commit CSS.
-- [x] IE app → real multi-page browser (`browser.js`): portfolio is home,
-      plus gag pages (AltaVista search, guestbook, conspiracy, under
-      construction, 404) with working Back/Forward/Refresh/Home + address bar.
+## ✅ Done
+- [x] **Steam serverless proxy** — Cloudflare Worker live at
+      `rapid-feather-4bb1`, holds `STEAM_API_KEY`/`STEAM_ID` as secrets, serves
+      recent / profile / library endpoints with CORS locked to the live domains.
+      Old leaked key revoked; new key is server-side only.
+- [x] **Steam widget** — vinyl-record disc with full-cover game art, online
+      status + avatar + library count footer, spin pauses when off-screen.
+- [x] **Contact email centralized** in `contactConfig` (`projects.js`).
+- [x] **Favicon** (`favicon.svg`) + **404.html** + **PWA meta** (theme-color,
+      apple-touch-icon, `site.webmanifest`).
+- [x] **`socialConfig` filled** — Instagram / LinkedIn / Facebook / GitHub wired
+      to desktop icons + Start-menu "Socials".
+- [x] **Mobile layout** — stacked reorder (prompt → projects → about → apps),
+      compact IE chrome, centered fixed "Activate" footer, no horizontal scroll.
+- [x] **GitHub terminal** — activity feed + streak, most-active repo, language
+      chips.
+- [x] Committed fully to the Win98 skin; one-screen draggable desktop with a
+      fixed default window layout.
+- [x] Easter eggs: Minesweeper, Konami → BSOD, Restart gag, Recycle Bin.
+- [x] IE app → real multi-page browser (`browser.js`) with gag pages + working
+      Back/Forward/Refresh/Home + address bar.
 - [x] Reduced motion: respect `prefers-reduced-motion`.

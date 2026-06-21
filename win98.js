@@ -9,6 +9,8 @@
         return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    var CONTACT_EMAIL = (typeof contactConfig !== 'undefined' && contactConfig.email) || 'damien@damienbuilds.dev';
+
     // Managed windows = content blocks that have a command title.
     var blocks = [].slice.call(document.querySelectorAll('.block'))
         .filter(function (b) { return b.querySelector('.prompt .p-cmd'); });
@@ -358,7 +360,7 @@
                 '<p><b>damienOS 98</b></p>' +
                 '<p>Registered to: one (1) code wizard</p>' +
                 '<p>Display: ' + window.innerWidth + ' × ' + window.innerHeight + '</p>' +
-                '<p>Caffeine: <b>critical</b></p>' +
+                '<p>Tea: <b>critical</b></p>' +
             '</div></div>';
     }
 
@@ -396,8 +398,8 @@
         '<div class="activate-title">Activate Damien</div>' +
         '<div class="activate-sub">Go to Settings to activate Damien</div>' +
         '<div class="activate-foot">&copy; ' + new Date().getFullYear() +
-            ' Damien &middot; built with caffeine &amp; questionable decisions' +
-            ' &middot; <a href="mailto:hello@damienbuilds.dev">hire me</a></div>';
+            ' Damien &middot; built with tea &amp; questionable decisions' +
+            ' &middot; <a href="mailto:' + CONTACT_EMAIL + '">hire me</a></div>';
     document.body.appendChild(wm);
 
     // ── Desktop right-click context menu ────────────────────────
@@ -548,7 +550,7 @@
         'rb-win': ['explorer.exe', '05', '12,000 K']
     };
     var TM_GAG = [
-        ['caffeine.exe',             '420', '1,024,000 K'],
+        ['tea.exe',                  '420', '1,024,000 K'],
         ['imposter_syndrome.dll',    '99',  '6,666,666 K'],
         ['chrome.exe',               '88',  '9,999,999 K'],
         ['chrome.exe',               '88',  '9,999,998 K'],
@@ -588,7 +590,7 @@
             ['CPU Usage',       '420%',       '100%',       100, true],
             ['Physical Memory', '63,901 MB',  '64 MB',      100, true],
             ['Commit Charge',   '999,999 K',  '512 K',      100, true],
-            ['Caffeine',        '6 cups',     '2 cups',     100, true],
+            ['Tea',             '6 cups',     '2 cups',     100, true],
             ['Vibes',           'immaculate', 'immaculate', 100, false],
             ['Productivity',    '3%',         '100%',         3, false],
             ['Free Time',       '0 ms',       '0 ms',         0, false]
@@ -655,7 +657,7 @@
         }, 1200);
         w.body.querySelector('.tm-end').addEventListener('click', function () {
             var first = tbody.querySelector('td');
-            var name = sel ? sel.firstElementChild.textContent : (first ? first.textContent : 'caffeine.exe');
+            var name = sel ? sel.firstElementChild.textContent : (first ? first.textContent : 'tea.exe');
             adminError('End', name);
         });
     }
@@ -685,7 +687,7 @@
                 '<p>If this is the first time you have seen this screen, relax &mdash; it&rsquo;s a bit. Damien is fine. Probably.</p>' +
                 '<p>&nbsp;</p>' +
                 '<p>* Press any key to continue</p>' +
-                '<p>* Or just hire him: hello@damienbuilds.dev</p>' +
+                '<p>* Or just hire him: ' + CONTACT_EMAIL + '</p>' +
                 '<p class="bsod-blink">_</p>' +
             '</div>';
         document.body.appendChild(b);

@@ -1,0 +1,18 @@
+{
+  "name": "Damien — developer & code wizard",
+  "short_name": "damienOS 98",
+  "description": "Developer portfolio reimagined as a Windows 98 desktop: projects, live now-playing & GitHub activity, and a few easter eggs.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#008080",
+  "theme_color": "#008080",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
