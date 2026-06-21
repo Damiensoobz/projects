@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — The page cannot be displayed</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="style-y2k.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .err-win {
+            width: 100%;
+            max-width: 580px;
+        }
+        .err-win .prompt {
+            margin: -14px -14px 0;
+            border-radius: 0;
+        }
+        .err-ie-page {
+            padding: 0;
+            max-height: none;
+        }
+    </style>
+</head>
+<body>
+<div class="err-win block" data-app="ie">
+    <div class="prompt">
+        <span class="p-cmd">Microsoft Internet Explorer</span>
+    </div>
+    <div class="ie-menubar">
+        <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span>
+    </div>
+    <div class="ie-page err-ie-page">
+        <div class="bw-page bw-404">
+            <h2 class="bw-404-h">The page cannot be displayed</h2>
+            <p class="bw-404-p">The page you are looking for is currently unavailable. You may have mistyped the address, or it has been moved to a different URL.</p>
+            <p class="bw-404-p">Please try the following:</p>
+            <ul class="bw-404-list">
+                <li>Click the <a href="/">Home</a> button to return to the desktop. It always works.</li>
+                <li>Check the address bar for spelling mistakes and try again.</li>
+                <li>Press the browser <b>Back</b> button to return to the previous page.</li>
+            </ul>
+            <p class="bw-404-code">HTTP 404 &mdash; File not found<br>Microsoft Internet Explorer</p>
+        </div>
+    </div>
+    <div class="ie-statusbar">
+        <span class="ie-status-text">Done</span>
+        <span class="ie-zone">Internet</span>
+    </div>
+</div>
+</body>
+</html>

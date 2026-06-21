@@ -112,7 +112,7 @@ var githubConfig = {
 // ─────────────────────────────────────────────────────────────
 
 var steamConfig = {
-    proxyUrl:   "",   // e.g. "https://your-app.vercel.app/api/steam" — keeps the key server-side
+    proxyUrl:   "https://rapid-feather-4bb1.damiensoobz.workers.dev",
     steamId:    "76561198823151635",
     profileUrl: "https://steamcommunity.com/profiles/76561198823151635",
 };
@@ -123,7 +123,8 @@ var steamConfig = {
 // ─────────────────────────────────────────────────────────────
 
 var socialConfig = {
-    instagram: "",   // e.g. "https://instagram.com/yourhandle"
-    linkedin:  "",   // e.g. "https://linkedin.com/in/yourhandle"
-    facebook:  "",   // e.g. "https://facebook.com/yourhandle"
+    instagram: "https://www.instagram.com/damienbuilds.dev/?hl=en",
+    linkedin:  "https://www.linkedin.com/in/damien-subramanian-440309194/",
+    facebook:  "https://web.facebook.com/profile.php?id=61583113542412",
+    github:    "https://github.com/Damiensoobz",
 };

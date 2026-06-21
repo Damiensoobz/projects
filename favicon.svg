@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- floppy disk body -->
+  <rect x="1" y="1" width="14" height="14" rx="1" fill="#1a1a66"/>
+  <rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="#4444aa" stroke-width="0.5"/>
+  <!-- metal shutter -->
+  <rect x="3" y="1" width="7" height="5" fill="#999"/>
+  <!-- shutter slot -->
+  <rect x="4" y="2" width="3" height="3" fill="#333"/>
+  <!-- write-protect notch -->
+  <rect x="12" y="2" width="2" height="2" fill="#666"/>
+  <!-- label area -->
+  <rect x="2" y="8" width="12" height="6" fill="#e8e4cc"/>
+  <!-- label rules -->
+  <rect x="3" y="10" width="10" height="1" fill="#b0ac94"/>
+  <rect x="3" y="12" width="7" height="1" fill="#b0ac94"/>
+</svg>

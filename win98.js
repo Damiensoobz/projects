@@ -355,7 +355,8 @@
         { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
         { kind: 'instagram', label: 'Instagram', action: function () { openSocial('Instagram', social('instagram')); } },
         { kind: 'linkedin',  label: 'LinkedIn',  action: function () { openSocial('LinkedIn',  social('linkedin')); } },
-        { kind: 'facebook',  label: 'Facebook',  action: function () { openSocial('Facebook',  social('facebook')); } }
+        { kind: 'facebook',  label: 'Facebook',  action: function () { openSocial('Facebook',  social('facebook')); } },
+        { kind: 'github',    label: 'GitHub',    action: function () { openSocial('GitHub',    social('github')); } }
     ];
     function social(key) { return (typeof socialConfig !== 'undefined' && socialConfig[key]) || ''; }
     function openSocial(name, url) {
@@ -381,7 +382,6 @@
         '<div class="activate-sub">Go to Settings to activate Damien</div>' +
         '<div class="activate-foot">&copy; ' + new Date().getFullYear() +
             ' Damien &middot; built with caffeine &amp; questionable decisions' +
-            ' &middot; <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>' +
             ' &middot; <a href="mailto:hello@damienbuilds.dev">hire me</a></div>';
     document.body.appendChild(wm);
 
