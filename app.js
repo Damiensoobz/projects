@@ -52,7 +52,7 @@
         var bootOut = out.innerHTML;             // snapshot of the initial "script" output
         // Re-running AUTOEXEC.BAT (used when the window is closed → relaunched).
         window.dosRerun = function () {
-            out.innerHTML = '<p class="out dim">Running AUTOEXEC.BAT&hellip;</p>' + bootOut;
+            out.innerHTML = '<p class="out dim">Running hello.bat&hellip;</p>' + bootOut;
             input.value = ''; grow();
             screen.scrollTop = 0;
             input.focus();

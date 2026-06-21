@@ -99,13 +99,16 @@
         prompt.classList.add('wm');                       // hides the decorative ::after buttons
         var ctrls = document.createElement('span');
         ctrls.className = 'win-ctrls';
+        // Maximize only makes sense for the IE window (the projects browser).
+        // The frameless status apps look broken maximized, so they get min+close.
+        var canMax = b.getAttribute('data-app') === 'ie';
         ctrls.innerHTML =
             '<button class="wc wc-min"   title="Minimize" aria-label="Minimize"></button>' +
-            '<button class="wc wc-max"   title="Maximize" aria-label="Maximize"></button>' +
+            (canMax ? '<button class="wc wc-max" title="Maximize" aria-label="Maximize"></button>' : '') +
             '<button class="wc wc-close" title="Close"    aria-label="Close"></button>';
         prompt.appendChild(ctrls);
         ctrls.querySelector('.wc-min').addEventListener('click',   function (e) { e.stopPropagation(); minimize(b); });
-        ctrls.querySelector('.wc-max').addEventListener('click',   function (e) { e.stopPropagation(); toggleMax(b); });
+        if (canMax) ctrls.querySelector('.wc-max').addEventListener('click', function (e) { e.stopPropagation(); toggleMax(b); });
         ctrls.querySelector('.wc-close').addEventListener('click', function (e) { e.stopPropagation(); closeWin(b); });
     });
 
@@ -133,15 +136,28 @@
         else minimize(b);
     }
     function toggleMax(b) {
-        b.classList.toggle('win-max');
-        if (b.classList.contains('win-max')) b.classList.remove('win-min');
+        var goingMax = !b.classList.contains('win-max');
+        b.classList.toggle('win-max', goingMax);
+        if (goingMax) {
+            // Hand geometry to the .win-max CSS — clear the inline left/top/width
+            // that applyLayout set, otherwise they'd pin it at its old size.
+            b.classList.remove('win-min');
+            b.style.left = b.style.top = b.style.width = '';
+            bringFront(b);                       // keep it above the other windows
+        } else {
+            // Restore its home position + width from the saved layout.
+            if (b.dataset.homeLeft) { b.style.left = b.dataset.homeLeft; b.style.top = b.dataset.homeTop; }
+            var L = LAYOUT[b.getAttribute('data-app')];
+            if (L) b.style.width = Math.min(L.w, window.innerWidth - 16) + 'px';
+            bringFront(b);
+        }
         document.body.classList.toggle('has-max', !!document.querySelector('.win-max'));
     }
     function closeWin(b) {
         if (b.classList.contains('win-max')) toggleMax(b);
         b.classList.add('win-closed');
         setTaskState(b, 'gone');
-        // AUTOEXEC.BAT is a startup script — you can't kill it, it just runs again.
+        // hello.bat is a startup script — you can't kill it, it just runs again.
         if (b.getAttribute('data-app') === 'dos') {
             setTimeout(function () { restore(b); if (window.dosRerun) window.dosRerun(); }, 750);
         }
@@ -169,14 +185,35 @@
     var Z_ORDER = ['ie', 'dos', 'notepad', 'winamp', 'cdplayer', 'terminal'];
     var zTop = 20;
     var desktopMode = false;
+    var defaultsDone = false;
 
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
+
+    // Initial desktop arrangement (runs once, the first time desktop mode is
+    // active): the projects browser (IE) and Steam start minimized, aboutMe
+    // starts closed — reopen it from its desktop icon. The three "live"
+    // windows — hello.bat, Media Player, Terminal — stay open up front.
+    function applyDefaultStates() {
+        ['ie', 'cdplayer'].forEach(function (app) {
+            var b = document.querySelector('[data-app="' + app + '"]');
+            if (b) minimize(b);
+        });
+        var np = document.querySelector('[data-app="notepad"]');
+        if (np) closeWin(np);
+    }
 
     function applyLayout() {
         desktopMode = isDesktop();
         document.documentElement.classList.toggle('desktop-mode', desktopMode);
         if (!desktopMode) {
-            blocks.forEach(function (b) { b.style.left = b.style.top = b.style.width = b.style.zIndex = b.style.transform = ''; });
+            // Stacked mobile flow shows every window — undo any min/closed state.
+            blocks.forEach(function (b) {
+                b.style.left = b.style.top = b.style.width = b.style.zIndex = b.style.transform = '';
+                if (b.classList.contains('win-min') || b.classList.contains('win-closed')) {
+                    b.classList.remove('win-min', 'win-closed');
+                    setTaskState(b, 'active');
+                }
+            });
             return;
         }
         var W = window.innerWidth, H = window.innerHeight - 30;
@@ -196,6 +233,7 @@
             b.dataset.homeTop  = top + 'px';
             zTop = 20 + i;
         });
+        if (!defaultsDone) { defaultsDone = true; applyDefaultStates(); }
     }
 
     function bringFront(b) { b.style.zIndex = ++zTop; }
