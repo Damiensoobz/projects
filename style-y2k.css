@@ -1187,7 +1187,7 @@ code {
 /* ═══════════════════════════════════════════════════════════════
    BROWSER PAGES — the IE window's internal "web" (portfolio + gags)
    ═══════════════════════════════════════════════════════════════ */
-.bw-page { padding: 12px 20px 22px; font-family: Tahoma, Arial, sans-serif; color: #000000; }
+.bw-page { max-width: 900px; margin: 0 auto; padding: 12px 20px 22px; font-family: Tahoma, Arial, sans-serif; color: #000000; }
 .bw-page [data-link] { cursor: pointer; }
 .bw-page .ie-teaser { margin: 18px -20px -22px; }
 
@@ -1225,38 +1225,40 @@ code {
 .bw-gb-head { display: flex; justify-content: space-between; font-size: 0.68rem; color: #999; margin-bottom: 2px; }
 .bw-gb-head b { color: #cc00cc; font-family: 'Comic Sans MS', cursive; }
 .bw-gb-entry p { font-size: 0.82rem; color: #222; line-height: 1.4; }
-.bw-gb-form { display: flex; gap: 6px; align-items: flex-start; }
-.bw-gb-input { flex: 1; padding: 4px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.78rem; resize: vertical;
+.bw-gb-mine { border-color: #b9d7a8; background: #f4fbef; }   /* your own signatures */
+.bw-gb-mine .bw-gb-head b { color: #2a8a2a; }
+.bw-gb-signs { color: #888; }
+.bw-gb-form { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.bw-gb-row { display: flex; gap: 6px; align-items: flex-start; }
+.bw-gb-name, .bw-gb-input { padding: 4px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.78rem;
     border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
-.bw-gb-btn { padding: 4px 12px; cursor: pointer; background: #d4d0c8; font-family: 'Comic Sans MS', cursive; font-size: 0.74rem;
+.bw-gb-name { width: 100%; }
+.bw-gb-input { flex: 1; resize: vertical; }
+.bw-gb-btn { padding: 4px 14px; cursor: pointer; background: #d4d0c8; font-family: 'Comic Sans MS', cursive; font-size: 0.74rem; flex-shrink: 0; align-self: stretch;
     border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
 .bw-gb-btn:active { border-color: #404040 #fff #fff #404040; }
 
-/* Conspiracy page */
-.bw-truth { background: #000000; color: #2bff2b; margin: -12px -20px -22px; padding: 16px 20px 24px; text-align: center;
-    font-family: 'Comic Sans MS', 'Times New Roman', serif; }
-.bw-truth .bw-nav { border-bottom-color: #333; }
-.bw-truth .bw-navlink { color: #ffff00; }
-.bw-truth .bw-navlink.on { color: #ffffff; }
-.bw-truth-h { color: #ff2020; font-family: Impact, 'Arial Black', sans-serif; font-size: 2.3rem; letter-spacing: 2px; margin: 6px 0 12px; text-shadow: 0 0 8px rgba(255,0,0,0.6); }
-.bw-truth-p { color: #33ff33; margin: 10px auto; max-width: 500px; line-height: 1.5; }
-.bw-truth-p s { color: #777; }
-.bw-truth-list { text-align: left; max-width: 480px; margin: 14px auto; color: #ffe400; list-style: none; }
-.bw-truth-list li { margin: 7px 0; line-height: 1.4; }
-.bw-truth-foot { color: #ff8800; margin-top: 16px; font-size: 0.82rem; line-height: 1.5; }
-.bw-blink { color: #ff2020; font-weight: 700; animation: bw-blink 0.8s step-end infinite; }
-@keyframes bw-blink { 50% { opacity: 0; } }
-
-/* Under construction */
-.bw-construct { text-align: center; }
-.bw-barrier { height: 16px; margin: 14px 0; border-top: 1px solid #000; border-bottom: 1px solid #000;
-    background: repeating-linear-gradient(45deg, #ffcc00 0 14px, #1a1a1a 14px 28px); background-size: 40px 40px;
-    animation: bw-barrier 1.2s linear infinite; }
-@keyframes bw-barrier { from { background-position: 0 0; } to { background-position: 40px 0; } }
-.bw-construct-h { color: #cc0000; font-family: Impact, 'Arial Black', sans-serif; font-size: 1.7rem; letter-spacing: 1px; }
-.bw-construct-p { margin: 6px auto; max-width: 420px; }
-.bw-construct-foot { color: #666; font-size: 0.78rem; margin-top: 10px; line-height: 1.5; }
-.bw-construct-foot a { color: #0b3d91; }
+/* Blog — polished "coming soon" index */
+.bw-blog-head { text-align: center; border-bottom: 1px solid #e2e2e2; padding-bottom: 14px; margin-bottom: 14px; }
+.bw-blog-h { font-family: Georgia, 'Times New Roman', serif; font-size: 1.9rem; font-weight: 700; color: #0b3d91; }
+.bw-blog-tag { font-family: Georgia, serif; font-style: italic; color: #777; font-size: 0.92rem; margin-top: 4px; }
+.bw-blog-soon { text-align: center; color: #9a7b00; background: #fff8e0; border: 1px solid #ecd98a; border-radius: 3px;
+    padding: 5px 10px; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; margin: 0 auto 18px; width: fit-content; }
+.bw-blog-drafts { display: flex; flex-direction: column; gap: 0; }
+.bw-blog-draft { padding: 13px 2px 14px; border-bottom: 1px dashed #d6d6d6; }
+.bw-blog-draft:last-child { border-bottom: none; }
+.bw-blog-draft-h { font-family: Georgia, 'Times New Roman', serif; font-size: 1.12rem; font-weight: 700; color: #555; }
+.bw-blog-draft-meta { font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: #b08a00; margin: 3px 0 6px; }
+.bw-blog-draft-p { font-family: Georgia, serif; font-size: 0.9rem; line-height: 1.55; color: #444; }
+.bw-blog-sub { margin-top: 18px; padding: 14px 16px; background: #f6f7f9; border: 1px solid #e0e2e6; border-radius: 3px; text-align: center; }
+.bw-blog-sub-label { font-family: Tahoma, Arial, sans-serif; font-size: 0.82rem; color: #333; margin-bottom: 9px; }
+.bw-blog-sub-row { display: flex; gap: 6px; justify-content: center; }
+.bw-blog-sub-input { flex: 0 1 240px; min-width: 0; padding: 4px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.8rem;
+    border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
+.bw-blog-sub-btn { padding: 4px 14px; cursor: pointer; background: #d4d0c8; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; flex-shrink: 0;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
+.bw-blog-sub-btn:active { border-color: #404040 #fff #fff #404040; }
+.bw-blog-sub-note { font-size: 0.68rem; color: #999; font-style: italic; margin-top: 8px; }
 
 /* 404 */
 .bw-404-h { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
