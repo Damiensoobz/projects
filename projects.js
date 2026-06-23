@@ -68,6 +68,15 @@ var projects = [
     link: "https://damiensoobz.github.io/hecker/",
     github: "https://github.com/Damiensoobz/hecker",
     tags: ["JavaScript", "HTML", "CSS"]
+    },
+    {
+    title: "Asciifier",
+    subtitle: "Turn images into ascii images.",
+    description: "Upload an image and convert it to an ascii version - works best with invert checked.",
+    image: "images/ascii.png",
+    link: "https://damiensoobz.github.io/Ascii-fier/",
+    github: "https://github.com/Damiensoobz/Ascii-fier",
+    tags: ["JavaScript", "HTML", "CSS"]
     }
 ];
 
