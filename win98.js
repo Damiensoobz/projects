@@ -190,30 +190,31 @@
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
 
     // Initial desktop arrangement (runs once, the first time desktop mode is
-    // active): the projects browser (IE) and Steam start minimized, aboutMe
-    // starts closed — reopen it from its desktop icon. The three "live"
-    // windows — hello.bat, Media Player, Terminal — stay open up front.
+    // active): the Navigator (projects browser) launches MAXIMIZED — it's the
+    // main attraction. Steam starts minimized; aboutMe starts closed (reopen
+    // from its desktop icon). hello.bat, Media Player, Terminal sit behind.
     function applyDefaultStates() {
-        ['ie', 'cdplayer'].forEach(function (app) {
-            var b = document.querySelector('[data-app="' + app + '"]');
-            if (b) minimize(b);
-        });
+        var cd = document.querySelector('[data-app="cdplayer"]');
+        if (cd) minimize(cd);
         var np = document.querySelector('[data-app="notepad"]');
         if (np) closeWin(np);
+        var ie = document.querySelector('[data-app="ie"]');
+        if (ie && !ie.classList.contains('win-max')) toggleMax(ie);
     }
 
     function applyLayout() {
         desktopMode = isDesktop();
         document.documentElement.classList.toggle('desktop-mode', desktopMode);
         if (!desktopMode) {
-            // Stacked mobile flow shows every window — undo any min/closed state.
+            // Stacked mobile flow shows every window — undo any min/max/closed state.
             blocks.forEach(function (b) {
                 b.style.left = b.style.top = b.style.width = b.style.zIndex = b.style.transform = '';
-                if (b.classList.contains('win-min') || b.classList.contains('win-closed')) {
-                    b.classList.remove('win-min', 'win-closed');
+                if (b.classList.contains('win-min') || b.classList.contains('win-closed') || b.classList.contains('win-max')) {
+                    b.classList.remove('win-min', 'win-closed', 'win-max');
                     setTaskState(b, 'active');
                 }
             });
+            document.body.classList.remove('has-max');
             return;
         }
         var W = window.innerWidth, H = window.innerHeight - 30;
@@ -580,7 +581,7 @@
         terminal: ['telnet.exe',   '02', '3,900 K'],
         cdplayer: ['cdplayer.exe', '03', '5,600 K'],
         notepad:  ['notepad.exe',  '00', '2,040 K'],
-        ie:       ['iexplore.exe', '23', '88,000 K']
+        ie:       ['navigator.exe', '23', '88,000 K']
     };
     var TM_FW = {
         'ms-win': ['winmine.exe',  '01', '1,400 K'],

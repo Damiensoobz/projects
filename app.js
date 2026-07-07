@@ -217,28 +217,37 @@
             ? `<div class="card-links">${demoLink}${ghLink}</div>`
             : '';
 
-        // Screenshot is a link when there's a demo, otherwise a plain frame
-        const shotTag   = hasLink ? 'a' : 'div';
-        const shotAttrs = hasLink
+        // Framed preview: the full screenshot sits inside a faux browser window.
+        // Its title bar shows the live-demo URL; the whole frame links to the demo.
+        const frameTag   = hasLink ? 'a' : 'div';
+        const frameAttrs = hasLink
             ? ` href="${esc(project.link)}" target="_blank" rel="noopener noreferrer"`
             : '';
+        const displayUrl = hasLink
+            ? project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')
+            : (project.github ? project.github.replace(/^https?:\/\//, '') : 'preview.html');
 
         return `
 <article class="card" style="animation-delay:${index * 0.07 + 0.1}s">
   <div class="card-bar">
     <h3 class="card-title">${esc(project.title)}</h3>
   </div>
-  <div class="card-main">
-    <${shotTag} class="card-shot"${shotAttrs} aria-label="${esc(project.title)} screenshot">
-      <img class="card-img" src="${img}" alt="${esc(project.title)} screenshot" loading="lazy">
-    </${shotTag}>
-    <div class="card-body">
-      ${project.subtitle ? `<p class="card-subtitle">${esc(project.subtitle)}</p>` : ''}
-      <p class="card-desc">${esc(project.description)}</p>
-      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
-      ${slug ? `<p class="card-commit" data-repo="${esc(slug)}" hidden></p>` : ''}
-      ${links}
+  <${frameTag} class="card-frame"${frameAttrs} aria-label="${esc(project.title)}${hasLink ? ' — open live demo' : ' screenshot'}">
+    <div class="card-frame-bar">
+      <span class="card-frame-dots"><i></i><i></i><i></i></span>
+      <span class="card-frame-url">${esc(displayUrl)}</span>
+      ${hasLink ? '<span class="card-frame-go">open ↗</span>' : ''}
     </div>
+    <div class="card-frame-shot">
+      <img class="card-img" src="${img}" alt="${esc(project.title)} screenshot" loading="lazy">
+    </div>
+  </${frameTag}>
+  <div class="card-body">
+    ${project.subtitle ? `<p class="card-subtitle">${esc(project.subtitle)}</p>` : ''}
+    <p class="card-desc">${esc(project.description)}</p>
+    ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+    ${slug ? `<p class="card-commit" data-repo="${esc(slug)}" hidden></p>` : ''}
+    ${links}
   </div>
 </article>`;
     }
