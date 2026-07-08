@@ -262,8 +262,9 @@ body.has-max { overflow: hidden; }
     .block[data-app="terminal"] { order: 5; }
     .block[data-app="cdplayer"] { order: 6; }
 
-    /* "Activate" footer: centered, fixed just above the taskbar */
-    .activate-wm { left: 0; right: 0; bottom: 36px; }
+    /* "Activate" footer: in document flow at the page bottom, so it never
+       floats over content while scrolling (it only shows once you reach it) */
+    .activate-wm { position: static; padding: 0 16px; margin-bottom: 10px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════

@@ -29,25 +29,27 @@
     var CONTACT_EMAIL = (typeof contactConfig !== 'undefined' && contactConfig.email) || 'damien@damienbuilds.dev';
 
     var HOME      = 'http://www.damienbuilds.dev/projects';
-    var U_SEARCH  = 'http://www.altavista.com';
-    var U_GUEST   = 'http://www.damienbuilds.dev/guestbook';
+    var U_SEARCH  = 'http://www.googol.com';
     var U_BLOG    = 'http://www.damienbuilds.dev/blog';
     var U_AD      = 'http://www.totally-real-deals.net/claim';
     var SITE      = 'https://damienbuilds.dev';
     var RICK      = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 
     // ── Pseudo-ads — 90s banners trolling the modern web ───────
-    // [headline, body, cta] — all static trusted strings.
+    // [headline, body, cta, skin] — skins keep the ad wall from looking
+    // like one advertiser bought every slot. All static trusted strings.
+    //   s1 classic yellow · s2 hacker terminal · s3 corporate memo
+    //   s4 vaporwave · s5 hazard tape
     var ADS = [
-        ['Mine Bitcoin on dial-up!', 'Only ~4,000 years to your first coin. No refunds. Electricity not included.', 'START MINING'],
-        ['AI took your job?', 'Take its job. Retrain as an artisanal CAPTCHA solver today.', 'I AM NOT A ROBOT'],
-        ['The Doomscroll Wheel&trade;', 'Scroll 50% faster, feel 200% worse. Now with haptic regret.', 'UPGRADE MY SADNESS'],
-        ['Your data is for sale', 'We know. We sold it. Buy it back in 3 easy payments of $9.99.', 'BUY MYSELF BACK'],
-        ['FREE cloud storage*', '*The cloud is just someone else&rsquo;s computer. His name is Greg.', 'TRUST GREG'],
-        ['Streaming mega-bundle', 'All 14 services for the price of a mortgage. Cancel anytime**. **You can&rsquo;t.', 'SUBSCRIBE FOREVER'],
-        ['Refurbished attention span', 'Gently used. 8 seconds. One previous owner (a goldfish).', 'ADD TO CART'],
-        ['Y2K38 is coming', 'The clocks run out again in 2038. Panic early &mdash; beat the rush.', 'PANIC NOW'],
-        ['Hot singles? No.', 'Hot SIGNALS in your area. It&rsquo;s your router. It misses you.', 'RECONNECT']
+        ['Mine Bitcoin on dial-up!', 'Only ~4,000 years to your first coin. No refunds. Electricity not included.', 'START MINING', 's2'],
+        ['AI took your job?', 'Take its job. Retrain as an artisanal CAPTCHA solver today.', 'I AM NOT A ROBOT', 's3'],
+        ['The Doomscroll Wheel&trade;', 'Scroll 50% faster, feel 200% worse. Now with haptic regret.', 'UPGRADE MY SADNESS', 's4'],
+        ['Your data is for sale', 'We know. We sold it. Buy it back in 3 easy payments of $9.99.', 'BUY MYSELF BACK', 's1'],
+        ['FREE cloud storage*', '*The cloud is just someone else&rsquo;s computer. His name is Greg.', 'TRUST GREG', 's2'],
+        ['Streaming mega-bundle', 'All 14 services for the price of a mortgage. Cancel anytime**. **You can&rsquo;t.', 'SUBSCRIBE FOREVER', 's4'],
+        ['Refurbished attention span', 'Gently used. 8 seconds. One previous owner (a goldfish).', 'ADD TO CART', 's1'],
+        ['Y2K38 is coming', 'The clocks run out again in 2038. Panic early &mdash; beat the rush.', 'PANIC NOW', 's5'],
+        ['Hot singles? No.', 'Hot SIGNALS in your area. It&rsquo;s your router. It misses you.', 'RECONNECT', 's3']
     ];
     function adShuffle() {
         var a = ADS.slice();
@@ -55,7 +57,7 @@
         return a;
     }
     function adHtml(ad) {
-        return '<div class="bw-ad"><span class="bw-ad-tag">advertisement</span>' +
+        return '<div class="bw-ad bw-ad-' + (ad[3] || 's1') + '"><span class="bw-ad-tag">advertisement</span>' +
             '<a class="bw-ad-inner" data-link="' + U_AD + '">' +
                 '<span class="bw-ad-head">' + ad[0] + '</span>' +
                 '<span class="bw-ad-body">' + ad[1] + '</span>' +
@@ -65,7 +67,7 @@
     function railHtml(picks) {
         return '<aside class="bw-rail"><div class="bw-rail-sticky">' +
             adHtml(picks[0]) + adHtml(picks[1]) +
-            '<div class="bw-ad"><span class="bw-ad-tag">advertisement</span>' +
+            '<div class="bw-ad bw-ad-s3"><span class="bw-ad-tag">advertisement</span>' +
                 '<a class="bw-ad-inner" href="mailto:' + CONTACT_EMAIL + '">' +
                     '<span class="bw-ad-head">Your ad here</span>' +
                     '<span class="bw-ad-body">1 million impressions/day* (*mostly Damien refreshing).</span>' +
@@ -84,8 +86,7 @@
     // ── Shared retro nav bar ────────────────────────────────────
     function nav(active) {
         var links = [
-            ['Home', HOME, 'projects'], ['Search', U_SEARCH, 'search'],
-            ['Guestbook', U_GUEST, 'guestbook'], ['Blog', U_BLOG, 'blog']
+            ['Home', HOME, 'projects'], ['Search', U_SEARCH, 'search'], ['Blog', U_BLOG, 'blog']
         ];
         return '<div class="bw-nav">' + links.map(function (l) {
             return '<a class="bw-navlink' + (l[2] === active ? ' on' : '') + '" data-link="' + esc(l[1]) + '">' + esc(l[0]) + '</a>';
@@ -113,74 +114,44 @@
         return '<div class="bw-result">' + a +
             '<p class="bw-result-url">' + esc(link) + '</p><p class="bw-result-desc">' + desc + '</p></div>';
     }
+    // Googol — the search engine that "indexes 4 billion pages, returns 1 guy".
+    var GG_COLORS = ['#4285f4', '#ea4335', '#fbbc05', '#4285f4', '#34a853', '#ea4335'];
+    function googolLogo(cls) {
+        return '<span class="gg-logo ' + cls + '" aria-label="Googol">' +
+            'Googol'.split('').map(function (ch, i) {
+                return '<b style="color:' + GG_COLORS[i] + '">' + ch + '</b>';
+            }).join('') + '</span>';
+    }
+    function googolForm(q, compact) {
+        return '<form class="gg-form' + (compact ? ' gg-form-compact' : '') + '">' +
+            '<input class="gg-input" type="text" value="' + esc(q) + '" aria-label="Search the web">' +
+            '<span class="gg-btns">' +
+                '<button class="gg-btn" type="submit">Googol Search</button>' +
+                '<button class="gg-btn gg-lucky" type="button">I&rsquo;m Feeling Lucky</button>' +
+            '</span></form>';
+    }
     function searchPage(q) {
-        var results = '';
-        if (q) {
-            var rows =
-                searchResult('Damien &mdash; Projects', HOME, 'Browser games, a memento-mori calendar, a fantasy map generator. Exactly what you searched for. Probably.') +
-                searchResult('damienbuilds.dev &mdash; hire a code wizard', SITE, 'The official site. Web things conjured from tea and spite. Now accepting clients.', 'ext') +
-                searchResult('Damien &middot; GitHub', social('github'), 'Public repositories with live commit history. At least three of them are finished.', 'ext') +
-                searchResult('Damien Subramanian | LinkedIn', social('linkedin'), 'Professional&trade;. Open to work, opportunities, and free snacks.', 'ext') +
-                searchResult('@damienbuilds.dev &middot; Instagram', social('instagram'), 'Screenshots of code that compiled on the first try. A rare and beautiful archive.', 'ext') +
-                searchResult('Download more RAM &mdash; 100% FREE (legit)', RICK, 'Your PC is low on memory. Click here to install an extra 16&nbsp;GB instantly. No catch.', 'ext') +
-                searchResult('&#9733; YOU are visitor 1,000,000 &mdash; claim your prize &#9733;', RICK, 'CONGRATULATIONS!!! A brand-new iPod is reserved in your name. Click within 0:59 to claim.', 'ext') +
-                searchResult('Hire Damien (Sponsored)', 'mailto:' + CONTACT_EMAIL, 'The #1 result for &ldquo;' + esc(q) + '&rdquo;. Sponsored. (Sponsored by him.)', 'mail') +
-                searchResult('Guestbook', U_GUEST, 'Sign it. Visitor #1337 awaits. ~*~');
-            results = '<div class="bw-results"><p class="bw-results-meta">Results <b>1&ndash;9</b> of about <b>4,000,000,000</b> for &ldquo;' + esc(q) + '&rdquo; (0.04 seconds)</p>' +
-                rows + '</div>';
+        if (!q) {
+            return '<div class="bw-page bw-search gg-home">' + nav('search') +
+                '<div class="gg-hero">' + googolLogo('gg-big') +
+                    googolForm('', false) +
+                    '<p class="gg-tip">Searching 4,000,000,000 pages. Returning 1 guy. Every time.</p>' +
+                '</div></div>';
         }
-        return '<div class="bw-page bw-search">' + nav('search') +
-            '<div class="bw-av"><div class="bw-av-logo">Alta<b>Vista</b></div>' +
-            '<form class="bw-av-form"><input class="bw-av-input" type="text" value="' + esc(q) + '" placeholder="Search the web" aria-label="Search the web"><button class="bw-av-btn" type="submit">Search</button></form>' +
-            '<p class="bw-av-tip">Tip: searching for literally anything returns me. The algorithm is deeply biased.</p></div>' +
-            results + '</div>';
-    }
-
-    // Guestbook — seeded entries + visitor-submitted ones persisted in
-    // localStorage, plus a visitor counter that climbs as you come back.
-    var GB_KEY    = 'gb-entries-v1';
-    var GB_VISITS = 'gb-visits-v1';
-
-    function gbStored() {
-        try { return JSON.parse(localStorage.getItem(GB_KEY)) || []; } catch (e) { return []; }
-    }
-    function gbBumpVisits() {
-        var n = 0;
-        try { n = (parseInt(localStorage.getItem(GB_VISITS), 10) || 0) + 1; localStorage.setItem(GB_VISITS, String(n)); } catch (e) {}
-        var total = 1337 + n;                       // everyone starts as a leet visitor
-        return ('0000000' + total).slice(-8);       // zero-padded, 8 digits
-    }
-    function gbEntryHtml(name, msg, date, mine) {
-        return '<div class="bw-gb-entry' + (mine ? ' bw-gb-mine' : '') + '">' +
-            '<div class="bw-gb-head"><b>' + esc(name) + '</b><span>' + esc(date) + '</span></div>' +
-            '<p>' + esc(msg) + '</p></div>';
-    }
-    function guestbookPage() {
-        var seed = [
-            ['xXx_n3tscape_n4vigator_xXx', 'cool site!!1! how do u make the windows move?? teach me ur ways', '08/14/1998'],
-            ['HotMail_Linda', 'i was looking for casserole recipes but this is fine too. 10/10 would visit again', '12/02/1999'],
-            ['SysAdmin_Greg', 'whoever set tea.exe to 420% CPU, please see me. this is a final warning.', '01/01/2000'],
-            ['DialUpDan', 'took 45 mins to load on my 56k but worth every screech. bookmarked!!', '03/22/2001'],
-            ['webring_wendy', 'added u to the Cool Sites webring. next site is a page about ferrets. ur welcome', '11/09/2003'],
-            ['anonymous_coward', 'the cake is a lie', '06/06/2006'],
-            ['ur_mom', 'come home for dinner. you have been on this computer for 9 hours.', '&mdash;']
-        ];
-        var mine = gbStored();
-        var list = mine.map(function (e) { return gbEntryHtml(e[0], e[1], e[2], true); }).join('') +
-                   seed.map(function (e) { return gbEntryHtml(e[0], e[1], e[2], false); }).join('');
-        var count = mine.length + seed.length;
-        return '<div class="bw-page bw-guestbook">' + nav('guestbook') +
-            '<h2 class="bw-gb-title">~*~ Sign My Guestbook ~*~</h2>' +
-            '<p class="bw-gb-sub">You are visitor number <span class="bw-counter">' + gbBumpVisits() + '</span> &middot; ' +
-                '<span class="bw-gb-signs">' + count + ' signature' + (count === 1 ? '' : 's') + '</span></p>' +
-            '<form class="bw-gb-form">' +
-                '<input class="bw-gb-name" type="text" maxlength="28" placeholder="Your name / handle" aria-label="Your name">' +
-                '<div class="bw-gb-row">' +
-                    '<textarea class="bw-gb-input" rows="2" maxlength="280" placeholder="Leave your mark on the internet forever..." aria-label="Your guestbook entry"></textarea>' +
-                    '<button class="bw-gb-btn" type="submit">Sign it!</button>' +
-                '</div>' +
-            '</form>' +
-            '<div class="bw-gb-list">' + list + '</div></div>';
+        var rows =
+            searchResult('Damien &mdash; Projects', HOME, 'Browser games, a memento-mori calendar, a fantasy map generator. Exactly what you searched for. Probably.') +
+            searchResult('damienbuilds.dev &mdash; hire a code wizard', SITE, 'The official site. Web things conjured from tea and spite. Now accepting clients.', 'ext') +
+            searchResult('Damien &middot; GitHub', social('github'), 'Public repositories with live commit history. At least three of them are finished.', 'ext') +
+            searchResult('Damien Subramanian | LinkedIn', social('linkedin'), 'Professional&trade;. Open to work, opportunities, and free snacks.', 'ext') +
+            searchResult('@damienbuilds.dev &middot; Instagram', social('instagram'), 'Screenshots of code that compiled on the first try. A rare and beautiful archive.', 'ext') +
+            searchResult('Download more RAM &mdash; 100% FREE (legit)', RICK, 'Your PC is low on memory. Click here to install an extra 16&nbsp;GB instantly. No catch.', 'ext') +
+            searchResult('&#9733; YOU are visitor 1,000,000 &mdash; claim your prize &#9733;', RICK, 'CONGRATULATIONS!!! A brand-new iPod is reserved in your name. Click within 0:59 to claim.', 'ext') +
+            searchResult('Hire Damien (Sponsored)', 'mailto:' + CONTACT_EMAIL, 'The #1 result for &ldquo;' + esc(q) + '&rdquo;. Sponsored. (Sponsored by him.)', 'mail') +
+            searchResult('damien_resume_FINAL_v7_REAL.doc', 'http://files.damienbuilds.dev/resume', 'Download starts in 1998 seconds. Do not close this window. Do not open another.');
+        return '<div class="bw-page bw-search gg-results">' + nav('search') +
+            '<div class="gg-resbar">' + googolLogo('gg-small') + googolForm(q, true) + '</div>' +
+            '<div class="bw-results"><p class="bw-results-meta">About <b>4,000,000,000</b> results for &ldquo;' + esc(q) + '&rdquo; (0.04 seconds) &mdash; all of them Damien</p>' +
+            rows + '</div></div>';
     }
 
     function blogPage() {
@@ -243,8 +214,7 @@
     var PAGES = {};
     PAGES[HOME]     = { title: 'Damien — Projects',      html: function () { return withRail(homePage()); },
                         after: function () { if (window.renderPortfolio) window.renderPortfolio(); insertFeedAds(); } };
-    PAGES[U_SEARCH] = { title: 'AltaVista — Search',     html: function () { return searchPage(''); } };
-    PAGES[U_GUEST]  = { title: 'Guestbook',              html: function () { return withRail(guestbookPage()); } };
+    PAGES[U_SEARCH] = { title: 'Googol',                 html: function () { return searchPage(''); } };
     PAGES[U_BLOG]   = { title: "Damien's Blog",          html: function () { return withRail(blogPage()); } };
     PAGES[U_AD]     = { title: 'YOU WON!!! (you did not)', html: adClickPage };
 
@@ -339,34 +309,23 @@
         [].forEach.call(page.querySelectorAll('[data-link]'), function (a) {
             a.addEventListener('click', function (e) { e.preventDefault(); go(a.getAttribute('data-link')); });
         });
-        var sf = page.querySelector('.bw-av-form');
-        if (sf) sf.addEventListener('submit', function (e) {
-            e.preventDefault();
-            var q = page.querySelector('.bw-av-input').value;
-            page.innerHTML = searchPage(q);   // re-render in place with results
-            wirePage();
-            page.scrollTop = 0;
-        });
-        var gf = page.querySelector('.bw-gb-form');
-        if (gf) gf.addEventListener('submit', function (e) {
-            e.preventDefault();
-            var ta = page.querySelector('.bw-gb-input');
-            var nameEl = page.querySelector('.bw-gb-name');
-            var txt = (ta.value || '').trim();
-            if (!txt) return;
-            var name = (nameEl && nameEl.value.trim()) || 'anonymous_visitor';
-            var date = new Date().toLocaleDateString('en-US');
-            // Persist (newest first, cap the stash so it can't grow forever).
-            var stored = gbStored();
-            stored.unshift([name, txt, date]);
-            try { localStorage.setItem(GB_KEY, JSON.stringify(stored.slice(0, 50))); } catch (e2) {}
-            // Prepend to the visible list without a full re-render.
-            var list = page.querySelector('.bw-gb-list');
-            var tmp = document.createElement('div');
-            tmp.innerHTML = gbEntryHtml(name, txt, date, true);
-            list.insertBefore(tmp.firstChild, list.firstChild);
-            ta.value = ''; if (nameEl) nameEl.value = '';
-        });
+        var sf = page.querySelector('.gg-form');
+        if (sf) {
+            sf.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var q = page.querySelector('.gg-input').value;
+                page.innerHTML = searchPage(q);   // re-render in place with results
+                wirePage();
+                page.scrollTop = 0;
+            });
+            var lucky = page.querySelector('.gg-lucky');
+            if (lucky) lucky.addEventListener('click', function () {
+                // Feeling lucky → a random live project, in a new tab.
+                var ps = (window.projects || []).filter(function (p) { return p.link && p.link !== '#'; });
+                if (ps.length) window.open(ps[Math.floor(Math.random() * ps.length)].link, '_blank', 'noopener,noreferrer');
+                else go(U_BLOG);
+            });
+        }
         var blf = page.querySelector('.bw-blog-sub');
         if (blf) blf.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -395,6 +354,40 @@
     if (hireBtn) hireBtn.addEventListener('click', function () {
         window.location.href = 'mailto:' + CONTACT_EMAIL;
     });
+
+    // ── Favorites explorer bar (docked left, IE5 style) ─────────
+    var ieBody = document.querySelector('.ie-body');
+    var favBar = document.getElementById('ie-fav');
+    function favClosed() { try { return sessionStorage.getItem('fav-closed') === '1'; } catch (e) { return false; } }
+    function setFav(open) {
+        if (!ieBody) return;
+        ieBody.classList.toggle('show-fav', open);
+        try { sessionStorage.setItem('fav-closed', open ? '0' : '1'); } catch (e) {}
+    }
+    if (favBar) {
+        [].forEach.call(favBar.querySelectorAll('[data-nav]'), function (b) {
+            b.addEventListener('click', function () { go(b.getAttribute('data-nav')); });
+        });
+        [].forEach.call(favBar.querySelectorAll('[data-ext]'), function (b) {
+            b.addEventListener('click', function () { window.open(b.getAttribute('data-ext'), '_blank', 'noopener,noreferrer'); });
+        });
+        var favX = favBar.querySelector('.ie-fav-x');
+        if (favX) favX.addEventListener('click', function () { setFav(false); });
+        // The Grimoire menu actually does something: toggles the bar.
+        var gMenu = document.getElementById('menu-grimoire');
+        if (gMenu) gMenu.addEventListener('click', function () {
+            setFav(!ieBody.classList.contains('show-fav'));
+        });
+        // Auto-open on wide windows the first time (never fights a manual close).
+        if (window.ResizeObserver && ieBody) {
+            var favAuto = false;
+            new ResizeObserver(function () {
+                var wide = ieBody.clientWidth >= 1150;
+                if (wide && !favAuto && !favClosed()) { favAuto = true; ieBody.classList.add('show-fav'); }
+                if (!wide) ieBody.classList.remove('show-fav');
+            }).observe(ieBody);
+        }
+    }
 
     // Sidebar ad rail only fits when the window is wide (e.g. maximized).
     if (window.ResizeObserver) {

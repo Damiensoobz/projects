@@ -750,6 +750,8 @@ code {
 
 .ie-menubar { display: flex; align-items: center; gap: 15px; background: #d4d0c8; padding: 4px 10px; border-bottom: 1px solid #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
 .ie-menubar span:first-letter { text-decoration: underline; }
+.ie-menu-live { cursor: pointer; }
+.ie-menu-live:hover { color: #5a2ca0; }
 /* Throbber — the orb pulses/spins while a page is conjured */
 .ie-throbber {
     margin-left: auto; width: 20px; height: 20px; flex-shrink: 0;
@@ -830,12 +832,59 @@ code {
     border-right-color: #ffffff; border-bottom-color: #ffffff;
 }
 
+.ie-body { display: flex; align-items: stretch; flex: 1 1 auto; min-height: 0; }
 .ie-page {
-    flex: 1 1 auto; min-height: 0; max-height: 62vh; overflow-y: auto;
+    flex: 1 1 auto; min-width: 0; min-height: 0; max-height: 62vh; overflow-y: auto;
     background: #ffffff; padding: 6px 0 0;
     border-left: 1px solid #808080; border-right: 1px solid #ffffff;
 }
 .block[data-app="ie"].win-max .ie-page { max-height: none; }
+
+/* ── Favorites explorer bar — docked left, IE5 style ────────── */
+.ie-fav {
+    display: none;
+    width: 190px; flex-shrink: 0;
+    background: #ebe9e2;
+    border-left: 1px solid #808080; border-right: 1px solid #9a968e;
+    overflow-y: auto;
+}
+.ie-body.show-fav .ie-fav { display: block; }
+.ie-fav-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 7px 5px 10px; background: #d4d0c8; border-bottom: 1px solid #9a968e;
+}
+.ie-fav-title { font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; font-weight: 700; color: #000000; }
+.ie-fav-x {
+    width: 16px; height: 14px; padding: 0; cursor: pointer; background: #d4d0c8;
+    font-size: 8px; line-height: 1; color: #000000;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
+    border-right: 1px solid #404040; border-bottom: 1px solid #404040;
+}
+.ie-fav-x:active { border-color: #404040 #ffffff #ffffff #404040; }
+.ie-fav-list { display: flex; flex-direction: column; padding: 6px 4px 10px; }
+.ie-fav-group {
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #808080;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 9px 8px 3px; border-bottom: 1px solid #d8d5cc; margin-bottom: 2px;
+}
+.ie-fav-item {
+    display: flex; align-items: center; gap: 6px; text-align: left; cursor: pointer;
+    background: none; border: none; padding: 3px 8px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ie-fav-item::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'><path d='M8 1 L9.8 6.2 L15 8 L9.8 9.8 L8 15 L6.2 9.8 L1 8 L6.2 6.2 Z' fill='%23e8b422'/></svg>");
+    line-height: 1; flex-shrink: 0;
+}
+.ie-fav-item:hover { background: #000080; color: #ffffff; }
+.ie-fav-ext::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6.5' fill='none' stroke='%231560bd' stroke-width='1.4'/><path d='M2 8 H14 M8 1.5 C5 5 5 11 8 14.5 C11 11 11 5 8 1.5' fill='none' stroke='%231560bd' stroke-width='1'/></svg>");
+}
+.ie-fav-dead { color: #707070; }
+.ie-fav-dead::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'><path d='M8 1 L9.8 6.2 L15 8 L9.8 9.8 L8 15 L6.2 9.8 L1 8 L6.2 6.2 Z' fill='%23b8b4aa'/></svg>");
+}
 
 .ie-statusbar {
     display: flex; justify-content: space-between; gap: 6px;
@@ -1264,46 +1313,40 @@ code {
 .bw-navlink.on { color: #000000; font-weight: 700; text-decoration: none; }
 .bw-navsep { color: #b0b0b0; margin: 0 7px; }
 
-/* AltaVista-style search */
-.bw-av { text-align: center; padding: 14px 0 6px; }
-.bw-av-logo { font-family: Georgia, 'Times New Roman', serif; font-size: 1.9rem; font-style: italic; color: #1560bd; letter-spacing: -1px; }
-.bw-av-logo b { color: #cc0000; }
-.bw-av-form { margin: 12px 0 6px; }
-.bw-av-input { width: 58%; min-width: 160px; padding: 3px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.8rem;
-    border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
-.bw-av-btn { padding: 3px 14px; margin-left: 5px; cursor: pointer; background: #d4d0c8; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem;
-    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
-.bw-av-btn:active { border-color: #404040 #fff #fff #404040; }
-.bw-av-tip { color: #999; font-size: 0.7rem; font-style: italic; margin-top: 6px; }
-.bw-results { margin-top: 16px; border-top: 1px solid #d0d0d0; padding-top: 12px; }
+/* Googol — search parody (the algorithm is deeply biased) */
+.gg-hero { text-align: center; padding: 60px 0 30px; }
+.gg-logo { font-family: 'Times New Roman', Georgia, serif; font-weight: 700; letter-spacing: -1px; user-select: none; }
+.gg-logo b { font-weight: 700; }
+.gg-big { display: block; font-size: 3.4rem; line-height: 1.1; margin-bottom: 22px; text-shadow: 2px 2px 0 rgba(0,0,0,0.08); }
+.gg-small { font-size: 1.35rem; flex-shrink: 0; }
+.gg-form { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.gg-input {
+    width: 62%; min-width: 200px; max-width: 480px; padding: 5px 10px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.86rem;
+    border: 1px solid #9a9a9a; border-top-color: #7a7a7a;
+}
+.gg-input:focus { outline: none; border-color: #4285f4; box-shadow: 0 0 3px rgba(66,133,244,0.5); }
+.gg-btns { display: flex; gap: 8px; }
+.gg-btn {
+    padding: 4px 14px; cursor: pointer; background: #f2f1ec; color: #222;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem;
+    border-top: 1px solid #fff; border-left: 1px solid #fff;
+    border-right: 1px solid #808080; border-bottom: 1px solid #808080;
+}
+.gg-btn:active { border-color: #808080 #fff #fff #808080; }
+.gg-tip { color: #999; font-size: 0.7rem; font-style: italic; margin-top: 18px; }
+/* Results view: small logo + inline form up top */
+.gg-resbar { display: flex; align-items: center; gap: 16px; padding: 2px 0 12px; border-bottom: 1px solid #e4e2da; }
+.gg-form-compact { flex-direction: row; flex: 1; min-width: 0; gap: 8px; }
+.gg-form-compact .gg-input { width: auto; flex: 1; min-width: 120px; }
+.gg-form-compact .gg-btns .gg-lucky { display: none; }   /* lucky lives on the homepage */
+
+.bw-results { margin-top: 14px; }
 .bw-results-meta { font-size: 0.7rem; color: #888; margin-bottom: 12px; }
 .bw-result { margin-bottom: 13px; }
 .bw-result-title { color: #0b3d91; text-decoration: underline; font-size: 0.95rem; }
 .bw-result-url { color: #007800; font-size: 0.7rem; margin: 1px 0; }
 .bw-result-desc { color: #333; font-size: 0.78rem; line-height: 1.4; }
-
-/* 90s guestbook */
-.bw-guestbook { text-align: center; }
-.bw-gb-title { font-family: 'Comic Sans MS', 'Comic Sans', cursive; color: #cc00cc; font-size: 1.4rem; margin-bottom: 4px; }
-.bw-gb-sub { font-size: 0.78rem; color: #555; margin-bottom: 14px; }
-.bw-counter { font-family: 'Courier New', monospace; background: #000; color: #00ff00; padding: 1px 5px; letter-spacing: 2px; }
-.bw-gb-list { text-align: left; margin-bottom: 14px; }
-.bw-gb-entry { border: 1px solid #d8c8e8; background: #fffdf2; padding: 6px 9px; margin-bottom: 8px; }
-.bw-gb-head { display: flex; justify-content: space-between; font-size: 0.68rem; color: #999; margin-bottom: 2px; }
-.bw-gb-head b { color: #cc00cc; font-family: 'Comic Sans MS', cursive; }
-.bw-gb-entry p { font-size: 0.82rem; color: #222; line-height: 1.4; }
-.bw-gb-mine { border-color: #b9d7a8; background: #f4fbef; }   /* your own signatures */
-.bw-gb-mine .bw-gb-head b { color: #2a8a2a; }
-.bw-gb-signs { color: #888; }
-.bw-gb-form { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
-.bw-gb-row { display: flex; gap: 6px; align-items: flex-start; }
-.bw-gb-name, .bw-gb-input { padding: 4px 6px; font-family: Tahoma, Arial, sans-serif; font-size: 0.78rem;
-    border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; }
-.bw-gb-name { width: 100%; }
-.bw-gb-input { flex: 1; resize: vertical; }
-.bw-gb-btn { padding: 4px 14px; cursor: pointer; background: #d4d0c8; font-family: 'Comic Sans MS', cursive; font-size: 0.74rem; flex-shrink: 0; align-self: stretch;
-    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
-.bw-gb-btn:active { border-color: #404040 #fff #fff #404040; }
 
 /* Blog — polished "coming soon" index */
 .bw-blog-head { text-align: center; border-bottom: 1px solid #e2e2e2; padding-bottom: 14px; margin-bottom: 14px; }
@@ -1327,25 +1370,56 @@ code {
 .bw-blog-sub-btn:active { border-color: #404040 #fff #fff #404040; }
 .bw-blog-sub-note { font-size: 0.68rem; color: #999; font-style: italic; margin-top: 8px; }
 
-/* ── Pseudo-ads — 90s banners that troll the modern world ───── */
+/* ── Pseudo-ads — 90s banners that troll the modern world ─────
+   Five "advertisers" (s1–s5) so the ad wall doesn't look like one
+   agency bought every slot. Structure is shared; skins recolor. */
 .bw-ad { margin: 4px 0; text-align: center; }
 .bw-ad-tag { display: block; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; color: #a0a0a0; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 2px; }
-.bw-ad-inner {
-    display: block; cursor: pointer; text-decoration: none;
-    background: #fff34d;
-    border: 2px solid #000000;
-    outline: 2px dashed #ff00aa; outline-offset: -6px;
-    padding: 10px 14px 11px;
+.bw-ad-inner { display: block; cursor: pointer; text-decoration: none; padding: 10px 14px 11px; }
+.bw-ad-head { display: block; font-size: 1.05rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.bw-ad-body { display: block; font-size: 0.72rem; margin: 3px 0 5px; line-height: 1.4; }
+.bw-ad-cta { display: inline-block; font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.72rem; padding: 2px 10px; }
+@keyframes ad-blink { 50% { opacity: 0.35; } }
+
+/* s1 — classic sleaze: yellow, red Impact, magenta dashes */
+.bw-ad-s1 .bw-ad-inner { background: #fff34d; border: 2px solid #000000; outline: 2px dashed #ff00aa; outline-offset: -6px; }
+.bw-ad-s1 .bw-ad-inner:hover { background: #ffe81a; }
+.bw-ad-s1 .bw-ad-head { font-family: Impact, 'Arial Black', sans-serif; color: #d40000; }
+.bw-ad-s1 .bw-ad-body { font-family: 'Comic Sans MS', 'Comic Sans', Tahoma, sans-serif; color: #1a1a1a; }
+.bw-ad-s1 .bw-ad-cta { color: #ffffff; background: #d40000; animation: ad-blink 1s step-end infinite; }
+
+/* s2 — hacker terminal: black, phosphor green mono */
+.bw-ad-s2 .bw-ad-inner { background: #050a05; border: 2px solid #1f9c43; }
+.bw-ad-s2 .bw-ad-inner:hover { background: #0a140a; }
+.bw-ad-s2 .bw-ad-head { font-family: 'Courier New', monospace; font-weight: 700; color: #33ff66; text-shadow: 0 0 5px rgba(51,255,102,0.5); }
+.bw-ad-s2 .bw-ad-body { font-family: 'Courier New', monospace; color: #2bd457; }
+.bw-ad-s2 .bw-ad-cta { color: #050a05; background: #33ff66; }
+.bw-ad-s2 .bw-ad-cta::before { content: '> '; }
+
+/* s3 — corporate memo: polite white, navy serif, very trustworthy */
+.bw-ad-s3 .bw-ad-inner { background: #f4f6fb; border: 2px solid #0b3d91; }
+.bw-ad-s3 .bw-ad-inner:hover { background: #e9eefb; }
+.bw-ad-s3 .bw-ad-head { font-family: Georgia, 'Times New Roman', serif; color: #0b3d91; text-transform: none; font-style: italic; }
+.bw-ad-s3 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #445; }
+.bw-ad-s3 .bw-ad-cta { color: #ffffff; background: #0b3d91; border-radius: 2px; }
+
+/* s4 — vaporwave: hot pink, cyan glow, aggressively chill */
+.bw-ad-s4 .bw-ad-inner { background: linear-gradient(160deg, #ff71ce 0%, #b967ff 100%); border: 2px solid #01cdfe; }
+.bw-ad-s4 .bw-ad-inner:hover { filter: saturate(1.2); }
+.bw-ad-s4 .bw-ad-head { font-family: 'Comic Sans MS', 'Comic Sans', cursive; color: #ffffff; text-shadow: 2px 2px 0 #7b2fa0; }
+.bw-ad-s4 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #fdeaff; }
+.bw-ad-s4 .bw-ad-cta { color: #4b0a6e; background: #05ffa1; }
+
+/* s5 — hazard tape: emergency orange between warning stripes */
+.bw-ad-s5 .bw-ad-inner {
+    background: #ff9500; border: 2px solid #000000;
+    border-image: repeating-linear-gradient(45deg, #ffcc00 0 8px, #1a1a1a 8px 16px) 4;
 }
-.bw-ad-inner:hover { background: #ffe81a; }
-.bw-ad-head { display: block; font-family: Impact, 'Arial Black', sans-serif; font-size: 1.05rem; letter-spacing: 0.04em; color: #d40000; text-transform: uppercase; }
-.bw-ad-body { display: block; font-family: 'Comic Sans MS', 'Comic Sans', Tahoma, sans-serif; font-size: 0.72rem; color: #1a1a1a; margin: 3px 0 5px; line-height: 1.4; }
-.bw-ad-cta {
-    display: inline-block; font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.72rem;
-    color: #ffffff; background: #d40000; padding: 2px 10px;
-    animation: ad-blink 1s step-end infinite;
-}
-@keyframes ad-blink { 50% { background: #7b4fd0; } }
+.bw-ad-s5 .bw-ad-inner:hover { background: #ffa722; }
+.bw-ad-s5 .bw-ad-head { font-family: Impact, 'Arial Black', sans-serif; color: #1a1a1a; }
+.bw-ad-s5 .bw-ad-head::before { content: '\26A0 '; }
+.bw-ad-s5 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #401a00; font-weight: 700; }
+.bw-ad-s5 .bw-ad-cta { color: #ffcc00; background: #1a1a1a; animation: ad-blink 0.8s step-end infinite; }
 /* In-feed banner between project cards */
 .cards-grid .bw-ad { padding: 12px 22px; border-bottom: 1px dashed #b8b8b8; background: #ffffff; }
 
@@ -1448,7 +1522,7 @@ code {
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 1023px) {
     html, body { overflow-x: hidden; }          /* kill stray horizontal scroll */
-    .terminal { padding: 18px 12px 96px; }
+    .terminal { padding: 18px 12px 26px; }   /* footer is in-flow now, no fixed overlay to clear */
     .block { margin-bottom: 26px; }             /* breathing room between windows */
     /* note: no :last-child reset — DOM order != flex visual order here, so it
        would wrongly target the IE window (last in markup). Terminal padding
@@ -1460,6 +1534,7 @@ code {
     .block[data-app="ie"] .ie-btn { font-size: 0; gap: 0; padding: 4px 6px; }  /* icon-only buttons */
     .block[data-app="ie"] .ie-addr-label { display: none; }
     .block[data-app="ie"] .ie-links { display: none; }   /* page nav covers it on mobile */
+    .block[data-app="ie"] .ie-fav { display: none !important; }
     .block[data-app="ie"] .ie-page { max-height: none; }
 
     /* "Activate" footer — keep it readable + centered above the taskbar */
