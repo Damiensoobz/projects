@@ -332,25 +332,38 @@ body.has-max { overflow: hidden; }
 .rb-status { padding: 3px 8px; background: #d4d0c8; border-top: 1px solid #fff; font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; color: #000; }
 .rb-status i { color: #555; }
 
-/* Gag Task Manager */
+/* Gag Task Manager — NT-style: menu bar, 3 tabs, CPU graph, status bar */
 .tm-win .fw-body { padding: 0; }
-.tm { width: 322px; background: #d4d0c8; }
-.tm-tabs { display: flex; gap: 2px; padding: 6px 6px 0; }
+.tm { width: 358px; background: #d4d0c8; }
+.tm-menubar { display: flex; gap: 13px; padding: 4px 8px 3px; border-bottom: 1px solid #ffffff;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; color: #000; box-shadow: 0 1px 0 #808080; }
+.tm-menubar span:first-letter { text-decoration: underline; }
+.tm-tabs { display: flex; gap: 2px; padding: 8px 6px 0; }
 .tm-tab { font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; padding: 3px 11px 4px; cursor: pointer; background: #d4d0c8;
     border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 0;
     border-radius: 3px 3px 0 0; position: relative; top: 1px; color: #000; }
-.tm-tab.active { z-index: 2; padding-bottom: 5px; }
+.tm-tab.active { z-index: 2; padding-bottom: 5px; font-weight: 700; }
 .tm-body { background: #fff; border: 1px solid #808080; margin: 0 6px; }
 .tm-pane[hidden] { display: none; }
-.tm-pane[data-pane="proc"] { max-height: 198px; overflow-y: auto; }
+.tm-pane[data-pane="proc"],
+.tm-pane[data-pane="apps"] { max-height: 208px; overflow-y: auto; }
+.tm-pane[data-pane="apps"] { min-height: 120px; }
 .tm-proc { width: 100%; border-collapse: collapse; font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; }
-.tm-proc th { text-align: left; background: #d4d0c8; border-bottom: 1px solid #808080; padding: 2px 6px; font-weight: 400; position: sticky; top: 0; }
-.tm-proc td { padding: 1px 6px; color: #000; white-space: nowrap; }
-.tm-proc .tm-num { text-align: right; }
+.tm-proc th { text-align: left; background: #d4d0c8; border-bottom: 1px solid #808080; border-right: 1px solid #b8b4ac; padding: 2px 6px; font-weight: 400; position: sticky; top: 0; }
+.tm-proc th:last-child { border-right: 0; }
+.tm-proc td { padding: 2px 6px; color: #000; white-space: nowrap; }
+.tm-proc .tm-num { text-align: right; font-family: 'Courier New', monospace; font-size: 0.66rem; }
+.tm-proc tbody tr:nth-child(even) { background: #f4f3ef; }
 .tm-proc tbody tr:hover { background: #e8e8e8; }
 .tm-proc tbody tr.sel, .tm-proc tbody tr.sel td { background: #000080; color: #fff; }
-/* Performance: in-use vs total */
+.tm-apps td:last-child { color: #206020; }
+.tm-apps tr.sel td:last-child { color: #b8e8b8; }
+/* Performance: CPU history graph + in-use vs total bars */
 .tm-pane[data-pane="perf"] { padding: 9px 10px 6px; }
+.tm-graph-label { font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; color: #000; margin-bottom: 4px; }
+.tm-graph { display: block; width: 100%; margin-bottom: 10px; background: #000;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff; }
 .tm-perf-head { display: flex; justify-content: space-between; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #808080; border-bottom: 1px solid #c8c8c8; padding-bottom: 4px; margin-bottom: 9px; }
 .tm-perf-row { display: grid; grid-template-columns: 92px 1fr auto auto; align-items: center; gap: 7px; margin-bottom: 9px; font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; color: #000; }
 .tm-perf-label { white-space: nowrap; }
@@ -359,11 +372,19 @@ body.has-max { overflow: hidden; }
 .tm-perf-bar.over i { background: repeating-linear-gradient(90deg, #e23a3a 0 4px, #380000 4px 5px); }
 .tm-perf-use { text-align: right; font-weight: 700; white-space: nowrap; }
 .tm-perf-tot { color: #808080; white-space: nowrap; }
-.tm-foot { display: flex; align-items: center; justify-content: space-between; padding: 7px 8px 8px; }
-.tm-count { font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; color: #000; }
+.tm-foot { display: flex; align-items: center; justify-content: flex-end; padding: 7px 8px; }
+.tm-foot[hidden] { display: none; }
 .tm-end { font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; padding: 3px 13px; cursor: pointer; background: #d4d0c8;
     border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 1px solid #404040; }
 .tm-end:active { border-color: #404040 #fff #fff #404040; }
+/* Status bar — sunken cells, like the real thing */
+.tm-status { display: flex; gap: 3px; padding: 2px 4px 4px; }
+.tm-status span {
+    flex: 1; padding: 1px 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; color: #000;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
 
 /* Calculator */
 .calc-win .fw-body { padding: 0; }

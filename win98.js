@@ -583,6 +583,15 @@
         notepad:  ['notepad.exe',  '00', '2,040 K'],
         ie:       ['navigator.exe', '23', '88,000 K']
     };
+    // Applications-tab status flavor per app
+    var TM_STATUS = {
+        dos:      'Running (refuses to die)',
+        winamp:   'Vibing',
+        terminal: 'Listening…',
+        cdplayer: 'Spinning',
+        notepad:  'Running',
+        ie:       'Serving ads'
+    };
     var TM_FW = {
         'ms-win': ['winmine.exe',  '01', '1,400 K'],
         'tm-win': ['taskmgr.exe',  '08', '4,200 K'],
@@ -621,12 +630,33 @@
             return '<tr><td>' + esc(p[0]) + '</td><td class="tm-num">' + p[1] + '</td><td class="tm-num">' + p[2] + '</td></tr>';
         }).join('');
     }
+    // Open desktop windows, for the Applications tab.
+    function tmApps() {
+        var rows = [];
+        [].forEach.call(document.querySelectorAll('.block[data-app]'), function (b) {
+            if (b.classList.contains('win-closed')) return;
+            var app = b.getAttribute('data-app');
+            if (TM_APP[app]) rows.push({ app: app, title: b.dataset.winName, status: TM_STATUS[app] || 'Running' });
+        });
+        return rows;
+    }
+    function tmAppRowsHtml(rows) {
+        return rows.map(function (a) {
+            return '<tr data-app="' + esc(a.app) + '"><td>' + esc(a.title) + '</td><td>' + esc(a.status) + '</td></tr>';
+        }).join('');
+    }
+    // Wobble a numeric CPU reading; '00', '-7' and friends stay put.
+    function tmJitter(base) {
+        var n = parseInt(base, 10);
+        if (isNaN(n) || n <= 0) return base;
+        var v = Math.max(1, n + Math.floor(Math.random() * 9) - 4);
+        return (v < 10 ? '0' : '') + v;
+    }
 
     function openTaskManager() {
         if (document.querySelector('.tm-win')) { alreadyRunning('Task Manager'); return; }
         // [label, in-use, total, bar%, over-capacity?]
         var perf = [
-            ['CPU Usage',       '420%',       '100%',       100, true],
             ['Physical Memory', '63,901 MB',  '64 MB',      100, true],
             ['Commit Charge',   '999,999 K',  '512 K',      100, true],
             ['Tea',             '6 cups',     '2 cups',     100, true],
@@ -641,63 +671,144 @@
                    '<span class="tm-perf-tot">/ ' + g[2] + '</span></div>';
         }).join('');
         var rows0 = tmProcesses();
+        var apps0 = tmApps();
         var html =
             '<div class="tm">' +
+                '<div class="tm-menubar"><span>File</span><span>Options</span><span>View</span><span>Help</span></div>' +
                 '<div class="tm-tabs">' +
-                    '<button class="tm-tab active" data-tab="proc">Processes</button>' +
+                    '<button class="tm-tab active" data-tab="apps">Applications</button>' +
+                    '<button class="tm-tab" data-tab="proc">Processes</button>' +
                     '<button class="tm-tab" data-tab="perf">Performance</button>' +
                 '</div>' +
                 '<div class="tm-body">' +
-                    '<div class="tm-pane" data-pane="proc"><table class="tm-proc">' +
+                    '<div class="tm-pane" data-pane="apps"><table class="tm-proc tm-apps">' +
+                        '<thead><tr><th>Task</th><th>Status</th></tr></thead>' +
+                        '<tbody>' + tmAppRowsHtml(apps0) + '</tbody></table></div>' +
+                    '<div class="tm-pane" data-pane="proc" hidden><table class="tm-proc">' +
                         '<thead><tr><th>Image Name</th><th class="tm-num">CPU</th><th class="tm-num">Mem Usage</th></tr></thead>' +
                         '<tbody>' + tmRowsHtml(rows0) + '</tbody></table></div>' +
                     '<div class="tm-pane" data-pane="perf" hidden>' +
+                        '<div class="tm-graph-label">CPU Usage History</div>' +
+                        '<canvas class="tm-graph" width="330" height="96" aria-label="CPU usage history graph (decorative)"></canvas>' +
                         '<div class="tm-perf-head"><span>Resource</span><span>In&nbsp;Use&nbsp; / &nbsp;Total</span></div>' +
                         perfRows + '</div>' +
                 '</div>' +
-                '<div class="tm-foot"><span class="tm-count"></span>' +
-                    '<button class="tm-end">End Task</button></div>' +
+                '<div class="tm-foot"><button class="tm-end">End Task</button></div>' +
+                '<div class="tm-status"><span class="tm-count"></span><span class="tm-cpu"></span><span class="tm-mem">Mem: 63,901 MB / 64 MB</span></div>' +
             '</div>';
         var w = createWindow('Task Manager', html, 'tm-win');
-        var tabs    = w.body.querySelectorAll('.tm-tab');
-        var tbody   = w.body.querySelector('.tm-proc tbody');
-        var countEl = w.body.querySelector('.tm-count');
-        var sel = null, sig = rows0.map(function (r) { return r[0]; }).join('|');
+        var tabs     = w.body.querySelectorAll('.tm-tab');
+        var procBody = w.body.querySelector('.tm-pane[data-pane="proc"] tbody');
+        var appsBody = w.body.querySelector('.tm-pane[data-pane="apps"] tbody');
+        var countEl  = w.body.querySelector('.tm-count');
+        var cpuEl    = w.body.querySelector('.tm-cpu');
+        var footEl   = w.body.querySelector('.tm-foot');
+        var endBtn   = w.body.querySelector('.tm-end');
+        var graph    = w.body.querySelector('.tm-graph');
+        var activeTab = 'apps';
+        var selProc = null, selApp = null;
+        var sigProc = rows0.map(function (r) { return r[0]; }).join('|');
+        var sigApps = apps0.map(function (a) { return a.app; }).join('|');
 
         [].forEach.call(tabs, function (t) {
             t.addEventListener('click', function () {
                 [].forEach.call(tabs, function (x) { x.classList.remove('active'); });
                 t.classList.add('active');
+                activeTab = t.getAttribute('data-tab');
                 [].forEach.call(w.body.querySelectorAll('.tm-pane'), function (p) {
-                    p.hidden = (p.getAttribute('data-pane') !== t.getAttribute('data-tab'));
+                    p.hidden = (p.getAttribute('data-pane') !== activeTab);
                 });
+                // Performance has nothing to end — the button stays on task tabs.
+                footEl.hidden = (activeTab === 'perf');
+                endBtn.textContent = (activeTab === 'proc') ? 'End Process' : 'End Task';
             });
         });
-        function bindRows() {
+
+        function bindTable(tbody, setSel) {
             [].forEach.call(tbody.querySelectorAll('tr'), function (tr) {
                 tr.addEventListener('click', function () {
-                    if (sel) sel.classList.remove('sel');
-                    sel = tr; tr.classList.add('sel');
+                    var prev = tbody.querySelector('tr.sel');
+                    if (prev) prev.classList.remove('sel');
+                    tr.classList.add('sel');
+                    setSel(tr);
                 });
             });
         }
+        function bindProc() { bindTable(procBody, function (tr) { selProc = tr; }); }
+        function bindApps() { bindTable(appsBody, function (tr) { selApp = tr; }); }
+
+        // ── CPU history graph — random walk around a healthy 420% ──
+        var MAX_PCT = 500, cpuNow = 420;
+        var series = [];
+        for (var si = 0; si < 46; si++) {
+            cpuNow = Math.max(370, Math.min(470, cpuNow + Math.floor(Math.random() * 25) - 12));
+            series.push(cpuNow);
+        }
+        function drawGraph() {
+            if (!graph || !graph.getContext) return;
+            var ctx = graph.getContext('2d');
+            var W = graph.width, H = graph.height;
+            ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, W, H);
+            ctx.strokeStyle = '#003c00'; ctx.lineWidth = 1;
+            for (var gx = W - 0.5; gx > 0; gx -= 15) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+            for (var gy = H - 0.5; gy > 0; gy -= 15) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+            var y100 = Math.round(H - (100 / MAX_PCT) * H) + 0.5;   // the line sanity left behind
+            ctx.strokeStyle = '#7a0000';
+            ctx.beginPath(); ctx.moveTo(0, y100); ctx.lineTo(W, y100); ctx.stroke();
+            ctx.strokeStyle = '#00ff00'; ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            var step = W / (series.length - 1);
+            series.forEach(function (v, i) {
+                var px = i * step, py = H - (v / MAX_PCT) * H;
+                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            });
+            ctx.stroke();
+        }
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        drawGraph();
+
         // Reflect apps being closed/reopened, without churning the DOM when nothing changed.
         function refresh() {
             var rows = tmProcesses();
             var newSig = rows.map(function (r) { return r[0]; }).join('|');
-            if (newSig !== sig) { sig = newSig; tbody.innerHTML = tmRowsHtml(rows); bindRows(); sel = null; }
+            if (newSig !== sigProc) { sigProc = newSig; procBody.innerHTML = tmRowsHtml(rows); bindProc(); selProc = null; }
+            else {
+                // Same processes — just let the CPU numbers twitch in place.
+                [].forEach.call(procBody.querySelectorAll('tr'), function (tr, i) {
+                    if (rows[i]) tr.children[1].textContent = tmJitter(rows[i][1]);
+                });
+            }
+            var apps = tmApps();
+            var newAppSig = apps.map(function (a) { return a.app; }).join('|');
+            if (newAppSig !== sigApps) { sigApps = newAppSig; appsBody.innerHTML = tmAppRowsHtml(apps); bindApps(); selApp = null; }
+            if (!reduceMotion) {
+                cpuNow = Math.max(370, Math.min(470, cpuNow + Math.floor(Math.random() * 25) - 12));
+                series.push(cpuNow); series.shift();
+                if (activeTab === 'perf') drawGraph();
+            }
             countEl.textContent = 'Processes: ' + rows.length;
+            cpuEl.textContent = 'CPU Usage: ' + cpuNow + '%';
         }
-        bindRows();
+        bindProc(); bindApps();
         refresh();          // include the Task Manager itself + anything opened since snapshot
         var poll = setInterval(function () {
             if (!document.body.contains(w.el)) { clearInterval(poll); return; }
             refresh();
         }, 1200);
-        w.body.querySelector('.tm-end').addEventListener('click', function () {
-            var first = tbody.querySelector('td');
-            var name = sel ? sel.firstElementChild.textContent : (first ? first.textContent : 'tea.exe');
-            adminError('End', name);
+
+        endBtn.addEventListener('click', function () {
+            if (activeTab === 'apps') {
+                // End Task genuinely closes the window (hello.bat respawns — it's a startup script).
+                var tr = selApp || appsBody.querySelector('tr');
+                if (!tr) return;
+                var b = document.querySelector('.block[data-app="' + tr.getAttribute('data-app') + '"]');
+                if (b) closeWin(b);
+                refresh();
+            } else {
+                var first = procBody.querySelector('td');
+                var name = selProc ? selProc.firstElementChild.textContent : (first ? first.textContent : 'tea.exe');
+                adminError('End', name);
+            }
         });
     }
 
