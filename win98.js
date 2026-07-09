@@ -392,20 +392,9 @@
         return ov;
     }
 
-    function sysInfoHtml() {
-        return '<div class="dlg-sys">' +
-            '<div class="dlg-sys-logo"></div>' +
-            '<div class="dlg-sys-text">' +
-                '<p><b>damienOS 98</b></p>' +
-                '<p>Registered to: one (1) code wizard</p>' +
-                '<p>Display: ' + window.innerWidth + ' × ' + window.innerHeight + '</p>' +
-                '<p>Tea: <b>critical</b></p>' +
-            '</div></div>';
-    }
-
     // ── Desktop icons ───────────────────────────────────────────
     var deskIcons = [
-        { kind: 'computer', label: 'My Computer',   action: function () { openDialog('My Computer', sysInfoHtml()); } },
+        { kind: 'computer', label: 'My Computer',   action: function () { openSysProps(); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
         { kind: 'mine',     label: 'Minesweeper',   action: function () { openMinesweeper(); } },
         { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
@@ -469,7 +458,7 @@
         if (act === 'refresh' && window.triggerScramble) window.triggerScramble();
         else if (act === 'tidy') tidyWindows();
         else if (act === 'taskmgr') openTaskManager();
-        else if (act === 'props') openDialog('Display Properties', sysInfoHtml());
+        else if (act === 'props') openSysProps();
         hideCtx();
     });
 
@@ -810,6 +799,46 @@
                 adminError('End', name);
             }
         });
+    }
+
+    // ── System Properties — the "about this PC" screen, except the
+    //    PC is this website. What it is, who made it, and why.
+    function openSysProps() {
+        if (document.querySelector('.dp-win')) { alreadyRunning('System Properties'); return; }
+        var mins = Math.floor((Date.now() - (window.performance && performance.timing ? performance.timing.navigationStart : Date.now())) / 60000);
+        var html =
+            '<div class="dp">' +
+                '<div class="dp-tabs"><button class="dp-tab active">General</button></div>' +
+                '<div class="dp-body">' +
+                    '<div class="dp-about">' +
+                        '<div class="dlg-sys-logo"></div>' +
+                        '<div class="dp-about-main">' +
+                            '<div class="dp-group"><span class="dp-group-title">System</span>' +
+                                '<p><b>damienOS 98</b> <span class="dp-dim">Second Edition (allegedly)</span></p>' +
+                                '<p>A developer portfolio dressed as a Windows&nbsp;98 desktop.</p>' +
+                                '<p>Hand-built in vanilla HTML/CSS/JS &mdash; no frameworks, no build step, no mercy.</p>' +
+                            '</div>' +
+                            '<div class="dp-group"><span class="dp-group-title">Registered to</span>' +
+                                '<p><b>Damien</b> &mdash; Coder &amp; Warlock &#9876;&#65039;</p>' +
+                                '<p>Powered by tea, delusion, and a healthy respect for the test suite.</p>' +
+                                '<p><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>' +
+                            '</div>' +
+                            '<div class="dp-group"><span class="dp-group-title">The point</span>' +
+                                '<p>The real work lives in <b>Damien Navigator</b> &mdash; open it from the taskbar and browse the projects.</p>' +
+                                '<p>The rest of the desktop exists to make you smile. Everything you can click does something; some of it is even useful.</p>' +
+                            '</div>' +
+                            '<div class="dp-group"><span class="dp-group-title">Computer</span>' +
+                                '<p>Display: ' + window.innerWidth + ' &times; ' + window.innerHeight + ' <span class="dp-dim">(pixels, mostly aligned)</span></p>' +
+                                '<p>Memory: 64 MB of pure optimism <span class="dp-dim">&middot; Tea: <b>critical</b></span></p>' +
+                                '<p>Uptime: ' + mins + ' min <span class="dp-dim">(this visit &mdash; thank you for ' + (mins < 1 ? 'the seconds' : 'them') + ')</span></p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="dp-foot"><button class="dp-btn dp-ok">OK</button></div>' +
+            '</div>';
+        var w = createWindow('System Properties', html, 'dp-win');
+        w.body.querySelector('.dp-ok').addEventListener('click', w.close);
     }
 
     // ── Restart → refuses, on the grounds of preventing societal collapse ──
