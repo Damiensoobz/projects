@@ -1290,6 +1290,7 @@ code {
 .activate-wm { color: rgba(255,255,255,0.5); font-family: Tahoma, Arial, sans-serif; text-shadow: 0 1px 1px rgba(0,0,0,0.25); }
 .activate-title { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.01em; }
 .activate-sub { font-size: 0.78rem; margin-top: 2px; }
+.activate-sub:hover { color: rgba(255,255,255,0.85); text-decoration: underline; }
 .activate-foot { font-size: 0.66rem; margin-top: 8px; color: rgba(255,255,255,0.4); }
 .activate-foot a { color: rgba(255,255,255,0.6); text-decoration: underline; }
 .activate-foot a:hover { color: #ffffff; }

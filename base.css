@@ -242,9 +242,12 @@ body.has-max { overflow: hidden; }
 .desktop-mode .block { position: fixed; margin: 0; }
 .desktop-mode .block > .prompt { cursor: move; }
 
-/* "Activate Windows" desktop watermark + footer (sits behind the windows) */
+/* "Activate damienOS" desktop watermark + footer (sits behind the windows) */
 .activate-wm { position: fixed; right: 22px; bottom: 44px; z-index: 2; pointer-events: none; user-select: none; text-align: center; }
 .activate-foot a { pointer-events: auto; }
+/* The sub-line is a real button → System Properties → Activate Now */
+.activate-sub { display: block; width: 100%; background: none; border: none; padding: 0;
+    font: inherit; color: inherit; text-align: center; pointer-events: auto; cursor: pointer; }
 
 /* ═══════════════════════════════════════════════════════════════
    MOBILE / STACKED FLOW (narrow viewports — desktop-mode is off
@@ -388,7 +391,13 @@ body.has-max { overflow: hidden; }
 
 /* System Properties — the site's "about this PC" screen */
 .dp-win .fw-body { padding: 0; }
-.dp { width: 384px; background: #d4d0c8; }
+.dp { width: 384px; max-width: calc(100vw - 24px); background: #d4d0c8; }
+.dp-activate { margin-top: 2px; }
+
+/* Post-BSOD "Restarting damienOS…" black screen */
+.act-restart { position: fixed; inset: 0; z-index: 100002; background: #000000;
+    display: flex; align-items: center; justify-content: center; }
+.act-restart-text { color: #c0c0c0; font-family: 'Courier New', monospace; font-size: 1.05rem; }
 .dp-tabs { display: flex; gap: 2px; padding: 8px 6px 0; }
 .dp-tab { font-family: Tahoma, Arial, sans-serif; font-size: 0.7rem; padding: 3px 11px 4px; cursor: default; background: #d4d0c8;
     border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #404040; border-bottom: 0;

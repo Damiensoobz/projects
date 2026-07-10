@@ -419,16 +419,19 @@
     });
     document.body.appendChild(deskWrap);
 
-    // ── "Activate Windows" desktop watermark (also the footer) ──
+    // ── "Activate damienOS" desktop watermark (also the footer) ──
+    // The sub-line is a real link: Settings = System Properties, where the
+    // Activate Now button lives (and promptly regrets being pressed).
     var wm = document.createElement('div');
     wm.className = 'activate-wm';
     wm.innerHTML =
-        '<div class="activate-title">Activate Damien</div>' +
-        '<div class="activate-sub">Go to Settings to activate Damien</div>' +
+        '<div class="activate-title">Activate damienOS</div>' +
+        '<button class="activate-sub" type="button">Go to Settings to activate damienOS</button>' +
         '<div class="activate-foot">&copy; ' + new Date().getFullYear() +
             ' Damien &middot; built with tea &amp; questionable decisions' +
             ' &middot; <a href="mailto:' + CONTACT_EMAIL + '">hire me</a></div>';
     document.body.appendChild(wm);
+    wm.querySelector('.activate-sub').addEventListener('click', function () { openSysProps(); });
 
     // ── Desktop right-click context menu ────────────────────────
     var ctx = document.createElement('div');
@@ -806,6 +809,8 @@
     function openSysProps() {
         if (document.querySelector('.dp-win')) { alreadyRunning('System Properties'); return; }
         var mins = Math.floor((Date.now() - (window.performance && performance.timing ? performance.timing.navigationStart : Date.now())) / 60000);
+        // Days since Windows 98 shipped (June 25, 1998) — the trial runs long.
+        var trialDay = Math.floor((Date.now() - Date.UTC(1998, 5, 25)) / 86400000).toLocaleString();
         var html =
             '<div class="dp">' +
                 '<div class="dp-tabs"><button class="dp-tab active">General</button></div>' +
@@ -832,6 +837,10 @@
                                 '<p>Memory: 64 MB of pure optimism <span class="dp-dim">&middot; Tea: <b>critical</b></span></p>' +
                                 '<p>Uptime: ' + mins + ' min <span class="dp-dim">(this visit &mdash; thank you for ' + (mins < 1 ? 'the seconds' : 'them') + ')</span></p>' +
                             '</div>' +
+                            '<div class="dp-group"><span class="dp-group-title">Activation</span>' +
+                                '<p>Status: <b>not activated</b> <span class="dp-dim">(day ' + trialDay + ' of the 30-day trial)</span></p>' +
+                                '<p><button class="dp-btn dp-activate">Activate Now&hellip;</button></p>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -839,6 +848,7 @@
             '</div>';
         var w = createWindow('System Properties', html, 'dp-win');
         w.body.querySelector('.dp-ok').addEventListener('click', w.close);
+        w.body.querySelector('.dp-activate').addEventListener('click', function () { activateGag(w); });
     }
 
     // ── Restart → refuses, on the grounds of preventing societal collapse ──
@@ -851,6 +861,52 @@
                 'the group chats go dark, and somewhere a server farm weeps.</p>' +
                 '<p><b>Request denied.</b> You&rsquo;re welcome.</p>' +
             '</div></div>');
+    }
+
+    // ── "Activate Now" → BSOD → gathers data → restarts → punchline ──
+    // Deliberately unhurried: the crash needs a beat to land.
+    function activateGag(fromWin) {
+        if (document.querySelector('.bsod') || document.querySelector('.act-restart')) return;
+        if (fromWin) fromWin.close();
+        var b = document.createElement('div');
+        b.className = 'bsod';
+        b.innerHTML =
+            '<div class="bsod-inner">' +
+                '<p class="bsod-h">&nbsp;DAMIEN&nbsp;</p>' +
+                '<p>A problem has been detected and damienOS has been shut down to prevent activation.</p>' +
+                '<p>The problem seems to be caused by: <b>ACTIVATION_NOT_FOUND</b></p>' +
+                '<p>damienOS cannot be activated. It was never licensed, never purchased, and if we are being honest, never entirely finished.</p>' +
+                '<p>&nbsp;</p>' +
+                '<p>Gathering activation data&hellip; <b class="bsod-pct">0%</b> complete</p>' +
+                '<p>Your desktop will restart automatically. Do not turn off your portfolio.</p>' +
+                '<p class="bsod-blink">_</p>' +
+            '</div>';
+        document.body.appendChild(b);
+        var pctEl = b.querySelector('.bsod-pct');
+        // [percent, ms until the next tick] — stalls at 24% like the real thing.
+        var steps = [[7, 600], [23, 700], [24, 1500], [51, 800], [78, 700], [94, 650], [99, 900], [100, 1000]];
+        var i = 0;
+        function tick() {
+            if (i < steps.length) {
+                pctEl.textContent = steps[i][0] + '%';
+                setTimeout(tick, steps[i][1]);
+                i++;
+            } else {
+                b.remove();
+                var r = document.createElement('div');
+                r.className = 'act-restart';
+                r.innerHTML = '<div class="act-restart-text">Restarting damienOS&hellip;<span class="bsod-blink">_</span></div>';
+                document.body.appendChild(r);
+                setTimeout(function () {
+                    r.remove();
+                    openDialog('Activation', '<p class="dlg-p">Activation failed successfully.<br><br>' +
+                        'damienOS remains free, unlicensed, and slightly haunted.<br><br>' +
+                        'Damien, however, is fully licensed and available for hire:<br>' +
+                        '<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>');
+                }, 1700);
+            }
+        }
+        setTimeout(tick, 800);   // let "0%" sit for a beat first
     }
 
     // ── Konami code → (harmless) Blue Screen of Death ───────────
