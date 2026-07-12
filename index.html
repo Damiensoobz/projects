@@ -79,27 +79,26 @@
 
     <hr class="divider">
 
-    <!-- ── Projects (browsed in Damien Navigator, the in-house 90s browser) ── -->
-    <section class="block" data-app="ie" data-app-title="Damien Navigator">
+    <!-- ── Projects (browsed in Foxfire, the in-house 90s browser parody) ── -->
+    <section class="block" data-app="ie" data-app-title="Foxfire">
         <div class="prompt"><span class="p-user">visitor</span><span class="p-dim">@</span><span class="p-host">damien.dev</span><span class="p-dim">:</span><span class="p-path">~</span><span class="p-sym">$</span> <span class="p-cmd">ls -la projects/</span></div>
         <div class="ie-chrome">
-            <div class="ie-menubar"><span>File</span><span>Edit</span><span>View</span><span id="menu-grimoire" class="ie-menu-live" title="Toggle the Grimoire bar">Grimoire</span><span>Spells</span><span>Help</span><span class="ie-throbber" id="ie-throbber" title="Damien Navigator" aria-hidden="true"></span></div>
+            <div class="ie-menubar"><span>File</span><span>Edit</span><span>View</span><span>History</span><span id="menu-grimoire" class="ie-menu-live" title="Toggle the Bookmarks sidebar (maximize the window first)">Bookmarks</span><span>Tools</span><span>Help</span><span class="ie-throbber" id="ie-throbber" title="Foxfire" aria-hidden="true"></span></div>
             <div class="ie-toolbar">
                 <button class="ie-btn" type="button" data-ie="back" disabled><span class="ie-ico ie-ico-back"></span>Back</button>
                 <button class="ie-btn" type="button" data-ie="fwd" disabled><span class="ie-ico ie-ico-fwd"></span>Forward</button>
                 <button class="ie-btn" type="button" data-ie="stop"><span class="ie-ico ie-ico-stop"></span>Stop</button>
-                <button class="ie-btn" type="button" data-ie="refresh"><span class="ie-ico ie-ico-refresh"></span>Recast</button>
+                <button class="ie-btn" type="button" data-ie="refresh"><span class="ie-ico ie-ico-refresh"></span>Reload</button>
                 <button class="ie-btn" type="button" data-ie="home"><span class="ie-ico ie-ico-home"></span>Home</button>
                 <button class="ie-btn ie-btn-hire" type="button" data-ie="hire"><span class="ie-ico ie-ico-hire"></span>Hire Me</button>
             </div>
             <div class="ie-address">
-                <span class="ie-addr-label">Scroll</span>
+                <span class="ie-addr-label">Address</span>
                 <span class="ie-favicon"></span>
                 <input class="ie-url" id="ie-url" type="text" spellcheck="false" autocomplete="off" aria-label="Address">
-                <button class="ie-go" type="button" data-ie="go">Cast</button>
+                <button class="ie-go" type="button" data-ie="go" title="Go" aria-label="Go"><span class="ie-go-ico"></span></button>
             </div>
             <div class="ie-links">
-                <span class="ie-links-label">Grimoire</span>
                 <button class="ie-glink" type="button" data-nav="http://www.damienbuilds.dev/projects">Projects</button>
                 <button class="ie-glink" type="button" data-nav="http://www.googol.com">Search</button>
                 <button class="ie-glink" type="button" data-nav="http://www.damienbuilds.dev/blog">Blog</button>
@@ -107,18 +106,18 @@
         </div>
         <div class="ie-body">
             <aside class="ie-fav" id="ie-fav">
-                <div class="ie-fav-head"><span class="ie-fav-title">Favorites</span><button class="ie-fav-x" type="button" title="Close" aria-label="Close Favorites">&#10005;</button></div>
+                <div class="ie-fav-head"><span class="ie-fav-title">Bookmarks</span><button class="ie-fav-x" type="button" title="Close" aria-label="Close Bookmarks">&#10005;</button></div>
                 <div class="ie-fav-list">
-                    <span class="ie-fav-group">Pages</span>
+                    <span class="ie-fav-group">Bookmarks Toolbar</span>
                     <button class="ie-fav-item" type="button" data-nav="http://www.damienbuilds.dev/projects">My Projects</button>
                     <button class="ie-fav-item" type="button" data-nav="http://www.googol.com">Googol Search</button>
                     <button class="ie-fav-item" type="button" data-nav="http://www.damienbuilds.dev/blog">The Blog (0 posts)</button>
-                    <span class="ie-fav-group">Elsewhere</span>
+                    <span class="ie-fav-group">Bookmarks Menu</span>
                     <button class="ie-fav-item ie-fav-ext" type="button" data-ext="https://github.com/Damiensoobz">GitHub</button>
                     <button class="ie-fav-item ie-fav-ext" type="button" data-ext="https://www.linkedin.com/in/damien-subramanian-440309194/">LinkedIn</button>
                     <button class="ie-fav-item ie-fav-ext" type="button" data-ext="https://www.instagram.com/damienbuilds.dev/?hl=en">Instagram</button>
                     <button class="ie-fav-item ie-fav-ext" type="button" data-ext="https://damienbuilds.dev">damienbuilds.dev</button>
-                    <span class="ie-fav-group">Dusty bookmarks</span>
+                    <span class="ie-fav-group">Unsorted Bookmarks</span>
                     <button class="ie-fav-item ie-fav-dead" type="button" data-nav="http://www.geocities.com/~xX_sk8er_Xx/gifs">cool skateboard gifs</button>
                     <button class="ie-fav-item ie-fav-dead" type="button" data-nav="http://www.helpplz.net/how-2-exit-vim">how 2 exit vim.txt</button>
                     <button class="ie-fav-item ie-fav-dead" type="button" data-nav="http://www.realwinamp-skins.com/dragon.wsz">winamp skin (dragon)</button>
@@ -126,19 +125,20 @@
             </aside>
             <div class="ie-page" id="ie-page">
                 <noscript>
-                    <p class="out dim">total 5</p>
+                    <p class="out dim">total 6</p>
                     <ul class="out">
                         <li>The Serpent's Trial &mdash; browser snake game</li>
                         <li>Memento Mori &mdash; life-in-weeks calendar</li>
                         <li>The Cartographer's Conjuring &mdash; fantasy map generator</li>
                         <li>Dungeon Dice! &mdash; digital game master toolkit</li>
                         <li>Hecker &mdash; fake hacker terminal toy</li>
+                        <li>Asciifier &mdash; turns images into ASCII art</li>
                     </ul>
                     <p class="out dim">Enable JavaScript for the full experience, or browse the source on <a href="https://github.com/Damiensoobz" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
                 </noscript>
             </div>
         </div>
-        <div class="ie-statusbar"><span class="ie-status-text">Done</span><span class="ie-zone">The Aether</span></div>
+        <div class="ie-statusbar"><span class="ie-status-text">Done</span><span class="ie-zone">Internet</span></div>
     </section>
 
 

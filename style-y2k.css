@@ -732,37 +732,37 @@ code {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   APP: Projects → Internet Explorer + a blog
+   APP: Projects → Foxfire (an old-school Firefox parody) + a blog
    ═══════════════════════════════════════════════════════════════ */
 .block[data-app="ie"] { display: flex; flex-direction: column; padding: 0; }
-/* Damien Navigator — own-brand title bar: arcane purple, roomier than stock */
+/* Foxfire — warm orange/red title bar, classic browser-chrome proportions */
 .block[data-app="ie"] > .prompt {
     margin: 0;
-    background: linear-gradient(to right, #2a1454 0%, #6a3bbf 75%, #8a5ce0 100%);
+    background: linear-gradient(to right, #a3260b 0%, #e2571b 60%, #ff8a3d 100%);
     padding: 5px 5px 5px 8px;
     gap: 8px;
 }
 .block[data-app="ie"] > .prompt .p-cmd { font-size: 0.76rem; letter-spacing: 0.02em; }
-/* Navigator orb — a sparkle caught in a crystal ball */
+/* Foxfire mark — an original flame glyph, not the real Firefox logo */
 .block[data-app="ie"] > .prompt::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23241047' stroke='%23b18cff' stroke-width='1'/><path d='M8 2.6 L9.4 6.6 L13.4 8 L9.4 9.4 L8 13.4 L6.6 9.4 L2.6 8 L6.6 6.6 Z' fill='%23ffd76e'/><circle cx='5.6' cy='5.2' r='1' fill='%23ffffff' fill-opacity='0.55'/></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%238a2a0f'/><path d='M8 2 C6 4 5 6 6.5 7.5 C4.5 8 4 10 5.5 11.5 C7.5 13.5 11 12.5 11.5 9.5 C11.8 7.8 10.3 6.5 9.3 7.3 C10 5 9.3 3 8 2 Z' fill='%23ff8a3d'/><circle cx='7.6' cy='10.3' r='1' fill='%23ffe0a3'/></svg>");
 }
 
 .ie-menubar { display: flex; align-items: center; gap: 15px; background: #d4d0c8; padding: 4px 10px; border-bottom: 1px solid #808080; font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem; color: #000000; }
 .ie-menubar span:first-letter { text-decoration: underline; }
 .ie-menu-live { cursor: pointer; }
-.ie-menu-live:hover { color: #5a2ca0; }
-/* Throbber — the orb pulses/spins while a page is conjured */
+.ie-menu-live:hover { color: #c1440e; }
+/* Throbber — the flame spins in the corner while a page loads */
 .ie-throbber {
     margin-left: auto; width: 20px; height: 20px; flex-shrink: 0;
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23241047'/><path d='M8 2.6 L9.4 6.6 L13.4 8 L9.4 9.4 L8 13.4 L6.6 9.4 L2.6 8 L6.6 6.6 Z' fill='%23ffd76e'/></svg>") center/contain no-repeat;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%238a2a0f'/><path d='M8 2 C6 4 5 6 6.5 7.5 C4.5 8 4 10 5.5 11.5 C7.5 13.5 11 12.5 11.5 9.5 C11.8 7.8 10.3 6.5 9.3 7.3 C10 5 9.3 3 8 2 Z' fill='%23ff8a3d'/></svg>") center/contain no-repeat;
     text-decoration: none !important;
 }
 .ie-throbber.busy { animation: throb-spin 0.7s linear infinite; }
 @keyframes throb-spin { to { transform: rotate(360deg); } }
 
 .ie-toolbar { display: flex; align-items: center; gap: 2px; background: #d4d0c8; padding: 4px 6px; border-bottom: 1px solid #808080; }
-.ie-btn-hire { margin-left: auto; color: #5a2ca0; font-weight: 700; }
+.ie-btn-hire { margin-left: auto; color: #c1440e; font-weight: 700; }
 .ie-ico-hire { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='18' viewBox='0 0 20 18'><circle cx='10' cy='9' r='7' fill='%23ffd200' stroke='%23a07000' stroke-width='1.2'/><text x='10' y='13' font-family='Georgia,serif' font-size='11' font-weight='bold' fill='%23805800' text-anchor='middle'>$</text></svg>"); }
 .ie-btn {
     display: inline-flex; align-items: center; gap: 5px;
@@ -797,22 +797,21 @@ code {
 }
 .ie-favicon {
     width: 14px; height: 14px; flex-shrink: 0;
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23241047' stroke='%23b18cff' stroke-width='1'/><path d='M8 2.6 L9.4 6.6 L13.4 8 L9.4 9.4 L8 13.4 L6.6 9.4 L2.6 8 L6.6 6.6 Z' fill='%23ffd76e'/></svg>") center/contain no-repeat;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%238a2a0f'/><path d='M8 2 C6 4 5 6 6.5 7.5 C4.5 8 4 10 5.5 11.5 C7.5 13.5 11 12.5 11.5 9.5 C11.8 7.8 10.3 6.5 9.3 7.3 C10 5 9.3 3 8 2 Z' fill='%23ff8a3d'/></svg>") center/contain no-repeat;
 }
 .ie-go {
-    flex-shrink: 0; padding: 2px 12px; background: #d4d0c8; text-decoration: none; color: #000000;
-    font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem;
+    flex-shrink: 0; width: 28px; padding: 0; background: #d4d0c8; display: flex; align-items: center; justify-content: center;
     border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
     border-right: 1px solid #404040; border-bottom: 1px solid #404040;
 }
 .ie-go:active { border-top-color: #404040; border-left-color: #404040; border-right-color: #ffffff; border-bottom-color: #ffffff; }
-
-/* Grimoire quick-bar — bookmarks with a spellbook label */
-.ie-links { display: flex; align-items: center; gap: 4px; background: #d4d0c8; padding: 3px 9px 4px; border-bottom: 1px solid #808080; overflow: hidden; }
-.ie-links-label {
-    font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; color: #5a2ca0; font-weight: 700;
-    padding-right: 8px; margin-right: 4px; border-right: 1px solid #a8a49c; flex-shrink: 0;
+.ie-go-ico {
+    width: 13px; height: 13px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 14 14'><path d='M2 2 L11.5 7 L2 12 Z' fill='%23159a3a'/></svg>") center/contain no-repeat;
 }
+
+/* Bookmarks toolbar — plain row of bookmark buttons, no leading label (classic FF) */
+.ie-links { display: flex; align-items: center; gap: 4px; background: #d4d0c8; padding: 3px 9px 4px; border-bottom: 1px solid #808080; overflow: hidden; }
 .ie-glink {
     display: inline-flex; align-items: center; gap: 4px;
     background: transparent; border: 1px solid transparent; cursor: pointer;
@@ -820,7 +819,7 @@ code {
     white-space: nowrap;
 }
 .ie-glink::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 16 16'><path d='M8 1 L9.8 6.2 L15 8 L9.8 9.8 L8 15 L6.2 9.8 L1 8 L6.2 6.2 Z' fill='%237b4fd0'/></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 16 16'><path d='M8 1 L9.8 6.2 L15 8 L9.8 9.8 L8 15 L6.2 9.8 L1 8 L6.2 6.2 Z' fill='%23e8b422'/></svg>");
     line-height: 1;
 }
 .ie-glink:hover {
@@ -951,6 +950,19 @@ code {
 [data-app="ie"] .card-tag-mobile { background: #0a7a0a; color: #fff; }
 [data-app="ie"] .card-demo, [data-app="ie"] .card-gh { font-family: Tahoma, Arial, sans-serif; color: #0b3d91; }
 [data-app="ie"] .card-demo::after { content: ' »'; }
+
+/* Wider window / maximized: let the project list breathe into 2 columns
+   instead of one long scroll — a container query so it reacts to the
+   actual rendered space (sidebar + ad rail included), not just viewport. */
+[data-app="ie"] .bw-home { container-type: inline-size; container-name: proj; }
+@container proj (min-width: 620px) {
+    [data-app="ie"] .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px 22px; align-items: start; }
+    [data-app="ie"] .card {
+        border-bottom: none; padding: 14px 16px 16px;
+        border: 1px solid #ddd8cd; border-radius: 3px;
+    }
+    [data-app="ie"] .bw-ad { grid-column: 1 / -1; }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    APP: Welcome → MS-DOS Prompt
@@ -1314,6 +1326,23 @@ code {
 .bw-navlink.on { color: #000000; font-weight: 700; text-decoration: none; }
 .bw-navsep { color: #b0b0b0; margin: 0 7px; }
 
+/* First-run banner explaining what this window is — dismissible per session */
+.bw-intro {
+    position: relative; margin: 0 0 16px; padding: 10px 30px 11px 13px;
+    background: #fff3e6; border: 1px solid #f0c090; border-left: 4px solid #e2571b;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.76rem; color: #3a2c1e; line-height: 1.55;
+}
+.bw-intro p { margin: 0 0 5px; }
+.bw-intro p:last-child { margin-bottom: 0; }
+.bw-intro-note { color: #8a6a4a; font-size: 0.7rem; }
+.bw-intro-x {
+    position: absolute; top: 7px; right: 7px; width: 16px; height: 14px; padding: 0; cursor: pointer;
+    background: #d4d0c8; font-size: 8px; line-height: 1; color: #000000;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
+    border-right: 1px solid #404040; border-bottom: 1px solid #404040;
+}
+.bw-intro-x:active { border-color: #404040 #ffffff #ffffff #404040; }
+
 /* Googol — search parody (the algorithm is deeply biased) */
 .gg-hero { text-align: center; padding: 60px 0 30px; }
 .gg-logo { font-family: 'Times New Roman', Georgia, serif; font-weight: 700; letter-spacing: -1px; user-select: none; }
@@ -1424,7 +1453,7 @@ code {
 /* In-feed banner between project cards */
 .cards-grid .bw-ad { padding: 12px 22px; border-bottom: 1px dashed #b8b8b8; background: #ffffff; }
 
-/* Sidebar ad rail — appears when the Navigator window is wide */
+/* Sidebar ad rail — appears when the Foxfire window is wide */
 .bw-shell { display: flex; justify-content: center; align-items: flex-start; }
 .bw-shell > .bw-page { flex: 0 1 900px; min-width: 0; margin: 0; }
 .bw-rail { display: none; width: 168px; flex-shrink: 0; padding: 12px 14px 12px 0; }
@@ -1483,7 +1512,7 @@ code {
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'><path d='M3 1 H10 L13 4 V15 H3 Z' fill='%23fff' stroke='%23000'/><path d='M10 1 V4 H13' fill='none' stroke='%23000'/><line x1='5' y1='7' x2='11' y2='7' stroke='%23000080'/><line x1='5' y1='9' x2='11' y2='9' stroke='%23000080'/><line x1='5' y1='11' x2='9' y2='11' stroke='%23000080'/></svg>") center/contain no-repeat;
 }
 .sm-ico-ie {
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23241047' stroke='%23b18cff' stroke-width='1'/><path d='M8 2.6 L9.4 6.6 L13.4 8 L9.4 9.4 L8 13.4 L6.6 9.4 L2.6 8 L6.6 6.6 Z' fill='%23ffd76e'/></svg>") center/contain no-repeat;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%238a2a0f'/><path d='M8 2 C6 4 5 6 6.5 7.5 C4.5 8 4 10 5.5 11.5 C7.5 13.5 11 12.5 11.5 9.5 C11.8 7.8 10.3 6.5 9.3 7.3 C10 5 9.3 3 8 2 Z' fill='%23ff8a3d'/></svg>") center/contain no-repeat;
 }
 .sm-ico-calc {
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect x='2' y='1' width='12' height='14' rx='1' fill='%23d8d4c8' stroke='%23000'/><rect x='3' y='2' width='10' height='3' fill='%2390b070'/><g fill='%23404040'><rect x='3' y='6' width='2' height='2'/><rect x='6' y='6' width='2' height='2'/><rect x='9' y='6' width='2' height='2'/><rect x='3' y='9' width='2' height='2'/><rect x='6' y='9' width='2' height='2'/><rect x='9' y='9' width='2' height='2'/><rect x='3' y='12' width='2' height='2'/></g><rect x='9' y='12' width='2' height='2' fill='%23c04040'/></svg>") center/contain no-repeat;
@@ -1529,7 +1558,7 @@ code {
        would wrongly target the IE window (last in markup). Terminal padding
        handles trailing space. */
 
-    /* Navigator window: compact chrome so it never overflows the screen */
+    /* Foxfire window: compact chrome so it never overflows the screen */
     .block[data-app="ie"] .ie-menubar { gap: 11px; flex-wrap: wrap; }
     .block[data-app="ie"] .ie-toolbar { flex-wrap: wrap; gap: 0; }
     .block[data-app="ie"] .ie-btn { font-size: 0; gap: 0; padding: 4px 6px; }  /* icon-only buttons */

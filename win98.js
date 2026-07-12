@@ -190,7 +190,7 @@
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
 
     // Initial desktop arrangement (runs once, the first time desktop mode is
-    // active): the Navigator (projects browser) launches MAXIMIZED — it's the
+    // active): Foxfire (the projects browser) launches MAXIMIZED — it's the
     // main attraction. Steam starts minimized; aboutMe starts closed (reopen
     // from its desktop icon). hello.bat, Media Player, Terminal sit behind.
     function applyDefaultStates() {
@@ -573,7 +573,7 @@
         terminal: ['telnet.exe',   '02', '3,900 K'],
         cdplayer: ['cdplayer.exe', '03', '5,600 K'],
         notepad:  ['notepad.exe',  '00', '2,040 K'],
-        ie:       ['navigator.exe', '23', '88,000 K']
+        ie:       ['firefox.exe', '23', '88,000 K']
     };
     // Applications-tab status flavor per app
     var TM_STATUS = {
@@ -582,7 +582,7 @@
         terminal: 'Listening…',
         cdplayer: 'Spinning',
         notepad:  'Running',
-        ie:       'Serving ads'
+        ie:       'Eating RAM'
     };
     var TM_FW = {
         'ms-win': ['winmine.exe',  '01', '1,400 K'],
@@ -829,7 +829,7 @@
                                 '<p><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>' +
                             '</div>' +
                             '<div class="dp-group"><span class="dp-group-title">The point</span>' +
-                                '<p>The real work lives in <b>Damien Navigator</b> &mdash; open it from the taskbar and browse the projects.</p>' +
+                                '<p>The real work lives in <b>Foxfire</b> &mdash; open it from the taskbar and browse the projects.</p>' +
                                 '<p>The rest of the desktop exists to make you smile. Everything you can click does something; some of it is even useful.</p>' +
                             '</div>' +
                             '<div class="dp-group"><span class="dp-group-title">Computer</span>' +

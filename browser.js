@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────────────────────
-//  browser.js — turns the IE window into a tiny multi-page
-//  browser. The portfolio is "home"; the rest are period gags.
-//  Working Back / Forward / Refresh / Home + an editable address
-//  bar with its own history stack. Loads after app.js (uses
-//  window.renderPortfolio to paint the home page's project cards).
+//  browser.js — turns the "ie" window into Foxfire, a tiny
+//  multi-page old-school Firefox parody. The portfolio is "home";
+//  the rest are period gags. Working Back / Forward / Reload / Home
+//  + an editable address bar with its own history stack. Loads after
+//  app.js (uses window.renderPortfolio to paint the home page's cards).
 // ─────────────────────────────────────────────────────────────
 (function () {
     var page = document.getElementById('ie-page');
@@ -94,9 +94,19 @@
     }
 
     // ── Pages ───────────────────────────────────────────────────
+    var INTRO_KEY = 'intro-dismissed';
+    function introDismissed() { try { return sessionStorage.getItem(INTRO_KEY) === '1'; } catch (e) { return false; } }
+    function introHtml() {
+        if (introDismissed()) return '';
+        return '<div class="bw-intro" id="bw-intro">' +
+            '<button class="bw-intro-x" type="button" aria-label="Dismiss">&#10005;</button>' +
+            '<p>This whole thing is Damien&rsquo;s developer portfolio, dressed up as a Windows&nbsp;98 desktop. You&rsquo;re currently reading the project list in <b>Foxfire</b> &mdash; minimize this window (or grab it from the taskbar) to poke around the rest of the desktop: a terminal with live GitHub activity, a media player, Steam stats, and a few things that bite back.</p>' +
+            '<p class="bw-intro-note">Heads up: the full desktop experience really wants a bigger screen. If you&rsquo;re on mobile, this project list is already the best part &mdash; sorry about that.</p>' +
+            '</div>';
+    }
     function homePage() {
         var n = (window.projects ? window.projects.length : '');
-        return '<div class="bw-page bw-home">' + nav('projects') +
+        return '<div class="bw-page bw-home">' + nav('projects') + introHtml() +
             '<p class="out dim ls-meta">total <span id="project-count">' + n + '</span></p>' +
             '<div class="cards-grid" id="cards-grid"></div>' +
             '<div class="ie-teaser"><h3 class="ie-teaser-title">Currently conjuring&hellip;</h3>' +
@@ -208,7 +218,7 @@
             '<p class="bw-404-p">Please try the following:</p>' +
             '<ul class="bw-404-list"><li>Click the <a data-link="' + HOME + '">Home</a> button. It always works.</li>' +
             '<li>Blow on the cartridge.</li><li>Turn it off and on again.</li></ul>' +
-            '<p class="bw-404-code">HTTP 404 &mdash; File not found<br>Damien Navigator</p></div>';
+            '<p class="bw-404-code">HTTP 404 &mdash; File not found<br>Foxfire</p></div>';
     }
 
     var PAGES = {};
@@ -242,7 +252,7 @@
 
     function setStatus(msg) { if (statusEl) statusEl.textContent = msg; }
     function setTitle(t) {
-        var full = t + ' - Damien Navigator';
+        var full = t + ' - Foxfire';
         if (titleEl) titleEl.textContent = full;
         if (ieBlock) ieBlock.dataset.winName = full;
     }
@@ -261,7 +271,7 @@
     var STATUS_LINES = [
         'Done', 'Done (allegedly)', 'Blocking 0 pop-ups — they pay rent',
         'Summoning pixels… done', 'Held together by duct tape and belief',
-        '100% Y2K compliant (fingers crossed)', 'The Aether is stable today',
+        '100% Y2K compliant (fingers crossed)', 'The information superhighway is clear',
         'Cookies accepted: 1 (chocolate chip)'
     ];
     setInterval(function () {
@@ -326,6 +336,12 @@
                 else go(U_BLOG);
             });
         }
+        var introX = page.querySelector('.bw-intro-x');
+        if (introX) introX.addEventListener('click', function () {
+            try { sessionStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
+            var el = page.querySelector('#bw-intro');
+            if (el) el.remove();
+        });
         var blf = page.querySelector('.bw-blog-sub');
         if (blf) blf.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -345,7 +361,7 @@
         if (e.key === 'Enter') { e.preventDefault(); go(urlInput.value); }
     });
 
-    // Grimoire quick-bar bookmarks
+    // Bookmarks toolbar buttons
     [].forEach.call(document.querySelectorAll('.ie-glink[data-nav]'), function (b) {
         b.addEventListener('click', function () { go(b.getAttribute('data-nav')); });
     });
@@ -355,14 +371,19 @@
         window.location.href = 'mailto:' + CONTACT_EMAIL;
     });
 
-    // ── Favorites explorer bar (docked left, IE5 style) ─────────
+    // ── Bookmarks sidebar (docked left) — shown only while the window
+    //    is maximized, since that's the only time there's real room for it.
     var ieBody = document.querySelector('.ie-body');
     var favBar = document.getElementById('ie-fav');
     function favClosed() { try { return sessionStorage.getItem('fav-closed') === '1'; } catch (e) { return false; } }
+    function isMaximized() { return !!(ieBlock && ieBlock.classList.contains('win-max')); }
     function setFav(open) {
         if (!ieBody) return;
         ieBody.classList.toggle('show-fav', open);
         try { sessionStorage.setItem('fav-closed', open ? '0' : '1'); } catch (e) {}
+    }
+    function syncFavToMaximize() {
+        if (ieBody) ieBody.classList.toggle('show-fav', isMaximized() && !favClosed());
     }
     if (favBar) {
         [].forEach.call(favBar.querySelectorAll('[data-nav]'), function (b) {
@@ -373,19 +394,17 @@
         });
         var favX = favBar.querySelector('.ie-fav-x');
         if (favX) favX.addEventListener('click', function () { setFav(false); });
-        // The Grimoire menu actually does something: toggles the bar.
+        // The Bookmarks menu toggles the sidebar — only meaningful while
+        // maximized, since a windowed view has nowhere to dock it.
         var gMenu = document.getElementById('menu-grimoire');
         if (gMenu) gMenu.addEventListener('click', function () {
+            if (!isMaximized()) return;
             setFav(!ieBody.classList.contains('show-fav'));
         });
-        // Auto-open on wide windows the first time (never fights a manual close).
-        if (window.ResizeObserver && ieBody) {
-            var favAuto = false;
-            new ResizeObserver(function () {
-                var wide = ieBody.clientWidth >= 1150;
-                if (wide && !favAuto && !favClosed()) { favAuto = true; ieBody.classList.add('show-fav'); }
-                if (!wide) ieBody.classList.remove('show-fav');
-            }).observe(ieBody);
+        // Keep the sidebar in sync every time the window is maximized/restored.
+        syncFavToMaximize();
+        if (window.MutationObserver && ieBlock) {
+            new MutationObserver(syncFavToMaximize).observe(ieBlock, { attributes: true, attributeFilter: ['class'] });
         }
     }
 
