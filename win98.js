@@ -392,6 +392,29 @@
         return ov;
     }
 
+    // ── Yes/No confirm dialog (Empty Recycle Bin etc.) ───────────
+    function openConfirm(title, bodyHtml, onYes) {
+        var ov = document.createElement('div');
+        ov.className = 'dlg-overlay';
+        ov.innerHTML =
+            '<div class="dlg" role="dialog" aria-label="' + esc(title) + '">' +
+                '<div class="dlg-bar"><span class="dlg-title">' + esc(title) + '</span>' +
+                    '<button class="dlg-x" aria-label="Close"></button></div>' +
+                '<div class="dlg-body">' + bodyHtml + '</div>' +
+                '<div class="dlg-foot"><button class="dlg-ok dlg-yes">Yes</button><button class="dlg-ok dlg-no">No</button></div>' +
+            '</div>';
+        document.body.appendChild(ov);
+        function close() { ov.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') close(); }
+        ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+        ov.querySelector('.dlg-x').addEventListener('click', close);
+        ov.querySelector('.dlg-no').addEventListener('click', close);
+        ov.querySelector('.dlg-yes').addEventListener('click', function () { close(); if (onYes) onYes(); });
+        document.addEventListener('keydown', onKey);
+        ov.querySelector('.dlg-yes').focus();
+        return ov;
+    }
+
     // ── Desktop icons ───────────────────────────────────────────
     var deskIcons = [
         { kind: 'computer', label: 'My Computer',   action: function () { openSysProps(); } },
@@ -496,49 +519,88 @@
     window.win98 = { openDialog: openDialog, createWindow: createWindow };
 
     // ── Recycle Bin → faux explorer of "deleted" things ─────────
+    // Each file has its own reason Restore is denied — selecting a row and
+    // clicking Restore surfaces that file's specific excuse.
+    function setBinFull(full) {
+        var el = document.querySelector('.icon-bin');
+        if (el) el.classList.toggle('bin-empty', !full);
+    }
     function openRecycleBin() {
         if (document.querySelector('.rb-win')) { alreadyRunning('Recycle Bin'); return; }
         var files = [
-            { ic: 'html', name: 'portfolio_v1_FINAL_final.html', meta: 'HTML Document &middot; 4 KB' },
-            { ic: 'txt',  name: 'good_intentions.txt',           meta: 'Text Document &middot; 0 KB' },
-            { ic: 'exe',  name: 'free_time.exe',                 meta: 'Application &middot; 404 KB' },
-            { ic: 'log',  name: 'that_one_bug.log',              meta: 'Log File &middot; 666 KB' },
-            { ic: 'dll',  name: 'motivation.dll',               meta: 'status: missing' },
-            { ic: 'txt',  name: 'NYE_resolution_2019.doc',       meta: 'never opened' }
+            { ic: 'html', name: 'portfolio_v1_FINAL_final.html', meta: 'HTML Document &middot; 4 KB',
+              deny: 'This version still calls a file <code>portfolio_v2_FINAL_v2_ACTUALLY_FINAL.html</code> a &ldquo;temporary fix.&rdquo; Restore denied, for everyone&rsquo;s sake.' },
+            { ic: 'txt',  name: 'good_intentions.txt',           meta: 'Text Document &middot; 0 KB',
+              deny: 'Good intentions expire after 24 hours. This one expired in 2019.' },
+            { ic: 'exe',  name: 'free_time.exe',                 meta: 'Application &middot; 404 KB',
+              deny: 'Error 0x1A4: file is currently in use by <i>adult life</i> and cannot be restored.' },
+            { ic: 'log',  name: 'that_one_bug.log',              meta: 'Log File &middot; 666 KB',
+              deny: 'Reopening this file respawns the bug. Some things are better left deleted.' },
+            { ic: 'dll',  name: 'motivation.dll',               meta: 'status: missing',
+              deny: 'Cannot restore &mdash; file status is <b>missing</b>. Records indicate it was never actually installed.' },
+            { ic: 'txt',  name: 'NYE_resolution_2019.doc',       meta: 'never opened',
+              deny: 'Restore blocked &mdash; the statute of limitations on New Year&rsquo;s resolutions expired several New Years ago.' }
         ];
-        var rowsHtml = files.map(function (f) {
-            return '<li class="rb-row"><span class="rb-ico rb-ico-' + f.ic + '"></span>' +
+        function rowHtml(f, i) {
+            return '<li class="rb-row" data-idx="' + i + '"><span class="rb-ico rb-ico-' + f.ic + '"></span>' +
                    '<span class="rb-name">' + esc(f.name) + '</span>' +
                    '<span class="rb-meta">' + f.meta + '</span></li>';
-        }).join('');
+        }
+        var rowsHtml = files.map(rowHtml).join('');
         var html =
             '<div class="rb">' +
                 '<div class="rb-toolbar">' +
                     '<button class="rb-empty">Empty Recycle Bin</button>' +
-                    '<button class="rb-restore">Restore</button>' +
+                    '<button class="rb-restore" disabled>Restore</button>' +
                 '</div>' +
                 '<ul class="rb-list">' + rowsHtml + '</ul>' +
                 '<div class="rb-status"><span class="rb-count">' + files.length + ' object(s)</span></div>' +
             '</div>';
         var w = createWindow('Recycle Bin', html, 'rb-win');
-        var list   = w.body.querySelector('.rb-list');
-        var status = w.body.querySelector('.rb-status');
-        w.body.querySelector('.rb-empty').addEventListener('click', function () {
-            list.classList.add('rb-emptying');
-            setTimeout(function () {
-                list.innerHTML = '<li class="rb-zero">This folder is empty.</li>';
-                list.classList.remove('rb-emptying');
-                status.innerHTML = '<span class="rb-count">0 object(s)</span>';
-                setTimeout(function () {                 // gag: nothing is ever truly deleted
-                    list.innerHTML = rowsHtml;
-                    status.innerHTML = '<span class="rb-count">' + files.length +
-                        ' object(s)</span> &middot; nothing is ever <i>really</i> deleted';
-                }, 1700);
-            }, 450);
+        var list      = w.body.querySelector('.rb-list');
+        var status    = w.body.querySelector('.rb-status');
+        var emptyBtn  = w.body.querySelector('.rb-empty');
+        var restoreBtn = w.body.querySelector('.rb-restore');
+        var sel = null;
+
+        function bindRows() {
+            [].forEach.call(list.querySelectorAll('.rb-row'), function (row) {
+                row.addEventListener('click', function () {
+                    if (sel) sel.classList.remove('sel');
+                    sel = row;
+                    row.classList.add('sel');
+                    restoreBtn.disabled = false;
+                });
+            });
+        }
+        bindRows();
+
+        emptyBtn.addEventListener('click', function () {
+            openConfirm('Confirm Multiple File Delete',
+                '<p class="dlg-p">Are you sure you want to delete these ' + files.length + ' items?</p>',
+                function () {
+                    sel = null;
+                    restoreBtn.disabled = true;
+                    setBinFull(false);
+                    list.classList.add('rb-emptying');
+                    setTimeout(function () {
+                        list.innerHTML = '<li class="rb-zero">This folder is empty.</li>';
+                        list.classList.remove('rb-emptying');
+                        status.innerHTML = '<span class="rb-count">0 object(s)</span>';
+                        setTimeout(function () {             // gag: nothing is ever truly deleted
+                            list.innerHTML = rowsHtml;
+                            bindRows();
+                            setBinFull(true);
+                            status.innerHTML = '<span class="rb-count">' + files.length +
+                                ' object(s)</span> &middot; nothing is ever <i>really</i> deleted';
+                        }, 1700);
+                    }, 450);
+                });
         });
-        w.body.querySelector('.rb-restore').addEventListener('click', function () {
-            openDialog('Restore File', '<p class="dlg-p">Restore <b>free_time.exe</b>?<br><br>' +
-                'Error 0x1A4: file is currently in use by <i>adult life</i> and cannot be restored.</p>');
+        restoreBtn.addEventListener('click', function () {
+            if (!sel) return;
+            var f = files[+sel.getAttribute('data-idx')];
+            openDialog('Restore File', '<p class="dlg-p">Restore <b>' + esc(f.name) + '</b>?<br><br>' + f.deny + '</p>');
         });
     }
 
