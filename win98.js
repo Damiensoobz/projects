@@ -213,6 +213,20 @@
             ie.classList.add('win-min');
             setTaskState(ie, 'inactive');
         }
+        // While the boot sequence is on screen, even hello.bat starts
+        // minimized — boot.js reopens it via launchStartup() after unlock.
+        if (window.bootActive) {
+            var dos = document.querySelector('[data-app="dos"]');
+            if (dos) minimize(dos);
+        }
+    }
+
+    // Called by boot.js once the lock screen clears: hello.bat "launches".
+    function launchStartup() {
+        var dos = document.querySelector('[data-app="dos"]');
+        if (!dos) return;
+        restore(dos);
+        if (window.dosRerun) window.dosRerun();
     }
 
     function applyLayout() {
@@ -439,7 +453,11 @@
         { kind: 'spotify',  label: 'Spotify98',     action: restoreApp('winamp') },
         { kind: 'git',      label: 'Git98',         action: restoreApp('terminal') },
         { kind: 'steam',    label: 'Steam98',       action: restoreApp('cdplayer') },
-        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
+        { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } }
+    ];
+    // Socials live in their own column on the right edge of the desktop,
+    // just above the "Activate damienOS" watermark.
+    var socialIcons = [
         { kind: 'instagram', label: 'Instagram', action: function () { openSocial('Instagram', social('instagram')); } },
         { kind: 'linkedin',  label: 'LinkedIn',  action: function () { openSocial('LinkedIn',  social('linkedin')); } },
         { kind: 'github',    label: 'GitHub',    action: function () { openSocial('GitHub',    social('github')); } }
@@ -449,16 +467,20 @@
         if (url) { window.open(url, '_blank', 'noopener,noreferrer'); }
         else { openDialog(name, '<p class="dlg-p">No ' + esc(name) + ' profile set yet.<br><br>Add your URL to <b>socialConfig</b> in <code>projects.js</code>.</p>'); }
     }
-    var deskWrap = document.createElement('div');
-    deskWrap.className = 'desktop-icons';
-    deskIcons.forEach(function (ic) {
-        var b = document.createElement('button');
-        b.className = 'desk-icon icon-' + ic.kind;
-        b.innerHTML = '<span class="desk-glyph"></span><span class="desk-label">' + esc(ic.label) + '</span>';
-        b.addEventListener('click', ic.action);
-        deskWrap.appendChild(b);
-    });
-    document.body.appendChild(deskWrap);
+    function buildIconColumn(icons, className) {
+        var wrap = document.createElement('div');
+        wrap.className = className;
+        icons.forEach(function (ic) {
+            var b = document.createElement('button');
+            b.className = 'desk-icon icon-' + ic.kind;
+            b.innerHTML = '<span class="desk-glyph"></span><span class="desk-label">' + esc(ic.label) + '</span>';
+            b.addEventListener('click', ic.action);
+            wrap.appendChild(b);
+        });
+        document.body.appendChild(wrap);
+    }
+    buildIconColumn(deskIcons, 'desktop-icons');
+    buildIconColumn(socialIcons, 'desktop-icons desktop-icons-social');
 
     // ── "Activate damienOS" desktop watermark (also the footer) ──
     // The sub-line is a real link: Settings = System Properties, where the
@@ -534,7 +556,7 @@
         w.querySelector('.fw-x').addEventListener('click', close);
         return { el: w, body: w.querySelector('.fw-body'), close: close };
     }
-    window.win98 = { openDialog: openDialog, createWindow: createWindow };
+    window.win98 = { openDialog: openDialog, createWindow: createWindow, launchStartup: launchStartup };
 
     // ── Recycle Bin → faux explorer of "deleted" things ─────────
     // Each file has its own reason Restore is denied — selecting a row and
@@ -623,11 +645,30 @@
     }
 
     // ── Error gags: no admin rights / single instance ───────────
-    function adminError(verb, name) {
-        openDialog(verb + ' Process',
+    // Retrying is allowed. It does not help. That's the joke.
+    function adminError(verb, name, attempt) {
+        attempt = attempt || 1;
+        var text = attempt === 1
+            ? '<p class="dlg-err-h">Unable to ' + verb.toLowerCase() + ' <b>' + esc(name) + '</b>.</p>' +
+              '<p class="dlg-p">Access is denied &mdash; you do not have administrator privileges on this machine. (You never did.)</p>' +
+              '<p class="dlg-err-code">Error 5: ACCESS_DENIED &middot; privileges found: 0 &middot; audacity: noted</p>'
+            : '<p class="dlg-err-h">Still unable to ' + verb.toLowerCase() + ' <b>' + esc(name) + '</b>.</p>' +
+              '<p class="dlg-p">You pressed it again. The process noticed. It is stronger now.</p>' +
+              '<p class="dlg-err-code">Error 5: ACCESS_DENIED &middot; attempts: 2 &middot; admin privileges: still none</p>';
+        var ov = openDialog(verb + ' Process',
             '<div class="dlg-err"><span class="dlg-err-ico"></span>' +
-            '<p class="dlg-p">Unable to ' + verb.toLowerCase() + ' <b>' + esc(name) + '</b>.<br><br>' +
-            'Access is denied &mdash; you do not have administrator privileges on this machine. (You never did.)</p></div>');
+            '<div class="dlg-err-text">' + text + '</div></div>');
+        if (attempt === 1) {
+            var retry = document.createElement('button');
+            retry.className = 'dlg-ok';
+            retry.textContent = 'Retry';
+            var foot = ov.querySelector('.dlg-foot');
+            foot.insertBefore(retry, foot.firstChild);
+            retry.addEventListener('click', function () {
+                ov.querySelector('.dlg-x').click();     // routes through the dialog's own close
+                adminError(verb, name, 2);
+            });
+        }
     }
     function alreadyRunning(name) {
         openDialog(name,
@@ -979,10 +1020,25 @@
                 document.body.appendChild(r);
                 setTimeout(function () {
                     r.remove();
-                    openDialog('Activation', '<p class="dlg-p">Activation failed successfully.<br><br>' +
-                        'damienOS remains free, unlicensed, and slightly haunted.<br><br>' +
-                        'Damien, however, is fully licensed and available for hire:<br>' +
-                        '<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>');
+                    var ov = openDialog('Activation',
+                        '<div class="dlg-act">' +
+                            '<div class="dlg-act-head"><span class="dlg-act-ico"></span>' +
+                                '<div><p class="dlg-act-h">Activation failed successfully.</p>' +
+                                '<p class="dlg-act-sub">Error 0x000-NICE-TRY</p></div></div>' +
+                            '<div class="dlg-act-rows">' +
+                                '<div><span>Product</span><b>damienOS 98 SE</b></div>' +
+                                '<div><span>License</span><b>never purchased</b></div>' +
+                                '<div><span>Status</span><b class="act-bad">free, unlicensed &amp; slightly haunted</b></div>' +
+                                '<div><span>Damien</span><b class="act-good">fully licensed &middot; available for hire</b></div>' +
+                            '</div>' +
+                            '<p class="dlg-act-note">No further action is required. The portfolio will keep working forever, out of spite.</p>' +
+                        '</div>');
+                    var hire = document.createElement('a');
+                    hire.className = 'dlg-ok dlg-hire';
+                    hire.href = 'mailto:' + CONTACT_EMAIL;
+                    hire.textContent = 'Hire Damien…';
+                    var foot = ov.querySelector('.dlg-foot');
+                    foot.insertBefore(hire, foot.firstChild);
                 }, 1700);
             }
         }

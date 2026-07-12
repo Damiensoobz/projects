@@ -735,6 +735,33 @@ code {
     border-top-color: #404040; border-left-color: #404040;
     border-right-color: #ffffff; border-bottom-color: #ffffff;
 }
+/* Richer error-dialog bits (End Process etc.) */
+.dlg-err-h { font-weight: 700; margin-bottom: 8px; }
+.dlg-err-code {
+    margin-top: 10px; padding-top: 7px; border-top: 1px solid #b8b4aa;
+    font-family: 'Courier New', monospace; font-size: 0.68rem; color: #6a6a6a;
+}
+.dlg-hire { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; color: #000000; font-weight: 700; }
+
+/* Activation punchline dialog — key icon + license "report card" */
+.dlg-act { max-width: 360px; }
+.dlg-act-head { display: flex; gap: 13px; align-items: center; margin-bottom: 12px; }
+.dlg-act-ico {
+    flex-shrink: 0; width: 34px; height: 34px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'><circle cx='11' cy='12' r='6.2' fill='none' stroke='%23c99700' stroke-width='3.6'/><path d='M15.5 16.5 L28 29 M24.5 25.5 l4 -4 M20.5 21.5 l3.4 -3.4' fill='none' stroke='%23c99700' stroke-width='3'/></svg>") center/contain no-repeat;
+}
+.dlg-act-h { font-weight: 700; font-size: 0.86rem; }
+.dlg-act-sub { font-family: 'Courier New', monospace; font-size: 0.66rem; color: #8a2020; margin-top: 2px; }
+.dlg-act-rows {
+    background: #ffffff; padding: 7px 10px; margin-bottom: 12px; font-size: 0.74rem;
+    border: 1px solid; border-color: #808080 #ffffff #ffffff #808080;
+}
+.dlg-act-rows > div { display: flex; justify-content: space-between; gap: 20px; padding: 2.5px 0; }
+.dlg-act-rows span { color: #666666; flex-shrink: 0; }
+.dlg-act-rows b { text-align: right; }
+.act-bad { color: #a01818; }
+.act-good { color: #0a7a2a; }
+.dlg-act-note { font-size: 0.72rem; color: #555555; line-height: 1.5; }
 
 /* ═══════════════════════════════════════════════════════════════
    APP: Projects → Foxfire (an old-school Firefox parody) + a blog

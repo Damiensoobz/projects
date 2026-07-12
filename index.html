@@ -18,8 +18,13 @@
     <meta name="theme-color" content="#008080">
     <link rel="stylesheet" href="base.css">
     <link id="main-style" rel="stylesheet" href="style-y2k.css">
+    <noscript><style>.boot { display: none; }</style></noscript>
 </head>
 <body>
+
+<!-- Boot overlay — static so it covers the desktop from first paint;
+     boot.js runs the BIOS → OS load → lock screen sequence inside it. -->
+<div class="boot" id="boot"></div>
 
 <div class="terminal">
 
@@ -144,6 +149,7 @@
 
 </div>
 
+<script src="boot.js"></script>
 <script src="projects.js"></script>
 <script src="app.js"></script>
 <script src="win98.js"></script>
