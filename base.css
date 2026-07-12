@@ -206,6 +206,19 @@ body.has-max { overflow: hidden; }
 .wc { position: relative; flex-shrink: 0; cursor: pointer; padding: 0; width: 16px; height: 14px; }
 .wc::before { content: ''; position: absolute; }
 
+/* ── Desktop wallpaper — centered, framed, not full-bleed ─────── */
+.desktop-wallpaper {
+    position: fixed; inset: 0 0 30px 0; z-index: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; user-select: none;
+}
+.desktop-wallpaper img {
+    max-width: 60vw; max-height: 60vh;
+    object-fit: contain;
+    box-shadow: 0 0 0 2px #404040, 0 0 0 4px #ffffff, 0 6px 18px rgba(0,0,0,0.35);
+}
+@media (max-width: 1180px) { .desktop-wallpaper { display: none; } }
+
 /* ── Desktop icons ──────────────────────────────────────────── */
 .desktop-icons { position: fixed; top: 14px; left: 14px; z-index: 1; display: flex; flex-direction: column; gap: 16px; }
 .desk-icon { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 78px; padding: 4px; background: none; border: none; cursor: pointer; }
@@ -342,6 +355,9 @@ body.has-max { overflow: hidden; }
 .osload-logo { color: #e8e8e8; font-size: 0.55rem; line-height: 1.15; margin: 0 0 2px; overflow: hidden; }
 .osload-tag { color: #8a8a8a; margin-bottom: 22px; }
 .osload-lines .b-line { color: #39d271; }
+.osload-lines .b-red { color: #ff5252; }
+.osload-lines .b-yellow { color: #ffd24a; }
+.osload-lines .b-dim { color: #7a7a7a; }
 .boot-bar-wrap { position: absolute; left: 10px; right: 10px; bottom: 30px; }
 .boot-bar { height: 12px; background: #3c4454; border-radius: 7px; overflow: hidden; }
 .boot-bar i { display: block; height: 100%; width: 0%; background: #27c93f; border-radius: 7px; transition: width 0.3s; }

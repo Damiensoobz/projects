@@ -196,37 +196,22 @@
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
 
     // Initial desktop arrangement (runs once, the first time desktop mode is
-    // active): only hello.bat opens by default — everything else starts
-    // minimized (or closed, for aboutMe) and is reopened from its desktop
-    // icon / taskbar / Start menu. Foxfire keeps its maximized geometry
-    // queued up so it still launches full-screen whenever it's reopened.
+    // active): only hello.bat is open (and on the taskbar) by default —
+    // every other app starts fully closed, off the taskbar too, and is
+    // opened from its desktop icon / Start menu. Foxfire keeps its maximized
+    // geometry queued up so it still launches full-screen whenever it's
+    // first opened.
     function applyDefaultStates() {
-        ['cdplayer', 'winamp', 'terminal'].forEach(function (app) {
+        ['cdplayer', 'winamp', 'terminal', 'notepad'].forEach(function (app) {
             var b = document.querySelector('[data-app="' + app + '"]');
-            if (b) minimize(b);
+            if (b) closeWin(b);
         });
-        var np = document.querySelector('[data-app="notepad"]');
-        if (np) closeWin(np);
         var ie = document.querySelector('[data-app="ie"]');
         if (ie) {
             if (!ie.classList.contains('win-max')) toggleMax(ie);
-            ie.classList.add('win-min');
-            setTaskState(ie, 'inactive');
+            ie.classList.add('win-closed');
+            setTaskState(ie, 'gone');
         }
-        // While the boot sequence is on screen, even hello.bat starts
-        // minimized — boot.js reopens it via launchStartup() after unlock.
-        if (window.bootActive) {
-            var dos = document.querySelector('[data-app="dos"]');
-            if (dos) minimize(dos);
-        }
-    }
-
-    // Called by boot.js once the lock screen clears: hello.bat "launches".
-    function launchStartup() {
-        var dos = document.querySelector('[data-app="dos"]');
-        if (!dos) return;
-        restore(dos);
-        if (window.dosRerun) window.dosRerun();
     }
 
     function applyLayout() {
@@ -442,6 +427,18 @@
         return ov;
     }
 
+    // ── Desktop wallpaper — a framed image centered on the teal desktop,
+    //    not stretched to fill the screen. Drop the file in /images and
+    //    point wallpaperConfig.src at it (projects.js); omitted if unset.
+    (function wallpaper() {
+        var src = (typeof wallpaperConfig !== 'undefined' && wallpaperConfig.src) || '';
+        if (!src) return;
+        var wp = document.createElement('div');
+        wp.className = 'desktop-wallpaper';
+        wp.innerHTML = '<img src="' + esc(src) + '" alt="">';
+        document.body.appendChild(wp);
+    })();
+
     // ── Desktop icons ───────────────────────────────────────────
     function restoreApp(app) {
         return function () { var n = document.querySelector('[data-app="' + app + '"]'); if (n) restore(n); };
@@ -556,7 +553,7 @@
         w.querySelector('.fw-x').addEventListener('click', close);
         return { el: w, body: w.querySelector('.fw-body'), close: close };
     }
-    window.win98 = { openDialog: openDialog, createWindow: createWindow, launchStartup: launchStartup };
+    window.win98 = { openDialog: openDialog, createWindow: createWindow };
 
     // ── Recycle Bin → faux explorer of "deleted" things ─────────
     // Each file has its own reason Restore is denied — selecting a row and

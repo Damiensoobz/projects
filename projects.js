@@ -145,3 +145,13 @@ var socialConfig = {
 var contactConfig = {
     email: "damien@damienbuilds.dev",
 };
+
+// ─────────────────────────────────────────────────────────────
+//  Wallpaper — a framed image centered on the desktop (not a
+//  full-bleed background). Drop the file in /images and point
+//  src at it; leave "" for no wallpaper.
+// ─────────────────────────────────────────────────────────────
+
+var wallpaperConfig = {
+    src: "images/wallpaper.jpg",
+};

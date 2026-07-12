@@ -3,9 +3,8 @@
 //  load screen (lines populate, the progress bar hangs like it
 //  means it), then a lock screen whose password types itself.
 //
-//  Runs before the desktop scripts. window.bootActive tells
-//  win98.js to keep hello.bat minimized until the user unlocks;
-//  boot.js then calls win98.launchStartup() after a short beat.
+//  Runs before the desktop scripts. All windows start minimized; the
+//  user opens what they want from the desktop/taskbar/Start menu.
 //  Enter / Esc / click skips straight to the lock screen.
 // ─────────────────────────────────────────────────────────────
 (function () {
@@ -198,10 +197,6 @@
                 document.documentElement.classList.remove('booting');
                 document.removeEventListener('keydown', onKey);
                 window.bootActive = false;
-                // a beat of quiet desktop before the startup script runs
-                setTimeout(function () {
-                    if (window.win98 && window.win98.launchStartup) window.win98.launchStartup();
-                }, 900);
             }, 500);
         }, reduceMotion ? 150 : 900);
     }
