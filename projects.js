@@ -134,7 +134,6 @@ var steamConfig = {
 var socialConfig = {
     instagram: "https://www.instagram.com/damienbuilds.dev/?hl=en",
     linkedin:  "https://www.linkedin.com/in/damien-subramanian-440309194/",
-    facebook:  "https://web.facebook.com/profile.php?id=61583113542412",
     github:    "https://github.com/Damiensoobz",
 };
 

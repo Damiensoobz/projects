@@ -94,12 +94,9 @@
     }
 
     // ── Pages ───────────────────────────────────────────────────
-    var INTRO_KEY = 'intro-dismissed';
-    function introDismissed() { try { return sessionStorage.getItem(INTRO_KEY) === '1'; } catch (e) { return false; } }
+    // Always shown — this one stays put rather than being dismissible.
     function introHtml() {
-        if (introDismissed()) return '';
         return '<div class="bw-intro" id="bw-intro">' +
-            '<button class="bw-intro-x" type="button" aria-label="Dismiss">&#10005;</button>' +
             '<p>This whole thing is Damien&rsquo;s developer portfolio, dressed up as a Windows&nbsp;98 desktop. You&rsquo;re currently reading the project list in <b>Foxfire</b> &mdash; minimize this window (or grab it from the taskbar) to poke around the rest of the desktop: a terminal with live GitHub activity, a media player, Steam stats, and a few things that bite back.</p>' +
             '<p class="bw-intro-note">Heads up: the full desktop experience really wants a bigger screen. If you&rsquo;re on mobile, this project list is already the best part &mdash; sorry about that.</p>' +
             '</div>';
@@ -336,12 +333,6 @@
                 else go(U_BLOG);
             });
         }
-        var introX = page.querySelector('.bw-intro-x');
-        if (introX) introX.addEventListener('click', function () {
-            try { sessionStorage.setItem(INTRO_KEY, '1'); } catch (e) {}
-            var el = page.querySelector('#bw-intro');
-            if (el) el.remove();
-        });
         var blf = page.querySelector('.bw-blog-sub');
         if (blf) blf.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -414,6 +405,23 @@
             page.classList.toggle('has-rail', page.clientWidth >= 980);
         }).observe(page);
     }
+
+    // ── Real visitor counter — Cloudflare Worker + KV, no cookies ────
+    // Reuses the same Worker that proxies Steam (see steam-proxy/worker.js,
+    // ?action=hits). Silently disappears if the Worker/KV isn't set up yet.
+    (function () {
+        var hitsEl = document.getElementById('ie-hits');
+        var cfg = (typeof steamConfig !== 'undefined') ? steamConfig : {};
+        if (!hitsEl || !cfg.proxyUrl) { if (hitsEl) hitsEl.remove(); return; }
+        fetch(cfg.proxyUrl + '?action=hits&path=' + encodeURIComponent(location.pathname))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (typeof data.count !== 'number') throw new Error('no count');
+                var padded = ('000000' + data.count).slice(-6);
+                hitsEl.innerHTML = 'Visitors: <b class="ie-hits-n">' + padded + '</b>';
+            })
+            .catch(function () { hitsEl.remove(); });
+    })();
 
     go(HOME);   // boot to the portfolio
 })();

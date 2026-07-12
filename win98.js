@@ -48,14 +48,20 @@
     var menu = document.createElement('div');
     menu.className = 'start-menu';
     menu.hidden = true;
+    function smBlockItem(b) {
+        return '<button class="sm-item" data-target="' + b.dataset.winId + '">' +
+               '<span class="sm-ico sm-ico-' + b.getAttribute('data-app') + '"></span>' + esc(b.dataset.winName) + '</button>';
+    }
+    var programBlocks = blocks.filter(function (b) { return b.getAttribute('data-app') !== 'notepad'; });
+    var fileBlocks     = blocks.filter(function (b) { return b.getAttribute('data-app') === 'notepad'; });
     menu.innerHTML =
         '<div class="sm-rail">damien<b>98</b></div>' +
         '<div class="sm-list">' +
             '<div class="sm-head">Programs</div>' +
-            blocks.map(function (b) {
-                return '<button class="sm-item" data-target="' + b.dataset.winId + '">' +
-                       '<span class="sm-ico sm-ico-' + b.getAttribute('data-app') + '"></span>' + esc(b.dataset.winName) + '</button>';
-            }).join('') +
+            programBlocks.map(smBlockItem).join('') +
+            '<div class="sm-sep"></div>' +
+            '<div class="sm-head">Files</div>' +
+            fileBlocks.map(smBlockItem).join('') +
             '<div class="sm-sep"></div>' +
             '<div class="sm-head">Socials</div>' +
             (function () {
@@ -63,7 +69,6 @@
                 var defs = [
                     { key: 'instagram', label: 'Instagram' },
                     { key: 'linkedin',  label: 'LinkedIn'  },
-                    { key: 'facebook',  label: 'Facebook'  },
                     { key: 'github',    label: 'GitHub'    },
                 ];
                 return defs.filter(function (d) { return sc[d.key]; })
@@ -73,6 +78,7 @@
                            }).join('');
             })() +
             '<div class="sm-sep"></div>' +
+            '<div class="sm-head">Utilities</div>' +
             '<button class="sm-item" data-sm="calc"><span class="sm-ico sm-ico-calc"></span>Calculator</button>' +
             '<button class="sm-item" data-sm="mines"><span class="sm-ico sm-ico-mine"></span>Minesweeper</button>' +
             '<button class="sm-item" data-sm="taskmgr"><span class="sm-ico sm-ico-task"></span>Task Manager</button>' +
@@ -190,16 +196,23 @@
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
 
     // Initial desktop arrangement (runs once, the first time desktop mode is
-    // active): Foxfire (the projects browser) launches MAXIMIZED — it's the
-    // main attraction. Steam starts minimized; aboutMe starts closed (reopen
-    // from its desktop icon). hello.bat, Media Player, Terminal sit behind.
+    // active): only hello.bat opens by default — everything else starts
+    // minimized (or closed, for aboutMe) and is reopened from its desktop
+    // icon / taskbar / Start menu. Foxfire keeps its maximized geometry
+    // queued up so it still launches full-screen whenever it's reopened.
     function applyDefaultStates() {
-        var cd = document.querySelector('[data-app="cdplayer"]');
-        if (cd) minimize(cd);
+        ['cdplayer', 'winamp', 'terminal'].forEach(function (app) {
+            var b = document.querySelector('[data-app="' + app + '"]');
+            if (b) minimize(b);
+        });
         var np = document.querySelector('[data-app="notepad"]');
         if (np) closeWin(np);
         var ie = document.querySelector('[data-app="ie"]');
-        if (ie && !ie.classList.contains('win-max')) toggleMax(ie);
+        if (ie) {
+            if (!ie.classList.contains('win-max')) toggleMax(ie);
+            ie.classList.add('win-min');
+            setTaskState(ie, 'inactive');
+        }
     }
 
     function applyLayout() {
@@ -416,14 +429,19 @@
     }
 
     // ── Desktop icons ───────────────────────────────────────────
+    function restoreApp(app) {
+        return function () { var n = document.querySelector('[data-app="' + app + '"]'); if (n) restore(n); };
+    }
     var deskIcons = [
         { kind: 'computer', label: 'My Computer',   action: function () { openSysProps(); } },
-        { kind: 'note',     label: 'aboutMe.txt',   action: function () { var n = document.querySelector('[data-app="notepad"]'); if (n) restore(n); } },
-        { kind: 'mine',     label: 'Minesweeper',   action: function () { openMinesweeper(); } },
+        { kind: 'note',     label: 'aboutMe.txt',   action: restoreApp('notepad') },
+        { kind: 'foxfire',  label: 'Foxfire',       action: restoreApp('ie') },
+        { kind: 'spotify',  label: 'Spotify98',     action: restoreApp('winamp') },
+        { kind: 'git',      label: 'Git98',         action: restoreApp('terminal') },
+        { kind: 'steam',    label: 'Steam98',       action: restoreApp('cdplayer') },
         { kind: 'bin',      label: 'Recycle Bin',   action: function () { openRecycleBin(); } },
         { kind: 'instagram', label: 'Instagram', action: function () { openSocial('Instagram', social('instagram')); } },
         { kind: 'linkedin',  label: 'LinkedIn',  action: function () { openSocial('LinkedIn',  social('linkedin')); } },
-        { kind: 'facebook',  label: 'Facebook',  action: function () { openSocial('Facebook',  social('facebook')); } },
         { kind: 'github',    label: 'GitHub',    action: function () { openSocial('GitHub',    social('github')); } }
     ];
     function social(key) { return (typeof socialConfig !== 'undefined' && socialConfig[key]) || ''; }
