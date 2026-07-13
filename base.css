@@ -215,7 +215,7 @@ body.has-max { overflow: hidden; }
 .desktop-wallpaper img {
     max-width: 60vw; max-height: 60vh;
     object-fit: contain;
-    box-shadow: 0 0 0 2px #404040, 0 0 0 4px #ffffff, 0 6px 18px rgba(0,0,0,0.35);
+    box-shadow: 0 0 0 1px #404040, 0 6px 18px rgba(0,0,0,0.35);
 }
 @media (max-width: 1180px) { .desktop-wallpaper { display: none; } }
 
