@@ -38,6 +38,8 @@
         '<button class="start-btn" id="start-btn"><span class="start-logo"></span>Start</button>' +
         '<div class="task-buttons" id="task-buttons"></div>' +
         '<div class="tray" id="tray">' +
+            '<button class="tray-ico tray-net" id="tray-net" title="Network Neighborhood"></button>' +
+            '<button class="tray-ico tray-shield" id="tray-shield" title="damienOS Defender"></button>' +
             '<button class="tray-ico tray-modem" id="tray-modem" title="Dial-Up Networking"></button>' +
             '<button class="tray-ico tray-vol" id="tray-vol" title="Volume"></button>' +
             '<span class="tray-clock" id="tray-clock"></span>' +
@@ -380,6 +382,28 @@
                     '<p class="dim">Do not pick up the phone.</p></div></div>');
             });
         }
+
+        var net = document.getElementById('tray-net');
+        if (net) net.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openDialog('Network Neighborhood', '<div class="dlg-sys"><div class="dlg-sys-logo net-big"></div><div class="dlg-sys-text">' +
+                '<p><b>Local Area Connection</b></p>' +
+                '<p>Status: connected (mostly)</p>' +
+                '<p>Workgroup: WIZARDS</p>' +
+                '<p>Other computers on this network: <b>0</b></p>' +
+                '<p class="dim">It is just you out here. It has always been just you.</p></div></div>');
+        });
+
+        var shield = document.getElementById('tray-shield');
+        if (shield) shield.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openDialog('damienOS Defender', '<div class="dlg-sys"><div class="dlg-sys-logo shield-big"></div><div class="dlg-sys-text">' +
+                '<p><b>Your system is protected.</b></p>' +
+                '<p>Last scan: just now</p>' +
+                '<p>Threats found: <b>0</b> &middot; Regrets found: <b>4</b></p>' +
+                '<p>Definitions last updated: 1999</p>' +
+                '<p class="dim">Real-time protection against bad decisions is unavailable.</p></div></div>');
+        });
     })();
 
     // ── Reusable Win98 dialog ───────────────────────────────────
@@ -446,7 +470,7 @@
     var deskIcons = [
         { kind: 'computer', label: 'My Computer',   action: function () { openSysProps(); } },
         { kind: 'note',     label: 'aboutMe.txt',   action: restoreApp('notepad') },
-        { kind: 'foxfire',  label: 'Foxfire',       action: restoreApp('ie') },
+        { kind: 'foxfire',  label: 'Kurama',        action: restoreApp('ie') },
         { kind: 'spotify',  label: 'Spotify98',     action: restoreApp('winamp') },
         { kind: 'git',      label: 'Git98',         action: restoreApp('terminal') },
         { kind: 'steam',    label: 'Steam98',       action: restoreApp('cdplayer') },
@@ -947,7 +971,7 @@
                                 '<p><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>' +
                             '</div>' +
                             '<div class="dp-group"><span class="dp-group-title">The point</span>' +
-                                '<p>The real work lives in <b>Foxfire</b> &mdash; open it from the taskbar and browse the projects.</p>' +
+                                '<p>The real work lives in <b>Kurama</b> &mdash; open it from the taskbar and browse the projects.</p>' +
                                 '<p>The rest of the desktop exists to make you smile. Everything you can click does something; some of it is even useful.</p>' +
                             '</div>' +
                             '<div class="dp-group"><span class="dp-group-title">Computer</span>' +
@@ -1061,34 +1085,5 @@
         if (e.keyCode === konami[kpos]) { kpos++; if (kpos === konami.length) { kpos = 0; bsod(); } }
         else { kpos = (e.keyCode === konami[0]) ? 1 : 0; }
     });
-
-    // ── Low-memory scare — fires once, a couple minutes in, purely for flavor.
-    //    Styled like the other error dialogs (adminError / Recycle Bin).
-    (function lowMemoryScare() {
-        var MSGS = [
-            { h: 'Your system is dangerously low on memory.',
-              p: 'damienOS is running on 64&nbsp;MB of pure optimism and has just used the last of it. Close some tabs, some feelings, or both. Windows will now pretend to fix this.',
-              code: 'Error 0x00DEAD: OUT_OF_MEMORY &middot; available: a vibe &middot; required: considerably more' },
-            { h: 'Virtual memory minimum too low.',
-              p: 'Your system is increasing the size of the paging file. Do not adjust your portfolio. During this process, memory requests for some applications, ambitions, and long-term plans may be denied.',
-              code: 'Error 0x00PAGE: LOW_VIRTUAL_MEMORY &middot; paging file: mostly vibes' },
-            { h: 'A memory leak has been detected.',
-              p: 'Process <b>tea.exe</b> is holding 1,024,000&nbsp;K and refuses to let go. It has been like this for years. We have stopped asking.',
-              code: 'Error 0x0BREW: MEMORY_LEAK &middot; suspect: tea.exe &middot; action: none advised' }
-        ];
-        var pick = MSGS[Math.floor(Math.random() * MSGS.length)];
-        var delay = 120000 + Math.floor(Math.random() * 60000);   // 2–3 minutes in
-        setTimeout(function () {
-            // Don't stomp the boot screen, a crash, or a dialog the user has open.
-            if (document.getElementById('boot') || document.querySelector('.bsod, .dlg-overlay')) return;
-            openDialog('System Warning',
-                '<div class="dlg-err"><span class="dlg-err-ico"></span>' +
-                '<div class="dlg-err-text">' +
-                    '<p class="dlg-err-h">' + pick.h + '</p>' +
-                    '<p class="dlg-p">' + pick.p + '</p>' +
-                    '<p class="dlg-err-code">' + pick.code + '</p>' +
-                '</div></div>');
-        }, delay);
-    })();
 
 })();

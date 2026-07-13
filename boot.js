@@ -207,10 +207,8 @@
         });
         var input = root.querySelector('.lock-input');
         var btn   = root.querySelector('.lock-btn');
-        var hint  = root.querySelector('.lock-hint');
         btn.addEventListener('click', unlock);
         function filled() {
-            hint.innerHTML = '&#10003; remembered by damienOS';
             btn.focus();
         }
         if (instant || reduceMotion) { input.value = PASSWORD; filled(); }
