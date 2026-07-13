@@ -13,6 +13,11 @@
     window.bootActive = true;
     document.documentElement.classList.add('booting');
 
+    // Custom art — drop these files in /images. Each has a built-in fallback
+    // (the inline-SVG BIOS logo / the wizard emoji) if the file is missing.
+    var BIOS_LOGO_SRC = 'images/bios-logo.jpg';   // BIOS header logo
+    var AVATAR_SRC    = 'images/pfp.jpg';          // lock-screen profile picture
+
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var stage = 'bios';
     var timers = [];
@@ -51,6 +56,16 @@
                 '<div class="bios-foot">Press <b>F</b> to pay respects &nbsp;&middot;&nbsp; Press <b>ENTER</b> to skip boot<br>' +
                     '<span class="b-dim">BIOS Date 06/25/98 &nbsp;&middot;&nbsp; Setup: there is no setup</span></div>' +
             '</div>';
+        // Swap the custom logo into the yellow badge (top-right) once it's
+        // confirmed to load; if the file is missing, the "★ D98" text stays.
+        (function () {
+            var img = new Image();
+            img.onload = function () {
+                var el = root.querySelector('.bios-badge');
+                if (el) { el.textContent = ''; el.classList.add('bios-badge-img'); el.style.backgroundImage = "url('" + BIOS_LOGO_SRC + "')"; }
+            };
+            img.src = BIOS_LOGO_SRC;
+        })();
         var box = root.querySelector('.bios-lines');
         function line(html, cls) {
             var d = document.createElement('div');
@@ -155,8 +170,8 @@
         root.innerHTML =
             '<div class="boot-stage boot-lock">' +
                 '<div class="lock-card">' +
-                    '<div class="lock-avatar">&#129497;&#8205;&#9794;&#65039;</div>' +
-                    '<div class="lock-user">damien &mdash; Coder &amp; Warlock</div>' +
+                    '<div class="lock-avatar"><img class="lock-avatar-img" src="' + AVATAR_SRC + '" alt=""></div>' +
+                    '<div class="lock-user">Hello there.</div>' +
                     '<label class="lock-label" for="lock-pass">Enter Password</label>' +
                     '<div class="lock-row">' +
                         '<input class="lock-input" id="lock-pass" type="password" readonly value="" aria-label="Password (damienOS fills this in for you)">' +
@@ -165,12 +180,17 @@
                     '<div class="lock-hint">&nbsp;</div>' +
                 '</div>' +
             '</div>';
+        // If the custom profile picture is missing, fall back to the wizard emoji.
+        var avatar = root.querySelector('.lock-avatar-img');
+        if (avatar) avatar.addEventListener('error', function () {
+            avatar.parentNode.innerHTML = '&#129497;&#8205;&#9794;&#65039;';
+        });
         var input = root.querySelector('.lock-input');
         var btn   = root.querySelector('.lock-btn');
         var hint  = root.querySelector('.lock-hint');
         btn.addEventListener('click', unlock);
         function filled() {
-            hint.innerHTML = '&#10003; remembered by damienOS &mdash; it&rsquo;s hunter2, but to you it just looks like *******';
+            hint.innerHTML = '&#10003; remembered by damienOS';
             btn.focus();
         }
         if (instant || reduceMotion) { input.value = PASSWORD; filled(); }
@@ -189,7 +209,7 @@
         stage = 'done';
         clearTimers();
         var card = root.querySelector('.lock-card');
-        card.innerHTML = '<div class="lock-welcome">Welcome, damien.<span>Loading personal settings&hellip;</span></div>';
+        card.innerHTML = '<div class="lock-welcome">Welcome&hellip;<span>Getting things ready for you&hellip;</span></div>';
         setTimeout(function () {
             root.classList.add('boot-fade');
             setTimeout(function () {

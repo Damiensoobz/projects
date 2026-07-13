@@ -336,15 +336,19 @@ body.has-max { overflow: hidden; }
 /* BIOS POST */
 .bios-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 24px; }
 .bios-brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
+/* Cool little geometric mark — a rotated square pierced by a diamond, no
+   image needed. Purely decorative, next to the BIOS brand text. */
 .bios-logo {
     width: 34px; height: 34px; flex-shrink: 0;
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 3 L20 15 L29 26 H3 L12 15 Z' fill='%232b4bee'/><ellipse cx='16' cy='26' rx='13' ry='3' fill='%231a35c0'/><circle cx='16' cy='9' r='1.4' fill='%23ffd200'/><circle cx='13.5' cy='17' r='1.1' fill='%23ffd200'/><circle cx='19' cy='20' r='1.1' fill='%23ffd200'/></svg>") center/contain no-repeat;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><rect x='6' y='6' width='20' height='20' fill='none' stroke='%232b4bee' stroke-width='2' transform='rotate(45 16 16)'/><rect x='11' y='11' width='10' height='10' fill='%23ffd200' transform='rotate(45 16 16)'/><circle cx='16' cy='16' r='2.4' fill='%232b4bee'/></svg>") center/contain no-repeat;
 }
 .bios-badge {
     flex-shrink: 0; color: #ffe600; border: 2px solid #ffe600; border-radius: 50%;
-    width: 86px; height: 58px; display: flex; align-items: center; justify-content: center;
+    width: 110px; height: 74px; display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;
+    overflow: hidden;
 }
+.bios-badge-img { background-size: cover; background-position: center; }
 .bios-lines, .osload-lines { white-space: pre-wrap; }
 .b-line { min-height: 1.6em; }
 .b-red { color: #ff5252; } .b-yellow { color: #ffd24a; } .b-green { color: #39d271; } .b-dim { color: #7a7a7a; }
@@ -369,12 +373,16 @@ body.has-max { overflow: hidden; }
     display: flex; align-items: center; justify-content: center;
     font-family: Tahoma, Arial, sans-serif;
 }
-.lock-card { display: flex; flex-direction: column; align-items: flex-start; padding-bottom: 8vh; }
+/* Hug the content (the input row is the widest child) so the card stays
+   centred. The readonly password + short static hint can't reflow it, which
+   is what used to shift the input + button off-centre after the autofill. */
+.lock-card { display: flex; flex-direction: column; align-items: flex-start; width: max-content; padding-bottom: 8vh; }
 .lock-avatar {
-    align-self: center; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center;
-    font-size: 52px; line-height: 1; background: linear-gradient(180deg, #cfe7ff, #7fc4ef);
+    align-self: center; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 76px; line-height: 1; overflow: hidden; background: linear-gradient(180deg, #cfe7ff, #7fc4ef);
     border: 1px solid rgba(255,255,255,0.75); box-shadow: 0 2px 8px rgba(0,0,60,0.3);
 }
+.lock-avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .lock-user { align-self: center; color: #ffffff; font-weight: 700; font-size: 0.82rem; margin: 9px 0 28px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
 .lock-label { color: #ffffff; font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
 .lock-row { display: flex; }
@@ -387,7 +395,7 @@ body.has-max { overflow: hidden; }
     border-right: 2px solid #404040; border-bottom: 2px solid #404040;
 }
 .lock-btn:active { border-color: #404040 #ffffff #ffffff #404040; }
-.lock-hint { min-height: 1.3em; margin-top: 9px; max-width: 300px; color: rgba(255,255,255,0.9); font-size: 0.66rem; line-height: 1.5; text-shadow: 0 1px 2px rgba(0,0,60,0.35); }
+.lock-hint { min-height: 1.3em; margin-top: 9px; max-width: 100%; color: rgba(255,255,255,0.9); font-size: 0.66rem; line-height: 1.5; text-shadow: 0 1px 2px rgba(0,0,60,0.35); }
 .lock-welcome { color: #ffffff; font-size: 1.35rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,60,0.45); }
 .lock-welcome span { display: block; font-size: 0.78rem; margin-top: 10px; color: rgba(255,255,255,0.85); }
 @media (max-width: 600px) {

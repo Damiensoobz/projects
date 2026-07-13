@@ -306,7 +306,7 @@
             if (sm === 'mines') { openMinesweeper(); }
             else if (sm === 'calc') { openCalc(); }
             else if (sm === 'taskmgr') openTaskManager();
-            else if (sm === 'restart') restartGag();
+            else if (sm === 'restart') restartSystem();
             else if (it.dataset.href) { window.open(it.dataset.href, '_blank', 'noopener,noreferrer'); }
             else openFromMenu(it.dataset.target);
             setMenu(false);
@@ -969,16 +969,9 @@
         w.body.querySelector('.dp-activate').addEventListener('click', function () { activateGag(w); });
     }
 
-    // ── Restart → refuses, on the grounds of preventing societal collapse ──
-    function restartGag() {
-        openDialog('Restart Error', '<div class="dlg-error">' +
-            '<div class="dlg-error-ico"></div>' +
-            '<div class="dlg-error-text">' +
-                '<p>Restarting the internet is a bad idea.</p>' +
-                '<p>Total societal collapse is not a favorable outcome &mdash; supply chains buckle, ' +
-                'the group chats go dark, and somewhere a server farm weeps.</p>' +
-                '<p><b>Request denied.</b> You&rsquo;re welcome.</p>' +
-            '</div></div>');
+    // ── Restart → reloads the page, which replays the boot sequence. ──
+    function restartSystem() {
+        location.reload();
     }
 
     // ── "Activate Now" → BSOD → gathers data → restarts → punchline ──
@@ -1068,5 +1061,34 @@
         if (e.keyCode === konami[kpos]) { kpos++; if (kpos === konami.length) { kpos = 0; bsod(); } }
         else { kpos = (e.keyCode === konami[0]) ? 1 : 0; }
     });
+
+    // ── Low-memory scare — fires once, a couple minutes in, purely for flavor.
+    //    Styled like the other error dialogs (adminError / Recycle Bin).
+    (function lowMemoryScare() {
+        var MSGS = [
+            { h: 'Your system is dangerously low on memory.',
+              p: 'damienOS is running on 64&nbsp;MB of pure optimism and has just used the last of it. Close some tabs, some feelings, or both. Windows will now pretend to fix this.',
+              code: 'Error 0x00DEAD: OUT_OF_MEMORY &middot; available: a vibe &middot; required: considerably more' },
+            { h: 'Virtual memory minimum too low.',
+              p: 'Your system is increasing the size of the paging file. Do not adjust your portfolio. During this process, memory requests for some applications, ambitions, and long-term plans may be denied.',
+              code: 'Error 0x00PAGE: LOW_VIRTUAL_MEMORY &middot; paging file: mostly vibes' },
+            { h: 'A memory leak has been detected.',
+              p: 'Process <b>tea.exe</b> is holding 1,024,000&nbsp;K and refuses to let go. It has been like this for years. We have stopped asking.',
+              code: 'Error 0x0BREW: MEMORY_LEAK &middot; suspect: tea.exe &middot; action: none advised' }
+        ];
+        var pick = MSGS[Math.floor(Math.random() * MSGS.length)];
+        var delay = 120000 + Math.floor(Math.random() * 60000);   // 2–3 minutes in
+        setTimeout(function () {
+            // Don't stomp the boot screen, a crash, or a dialog the user has open.
+            if (document.getElementById('boot') || document.querySelector('.bsod, .dlg-overlay')) return;
+            openDialog('System Warning',
+                '<div class="dlg-err"><span class="dlg-err-ico"></span>' +
+                '<div class="dlg-err-text">' +
+                    '<p class="dlg-err-h">' + pick.h + '</p>' +
+                    '<p class="dlg-p">' + pick.p + '</p>' +
+                    '<p class="dlg-err-code">' + pick.code + '</p>' +
+                '</div></div>');
+        }, delay);
+    })();
 
 })();
