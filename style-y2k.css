@@ -344,7 +344,7 @@ code {
 .sp-link:hover { text-decoration: underline; color: #22dd66; }
 .sp-link svg { width: 13px; height: 13px; }
 
-/* Album art (sized large by the .wmp rules below) */
+/* Album art fallback (final sizing set by the .sp-panel.spotify rules below) */
 .sp-art-empty {
     background: #11141c url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%234dffa0'><path d='M9 17V5l10-2v12'/><circle cx='6.5' cy='17.5' r='2.5'/><circle cx='16.5' cy='15.5' r='2.5'/></svg>") center/30px no-repeat;
 }
@@ -1055,180 +1055,120 @@ code {
    STATUS APPS — each widget styled as its own 98-era program
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Now Playing → Windows Media Player (compact / minimal) ─── */
+/* ── Spotify98 → Spotify "now playing" bar (dark + green) ───── */
 .sp-panel {
-    background: linear-gradient(180deg, #34394a 0%, #1f2330 100%);
-    border-top-color: #5a6076; border-left-color: #5a6076;
-    border-right-color: #0a0c12; border-bottom-color: #0a0c12;
-    box-shadow: none; color: #cdd6e6;
+    background: #121212;
+    border-top-color: #282828; border-left-color: #282828;
+    border-right-color: #000000; border-bottom-color: #000000;
+    box-shadow: none; color: #ffffff;
     display: flex; flex-direction: column;
 }
 .sp-panel::before {
-    content: 'Media Player';
-    background: linear-gradient(to bottom, #3a4055, #20242f);
-    color: #aebbd2; letter-spacing: 0.06em;
-    border-bottom: 1px solid #0a0c12;
+    content: 'Spotify';
+    background: #000000;
+    color: #1db954; letter-spacing: 0.02em; font-weight: 700;
+    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif; text-transform: none;
+    border-bottom: 1px solid #1db954;
+    padding-left: 22px;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%231db954'/><g fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'><path d='M6 15c4-1 8-0.7 11 1'/><path d='M5.2 11c5-1.4 10-0.9 14 1.4'/><path d='M5 7.4c6-1.4 11.6-0.9 15 1.5'/></g></svg>");
+    background-repeat: no-repeat; background-position: 6px center; background-size: 12px;
 }
 
-/* Compact now-playing row: small cover + meta + mini EQ */
-.sp-now { display: flex; align-items: center; gap: 9px; padding: 8px 9px; }
-.sp-panel.wmp .sp-art { width: 72px; height: 72px; flex-shrink: 0; border: 1px solid #0a0c12; border-radius: 2px; object-fit: cover; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
-.sp-panel.wmp .sp-art-empty { background-color: #11141c; }
+/* Now-playing row: album cover + meta + mini EQ */
+.sp-now { display: flex; align-items: center; gap: 11px; padding: 11px 11px 9px; }
+.sp-panel .sp-art { width: 66px; height: 66px; flex-shrink: 0; border: none; border-radius: 4px; object-fit: cover; display: block; box-shadow: 0 2px 7px rgba(0,0,0,0.6); }
+.sp-panel .sp-art-empty {
+    background: #282828 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%231db954'><path d='M9 17V5l10-2v12'/><circle cx='6.5' cy='17.5' r='2.5'/><circle cx='16.5' cy='15.5' r='2.5'/></svg>") center/28px no-repeat;
+}
 .sp-meta { min-width: 0; flex: 1; }
-.sp-panel.wmp .sp-status { display: flex; align-items: center; gap: 5px; padding: 0 0 2px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; letter-spacing: 0.06em; text-transform: uppercase; color: #aebbd2; }
-.sp-panel.wmp .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: #aab3c8; }
-.sp-panel.wmp.playing .sp-dot { background: #25e07a; box-shadow: 0 0 5px rgba(37,224,122,0.7); animation: blink 1.4s step-end infinite; }
-.sp-panel.wmp .sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #5dffac; font-weight: 700; font-size: 0.78rem; text-shadow: 0 0 6px rgba(77,255,160,0.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-panel.wmp .sp-artist { padding: 0; flex: none; font-family: Tahoma, Arial, sans-serif; color: #cdd9ea; font-size: 0.66rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-status { display: flex; align-items: center; gap: 6px; padding: 0 0 3px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.56rem; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 700; color: #1db954; }
+.sp-panel .sp-dot { width: 7px; height: 7px; border-radius: 50%; background: #535353; }
+.sp-panel.playing .sp-dot { background: #1db954; box-shadow: 0 0 6px rgba(29,185,84,0.85); animation: blink 1.4s step-end infinite; }
+.sp-track { padding: 0; font-family: Tahoma, Arial, sans-serif; color: #ffffff; font-weight: 700; font-size: 0.84rem; text-shadow: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-artist { padding: 0; flex: none; margin-top: 2px; font-family: Tahoma, Arial, sans-serif; color: #b3b3b3; font-size: 0.68rem; font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Mini EQ (animates only while actually playing) */
 .sp-eq { display: flex; align-items: flex-end; gap: 2px; height: 18px; flex-shrink: 0; }
-.sp-eq i { width: 3px; background: linear-gradient(#4dffa0, #1d8a55); opacity: 0.85; }
+.sp-eq i { width: 3px; background: linear-gradient(#1ed760, #1db954); opacity: 0.9; }
 .sp-eq i:nth-child(1) { height: 40%; } .sp-eq i:nth-child(2) { height: 75%; } .sp-eq i:nth-child(3) { height: 50%; }
 .sp-eq i:nth-child(4) { height: 90%; } .sp-eq i:nth-child(5) { height: 35%; }
-.sp-panel.wmp.playing .sp-eq i { animation: sp-eq 0.85s ease-in-out infinite alternate; }
-.sp-panel.wmp.playing .sp-eq i:nth-child(odd) { animation-duration: 0.6s; }
+.sp-panel.playing .sp-eq i { animation: sp-eq 0.85s ease-in-out infinite alternate; }
+.sp-panel.playing .sp-eq i:nth-child(odd) { animation-duration: 0.6s; }
 @keyframes sp-eq { from { height: 15%; } to { height: 100%; } }
 
+/* Spotify-style progress bar */
+.sp-bar { height: 4px; margin: 0 11px 9px; background: #4d4d4d; border-radius: 2px; overflow: hidden; }
+.sp-bar-fill { display: block; height: 100%; width: 38%; background: #1db954; border-radius: 2px; }
+.sp-panel.playing .sp-bar-fill { animation: sp-progress 24s linear infinite; }
+@keyframes sp-progress { from { width: 6%; } to { width: 97%; } }
+
 /* "last" footnote + profile link */
-.sp-last { padding: 0 9px 7px; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; color: #bcc7da; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sp-last-k { color: #8e99af; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 4px; }
-.sp-panel .sp-link { color: #c2d4ef; background: transparent; border-top: 1px solid #2a3040; padding: 5px 9px; }
-.sp-panel .sp-link:hover { color: #ffffff; }
+.sp-last { padding: 0 11px 9px; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #b3b3b3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-last-k { color: #727272; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 5px; }
+.sp-panel .sp-link { color: #1db954; background: transparent; border-top: 1px solid #282828; padding: 6px 11px; font-size: 0.66rem; margin-top: auto; }
+.sp-panel .sp-link:hover { color: #1ed760; text-decoration: underline; }
+.sp-link svg { width: 13px; height: 13px; }
 
-/* ── GitHub → warped retro CRT terminal ────────────────────── */
-.gh-panel { background: #020a04; border-color: #143; box-shadow: none; position: relative; }
+/* ── Git98 → GitHub dark panel (octocat + activity feed) ────── */
+.gh-panel { background: #0d1117; border-color: #30363d; box-shadow: none; position: relative; }
 .gh-panel::before {
-    content: 'Terminal';
-    background: #0a1a0e; color: #33ff66; border-bottom: 1px solid #0a3a18;
-    font-family: 'Courier New', monospace; letter-spacing: 0; text-transform: none;
+    content: 'GitHub';
+    background: #161b22; color: #ffffff; border-bottom: 1px solid #30363d;
+    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif; letter-spacing: 0.01em; text-transform: none; font-weight: 700;
+    padding-left: 24px;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/></svg>");
+    background-repeat: no-repeat; background-position: 7px center; background-size: 13px;
 }
-/* Curved-glass overlay: scanlines + phosphor glow + heavy corner vignette */
-.gh-panel::after {
-    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5;
-    border-radius: 11px / 18px;
-    background:
-        repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.30) 2px 3px),
-        radial-gradient(130% 120% at 50% 0%, rgba(80,255,150,0.10), transparent 46%);
-    box-shadow:
-        inset 0 0 26px 7px rgba(0,0,0,0.88),
-        inset 0 0 0 2px rgba(0,0,0,0.9);
-}
-.gh-status { background: transparent; color: #2bd457; border-bottom-color: #0a3a18; text-shadow: 0 0 4px rgba(51,255,102,0.4); }
-.gh-status::after { content: ' · online'; color: #1f9c43; }
-.gh-dot { background: #33ff66; box-shadow: 0 0 6px rgba(51,255,102,0.8); }
-.gh-feed { background: transparent; }
-.gh-ev { color: #33ff66; text-shadow: 0 0 4px rgba(51,255,102,0.45); }
-.gh-ev:nth-child(even) { background: rgba(20,80,40,0.16); }
-.gh-ev-ico, .gh-ev-star, .gh-ev-create, .gh-ev-fork, .gh-ev-pr, .gh-ev-issue {
-    background: transparent; color: #33ff66; border-radius: 0; width: auto; height: auto;
-}
-.gh-ev-repo { color: #5cd8ff; text-shadow: 0 0 4px rgba(92,216,255,0.45); }
-.gh-ev-time { color: #1f9c43; }
-.gh-meta { background: transparent; border-top-color: #0a3a18; }
-.gh-link { color: #5cd8ff; text-shadow: 0 0 4px rgba(92,216,255,0.4); }
-.gh-link:hover { color: #9be3ff; }
+/* Headline: "I'm working on <repo>" */
+.gh-status { background: #0d1117; color: #c9d1d9; border-bottom-color: #21262d; text-transform: none; letter-spacing: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; }
+.gh-status-repo { color: #58a6ff; text-decoration: none; font-weight: 700; margin-left: 4px; }
+.gh-status-repo:hover { text-decoration: underline; }
 
-/* ── Steam → vinyl record (draggable, slim header) ───────────── */
+/* ── Steam98 → Steam library capsule card (navy + blue) ──────── */
 .steam-panel {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-    padding: 14px 0 0;
+    background: #1b2838;
+    border-top-color: #3a5570; border-left-color: #3a5570;
+    border-right-color: #0e1520; border-bottom-color: #0e1520;
+    box-shadow: none; color: #c6d4df;
+    display: flex; flex-direction: column;
+    position: relative; width: 100%; margin: 0; padding: 0;
 }
-.steam-panel::before,
-.steam-status { display: none; }
+.steam-panel::before {
+    content: 'Steam'; display: block;
+    color: #ffffff; letter-spacing: 0.02em; font-weight: 700;
+    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif; text-transform: none;
+    border-bottom: 1px solid #0e1520;
+    padding-left: 22px;
+    background-color: #1b2838;
+    background-image:
+        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='none' stroke='%23ffffff' stroke-width='1.8'/><circle cx='15.5' cy='9' r='3.2' fill='none' stroke='%23ffffff' stroke-width='1.8'/><circle cx='8' cy='15.5' r='2.2' fill='%23ffffff'/><line x1='9.6' y1='13.9' x2='13.6' y2='10.6' stroke='%23ffffff' stroke-width='1.8'/></svg>"),
+        linear-gradient(to right, #1b2838 0%, #2a475e 100%);
+    background-repeat: no-repeat, no-repeat;
+    background-position: 6px center, 0 0;
+    background-size: 13px, 100% 100%;
+}
+.steam-status {
+    display: flex; align-items: center; gap: 6px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.56rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #66c0f4; font-weight: 700;
+    padding: 8px 10px 6px; border-bottom: 1px solid #2a3f52; background: #1b2838;
+}
+.steam-dot { width: 7px; height: 7px; border-radius: 50%; background: #66c0f4; }
+.steam-panel.active .steam-dot { background: #a4d007; box-shadow: 0 0 6px rgba(144,186,60,0.85); animation: blink 1.6s step-end infinite; }
 
-/* Vinyl disc — concentric grooves + center label */
-.steam-disc {
-    display: block; position: relative;
-    width: 210px; height: 210px; margin: 0 auto 14px;
-    border-radius: 50%;
-    background: #181818;
-    animation: disc-spin 16s linear infinite;
-    cursor: pointer;
-}
-.steam-disc.paused { animation-play-state: paused; }   /* off-screen / tab hidden */
-/* Game art fills the entire disc */
-.steam-disc .steam-img {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    object-fit: cover; display: block;
-    filter: brightness(0.82) saturate(0.9);
-    z-index: 0;
-}
-/* Groove rings overlay — light enough that art shows through */
-.steam-disc::before {
-    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 2;
-    background: radial-gradient(circle,
-        rgba(0,0,0,0)    0% 20%,
-        rgba(0,0,0,0.42) 20% 21.5%,  rgba(255,255,255,0.055) 21.5% 22%,
-        rgba(0,0,0,0.36) 22% 24.5%,  rgba(255,255,255,0.055) 24.5% 25%,
-        rgba(0,0,0,0.36) 25% 28%,    rgba(255,255,255,0.055) 28% 28.5%,
-        rgba(0,0,0,0.36) 28.5% 32%,  rgba(255,255,255,0.055) 32% 32.5%,
-        rgba(0,0,0,0.36) 32.5% 36%,  rgba(255,255,255,0.055) 36% 36.5%,
-        rgba(0,0,0,0.36) 36.5% 40%,  rgba(255,255,255,0.055) 40% 40.5%,
-        rgba(0,0,0,0.36) 40.5% 45%,  rgba(255,255,255,0.055) 45% 45.5%,
-        rgba(0,0,0,0.36) 45.5% 50%,  rgba(255,255,255,0.055) 50% 50.5%,
-        rgba(0,0,0,0.36) 50.5% 55%,  rgba(255,255,255,0.055) 55% 55.5%,
-        rgba(0,0,0,0.36) 55.5% 60%,  rgba(255,255,255,0.055) 60% 60.5%,
-        rgba(0,0,0,0.36) 60.5% 66%,  rgba(255,255,255,0.055) 66% 66.5%,
-        rgba(0,0,0,0.36) 66.5% 72%,  rgba(255,255,255,0.055) 72% 72.5%,
-        rgba(0,0,0,0.36) 72.5% 79%,  rgba(255,255,255,0.055) 79% 79.5%,
-        rgba(0,0,0,0.36) 79.5% 86%,  rgba(255,255,255,0.055) 86% 86.5%,
-        rgba(0,0,0,0.55) 86.5% 100%
-    );
-}
-/* Conic sheen + edge gloss on top */
-.steam-disc::after {
-    content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; z-index: 3;
-    background:
-        conic-gradient(from 0deg,
-            rgba(255,255,255,0) 0deg, rgba(180,200,255,0.09) 70deg, rgba(255,255,255,0) 130deg,
-            rgba(200,160,255,0.07) 210deg, rgba(255,255,255,0) 270deg,
-            rgba(160,220,190,0.08) 330deg, rgba(255,255,255,0) 360deg),
-        radial-gradient(circle at 34% 26%, rgba(255,255,255,0.13), transparent 52%);
-    mix-blend-mode: screen;
-}
-.steam-disc-hub {       /* spindle hole */
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 10px; height: 10px; border-radius: 50%; pointer-events: none; z-index: 3;
-    background: #0c0f15;
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
-}
-@keyframes disc-spin { to { transform: rotate(360deg); } }
+/* Game capsule banner */
+.steam-cap { display: block; position: relative; overflow: hidden; border-bottom: 1px solid #0e1520; }
+.steam-cap .steam-img { width: 100%; height: 96px; object-fit: cover; display: block; filter: brightness(0.92) saturate(1.05); transition: filter 0.2s; }
+.steam-cap:hover .steam-img { filter: brightness(1.05) saturate(1.15); }
 
-/* Info bubble — appears on hover above the disc */
-.steam-info {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(12, 15, 21, 0.94);
-    border: 1px solid #5a6478;
-    border-radius: 6px;
-    padding: 9px 16px 10px;
-    white-space: nowrap;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.18s ease;
-    z-index: 10;
-}
-.steam-info::after {    /* downward caret */
-    content: '';
-    position: absolute; top: 100%; left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: #5a6478;
-}
-.steam-panel:hover .steam-info { opacity: 1; pointer-events: auto; }
-/* Static / away state — no disc, show info inline */
+.steam-info { padding: 9px 10px 10px; flex: 1; display: flex; flex-direction: column; background: #1b2838; }
+.steam-game { font-family: Tahoma, Arial, sans-serif; color: #ffffff; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steam-badge { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.04em; color: #a4d007; margin-bottom: 6px; }
+.steam-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a4d007; box-shadow: 0 0 5px rgba(144,186,60,0.8); }
+.steam-meta { font-family: Tahoma, Arial, sans-serif; color: #8f98a0; font-size: 0.6rem; margin-bottom: 8px; flex: 1; text-align: left; }
+.steam-store-link { color: #66c0f4; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; text-decoration: none; margin-top: auto; }
+.steam-store-link:hover { color: #9ddcff; text-decoration: underline; }
+
 /* Profile footer — full width, matches the title bar; avatar/status/library + profile link */
 .steam-foot {
     display: flex; flex-direction: column; gap: 6px;
@@ -1271,42 +1211,21 @@ code {
 .steam-persona { flex: 1; font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .steam-lib { color: #8f98a0; font-size: 0.58rem; flex-shrink: 0; }
 
-.steam-panel:not(.active) .steam-info {
-    position: static;
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 4px 0 8px;
-    white-space: normal;
-}
-.steam-panel:not(.active) .steam-info::after { display: none; }
-.steam-game { color: #9fe8a0; font-family: 'Courier New', monospace; font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; text-align: center; }
-.steam-meta { color: #7fd0a0; font-family: 'Courier New', monospace; font-size: 0.68rem; text-align: center; margin-bottom: 2px; flex: none; }
-.steam-meta::before { content: '\25B6  '; }
-.steam-store-link { color: #66c0f4; display: flex; align-items: center; justify-content: center; gap: 4px; font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; text-decoration: none; margin-top: 7px; }
-.steam-store-link:hover { color: #9ddcff; text-decoration: underline; }
-.steam-link { color: #7fd0ff; justify-content: center; font-size: 0.64rem; margin-top: 4px; padding-top: 6px; border-top: 1px solid #3a4254; }
-.steam-link:hover { color: #a8e0ff; text-decoration: underline; }
-
-/* Status apps shed the chunky Win98 frame and wear their own app skin —
-   the slim title bar (drag handle + controls) is restyled per app. */
-.block[data-app="winamp"], .block[data-app="terminal"] {
+/* Status apps: a consistent dark Win98 window (chrome = drag handle + controls),
+   each wearing its own brand toolbar (the panel ::before) just below. */
+.block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] {
     padding: 0; border: 1px solid #000000; box-shadow: 0 2px 7px rgba(0,0,0,0.45);
+    margin-left: auto; margin-right: auto;
 }
-.block[data-app="winamp"]   { border-color: #0a0c12; }
-.block[data-app="terminal"] { border-color: #061206; border-radius: 9px; overflow: hidden; }
-/* cdplayer: slim Steam-themed drag handle, disc floats below */
-.block[data-app="cdplayer"] { padding: 0; background: transparent; border: none; box-shadow: none; width: 230px; margin: 0 auto; }
-.block[data-app="cdplayer"] > .prompt { margin: 0; background: rgba(12,16,24,0.82); border-bottom: 1px solid rgba(102,192,244,0.18); border-radius: 4px 4px 0 0; }
-.block[data-app="cdplayer"] > .prompt .p-cmd { color: #9ab8d4; font-size: 0.7rem; }
+/* Neutral dark title bar for all three; the brand colour lives in the toolbar below */
 .block[data-app="winamp"] > .prompt,
-.block[data-app="terminal"] > .prompt { margin: 0; }
-.block[data-app="winamp"] > .prompt   { background: linear-gradient(180deg, #3a4055, #20242f); border-bottom: 1px solid #0a0c12; }
-.block[data-app="terminal"] > .prompt { background: #0a1a0e; border-bottom: 1px solid #0a3a18; }
-.block[data-app="terminal"] > .prompt .p-cmd { font-family: 'Courier New', monospace; color: #33ff66; text-shadow: 0 0 4px rgba(51,255,102,0.4); }
+.block[data-app="terminal"] > .prompt,
+.block[data-app="cdplayer"] > .prompt {
+    margin: 0; background: #1c1c1c; border-bottom: 1px solid #000000;
+}
+.block[data-app="winamp"] > .prompt .p-cmd,
+.block[data-app="terminal"] > .prompt .p-cmd,
+.block[data-app="cdplayer"] > .prompt .p-cmd { color: #d6d6d6; }
 /* Flat, color-matched window buttons — the chunky beige ones clash on dark bars */
 .block[data-app="winamp"] .wc,
 .block[data-app="terminal"] .wc,
@@ -1317,27 +1236,28 @@ code {
 .block[data-app="winamp"] .wc:active,
 .block[data-app="terminal"] .wc:active,
 .block[data-app="cdplayer"] .wc:active { background: rgba(0,0,0,0.25); border-color: transparent; }
-.block[data-app="winamp"] .wc-min::before,  .block[data-app="cdplayer"] .wc-min::before  { background: #e6ecf6; }
-.block[data-app="winamp"] .wc-max::before,  .block[data-app="cdplayer"] .wc-max::before  { border-color: #e6ecf6; }
-.block[data-app="winamp"] .wc-close::before, .block[data-app="cdplayer"] .wc-close::before { color: #e6ecf6; }
-.block[data-app="terminal"] .wc-min::before  { background: #33ff66; }
-.block[data-app="terminal"] .wc-max::before  { border-color: #33ff66; }
-.block[data-app="terminal"] .wc-close::before { color: #33ff66; }
-.block[data-app="terminal"] .gh-stats { background: transparent; border-bottom-color: rgba(51,255,102,0.12); }
-.block[data-app="terminal"] .gh-streak { color: #ffb800; text-shadow: 0 0 4px rgba(255,184,0,0.5); }
-.block[data-app="terminal"] .gh-top-repo { color: #1f9c43; }
+.block[data-app="winamp"] .wc-min::before,
+.block[data-app="terminal"] .wc-min::before,
+.block[data-app="cdplayer"] .wc-min::before  { background: #e6ecf6; }
+.block[data-app="winamp"] .wc-max::before,
+.block[data-app="terminal"] .wc-max::before,
+.block[data-app="cdplayer"] .wc-max::before  { border-color: #e6ecf6; }
+.block[data-app="winamp"] .wc-close::before,
+.block[data-app="terminal"] .wc-close::before,
+.block[data-app="cdplayer"] .wc-close::before { color: #e6ecf6; }
+/* Strip the chunky beige panel frame — the brand toolbar (::before) is the header now */
 .block[data-app="winamp"] .sp-panel,
 .block[data-app="terminal"] .gh-panel,
 .block[data-app="cdplayer"] .steam-panel { border: none; box-shadow: none; }
-.block[data-app="winamp"] .sp-panel::before,
-.block[data-app="terminal"] .gh-panel::before,
-.block[data-app="cdplayer"] .steam-panel::before { display: none; }
-/* a fitting app icon in each status window's title bar */
+/* a brand app-icon in each status window's title bar */
+.block[data-app="winamp"] > .prompt::before {
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%231db954'/><g fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'><path d='M6 15c4-1 8-0.7 11 1'/><path d='M5.2 11c5-1.4 10-0.9 14 1.4'/><path d='M5 7.4c6-1.4 11.6-0.9 15 1.5'/></g></svg>");
+}
 .block[data-app="terminal"] > .prompt::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' shape-rendering='crispEdges'><rect width='14' height='14' fill='%23000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%2333ff66'>&gt;_</text></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='%23ffffff'><path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/></svg>");
 }
 .block[data-app="cdplayer"] > .prompt::before {
-    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><circle cx='7' cy='7' r='6.5' fill='%23181818'/><circle cx='7' cy='7' r='5.2' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='3.8' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='2.5' fill='none' stroke='%23ffffff' stroke-width='0.6' stroke-opacity='0.18'/><circle cx='7' cy='7' r='1.7' fill='%23444'/><circle cx='7' cy='7' r='0.7' fill='%23181818'/></svg>");
+    content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='none' stroke='%2366c0f4' stroke-width='1.8'/><circle cx='15.5' cy='9' r='3.2' fill='none' stroke='%2366c0f4' stroke-width='1.8'/><circle cx='8' cy='15.5' r='2.2' fill='%2366c0f4'/><line x1='9.6' y1='13.9' x2='13.6' y2='10.6' stroke='%2366c0f4' stroke-width='1.8'/></svg>");
 }
 
 /* "Activate Windows" watermark + footer (Win98) */
