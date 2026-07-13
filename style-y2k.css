@@ -868,6 +868,10 @@ code {
 
 /* Bookmarks toolbar — plain row of bookmark buttons, no leading label (classic FF) */
 .ie-links { display: flex; align-items: center; gap: 4px; background: #d4d0c8; padding: 3px 9px 4px; border-bottom: 1px solid #808080; overflow: hidden; }
+/* Loading progress strip — sits at the bottom edge of the chrome while a page loads */
+.ie-chrome { position: relative; }
+.ie-progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; opacity: 0; z-index: 6; pointer-events: none;
+    background: linear-gradient(to right, #ff8a3d, #e2571b); }
 .ie-glink {
     display: inline-flex; align-items: center; gap: 4px;
     background: transparent; border: 1px solid transparent; cursor: pointer;
@@ -1093,11 +1097,11 @@ code {
     background-repeat: no-repeat; background-position: 6px center; background-size: 12px;
 }
 
-/* Now-playing row: album cover + meta + mini EQ */
-.sp-now { display: flex; align-items: center; gap: 11px; padding: 11px 11px 9px; }
-.sp-panel .sp-art { width: 66px; height: 66px; flex-shrink: 0; border: none; border-radius: 4px; object-fit: cover; display: block; box-shadow: 0 2px 7px rgba(0,0,0,0.6); }
+/* Now-playing row: large album cover (the hero) + meta + mini EQ */
+.sp-now { display: flex; align-items: center; gap: 13px; padding: 13px 13px 12px; }
+.sp-panel .sp-art { width: 104px; height: 104px; flex-shrink: 0; border: none; border-radius: 5px; object-fit: cover; display: block; box-shadow: 0 3px 10px rgba(0,0,0,0.65); }
 .sp-panel .sp-art-empty {
-    background: #282828 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%231db954'><path d='M9 17V5l10-2v12'/><circle cx='6.5' cy='17.5' r='2.5'/><circle cx='16.5' cy='15.5' r='2.5'/></svg>") center/28px no-repeat;
+    background: #282828 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%231db954'><path d='M9 17V5l10-2v12'/><circle cx='6.5' cy='17.5' r='2.5'/><circle cx='16.5' cy='15.5' r='2.5'/></svg>") center/42px no-repeat;
 }
 .sp-meta { min-width: 0; flex: 1; }
 .sp-status { display: flex; align-items: center; gap: 6px; padding: 0 0 3px; margin: 0; border: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.56rem; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 700; color: #1db954; }
@@ -1115,33 +1119,44 @@ code {
 .sp-panel.playing .sp-eq i:nth-child(odd) { animation-duration: 0.6s; }
 @keyframes sp-eq { from { height: 15%; } to { height: 100%; } }
 
-/* Spotify-style progress bar */
-.sp-bar { height: 4px; margin: 0 11px 9px; background: #4d4d4d; border-radius: 2px; overflow: hidden; }
-.sp-bar-fill { display: block; height: 100%; width: 38%; background: #1db954; border-radius: 2px; }
-.sp-panel.playing .sp-bar-fill { animation: sp-progress 24s linear infinite; }
-@keyframes sp-progress { from { width: 6%; } to { width: 97%; } }
-
-/* "last" footnote + profile link */
-.sp-last { padding: 0 11px 9px; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #b3b3b3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* "last played" footnote */
+.sp-last { padding: 0 13px 11px; font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; color: #b3b3b3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sp-last-k { color: #727272; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.52rem; margin-right: 5px; }
-.sp-panel .sp-link { color: #1db954; background: transparent; border-top: 1px solid #282828; padding: 6px 11px; font-size: 0.66rem; margin-top: auto; }
-.sp-panel .sp-link:hover { color: #1ed760; text-decoration: underline; }
-.sp-link svg { width: 13px; height: 13px; }
 
-/* ── Git98 → GitHub dark panel (octocat + activity feed) ────── */
-.gh-panel { background: #0d1117; border-color: #30363d; box-shadow: none; position: relative; }
-.gh-panel::before {
-    content: 'GitHub';
-    background: #161b22; color: #ffffff; border-bottom: 1px solid #30363d;
-    font-family: Tahoma, 'MS Sans Serif', Arial, sans-serif; letter-spacing: 0.01em; text-transform: none; font-weight: 700;
-    padding-left: 24px;
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/></svg>");
-    background-repeat: no-repeat; background-position: 7px center; background-size: 13px;
-}
-/* Headline: "I'm working on <repo>" */
-.gh-status { background: #0d1117; color: #c9d1d9; border-bottom-color: #21262d; text-transform: none; letter-spacing: 0; font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; }
-.gh-status-repo { color: #58a6ff; text-decoration: none; font-weight: 700; margin-left: 4px; }
+/* ── Git98 → git-log / commit-graph terminal (Git orange) ───── */
+.gh-panel { background: #14100d; border-color: #4a2f1e; box-shadow: none; position: relative; }
+.gh-panel.active { border-color: #a5502e; }
+
+/* Headline: "I'm working on <repo>", branch-prompt flavour */
+.gh-status { background: #14100d; color: #d8ccc2; border-bottom-color: #3a2a1e; text-transform: none; letter-spacing: 0; font-family: 'Courier New', monospace; font-size: 0.64rem; padding: 8px 10px 6px; }
+.gh-dot { background: #f05133; box-shadow: 0 0 6px rgba(240,81,51,0.7); }
+.gh-status-repo { color: #ff9b6a; text-decoration: none; font-weight: 700; margin-left: 4px; }
 .gh-status-repo:hover { text-decoration: underline; }
+
+/* Stats bar — git orange accents; wraps once it holds several chips */
+.gh-stats { background: #14100d; border-bottom-color: #3a2a1e; flex-wrap: wrap; row-gap: 3px; gap: 9px; }
+.gh-streak { color: #f0883e; }
+.gh-top-repo { color: #b3a294; }
+.gh-stat { font-family: 'Courier New', monospace; font-size: 0.62rem; color: #b3a294; letter-spacing: 0.02em; white-space: nowrap; }
+
+/* Feed rendered as a commit graph: orange nodes on a single branch rail */
+.gh-feed { background: transparent; position: relative; }
+.gh-feed::before { content: ''; position: absolute; left: 15px; top: 4px; bottom: 4px; width: 2px; background: #5a3a28; }
+.gh-ev { color: #cdbfae; position: relative; }
+.gh-ev:nth-child(even) { background: rgba(240,81,51,0.05); }
+.gh-ev-ico, .gh-ev-star, .gh-ev-create, .gh-ev-fork, .gh-ev-pr, .gh-ev-issue {
+    width: 11px; height: 11px; border-radius: 50%; background: #f05133;
+    color: transparent; font-size: 0; box-shadow: 0 0 0 3px #14100d; z-index: 1;
+}
+.gh-ev-repo { color: #ff9b6a; text-decoration: none; }
+.gh-ev-repo:hover { color: #ffb98f; text-decoration: underline; }
+.gh-ev-time { color: #8a7360; }
+
+/* Footer link + join year */
+.gh-meta { background: #14100d; border-top-color: #3a2a1e; justify-content: space-between; }
+.gh-link { color: #ff9b6a; }
+.gh-link:hover { color: #ffb98f; }
+.gh-since { font-family: 'Courier New', monospace; font-size: 0.58rem; color: #8a7360; white-space: nowrap; }
 
 /* ── Steam98 → Steam library capsule card (navy + blue) ──────── */
 .steam-panel {

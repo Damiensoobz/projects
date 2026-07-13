@@ -332,9 +332,7 @@
     </div>
     <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
-  <div class="sp-bar" aria-hidden="true"><span class="sp-bar-fill"></span></div>
   ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last</span> ${esc(prevTxt)}</div>` : ''}
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
     }
 
@@ -349,15 +347,7 @@
       <div class="sp-artist">the bards are resting</div>
     </div>
   </div>
-  ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
-    }
-
-    function spotifyLinkHtml(url, label) {
-        return `<a class="sp-link" href="${url}" target="_blank" rel="noopener noreferrer">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-  ${label} ↗
-</a>`;
     }
 
     // ── GitHub last push widget ──────────────────────────────────
@@ -399,10 +389,15 @@
                     }
                 }
 
-                // Most active repo by push count
-                var repoPushCount = {};
+                // Most active repo + total pushes in the window. (The public events
+                // API omits payload.size/commits, so a commit count isn't available —
+                // push count is the reliable git-activity signal.)
+                var repoPushCount = {}, totalPushes = 0;
                 events.forEach(function (ev) {
-                    if (ev.type === 'PushEvent' && ev.repo) repoPushCount[ev.repo.name] = (repoPushCount[ev.repo.name] || 0) + 1;
+                    if (ev.type === 'PushEvent' && ev.repo) {
+                        repoPushCount[ev.repo.name] = (repoPushCount[ev.repo.name] || 0) + 1;
+                        totalPushes++;
+                    }
                 });
                 var topRepo = '', topCount = 0;
                 Object.keys(repoPushCount).forEach(function (r) { if (repoPushCount[r] > topCount) { topCount = repoPushCount[r]; topRepo = r; } });
@@ -414,8 +409,12 @@
                         .then(function (d) { return { full: full, lang: d.language || null }; })
                         .catch(function () { return { full: full, lang: null }; });
                 });
+                // Account-level stats (followers, public repos, join year)
+                var userP = cachedJson('https://api.github.com/users/' + encodeURIComponent(username), 3600000)
+                    .catch(function () { return null; });
 
-                Promise.all(langFetches).then(function (results) {
+                Promise.all([Promise.all(langFetches), userP]).then(function (res) {
+                    var results = res[0], user = res[1] || {};
                     var langMap = {};
                     results.forEach(function (r) { if (r.lang) langMap[r.full] = r.lang; });
 
@@ -425,7 +424,13 @@
                         if (it) { it.lang = langMap[it.full] || null; items.push(it); }
                     }
                     if (!items.length) { renderGithubStatic(username, profileUrl); return; }
-                    renderGithubFeed(items, profileUrl, streak, topRepo, topCount);
+                    renderGithubFeed(items, profileUrl, {
+                        streak: streak, topRepo: topRepo, topCount: topCount,
+                        pushes: totalPushes,
+                        followers: (typeof user.followers === 'number') ? user.followers : null,
+                        repos: (typeof user.public_repos === 'number') ? user.public_repos : null,
+                        since: (user.created_at ? user.created_at.slice(0, 4) : null)
+                    });
                 });
             })
             .catch(function () { renderGithubStatic(username, profileUrl); });
@@ -454,14 +459,16 @@
         }
     }
 
-    function renderGithubFeed(items, profileUrl, streak, topRepo, topCount) {
+    function renderGithubFeed(items, profileUrl, stats) {
+        stats = stats || {};
+        var streak = stats.streak || 0, topRepo = stats.topRepo || '';
         var topRepoShort = topRepo ? topRepo.split('/')[1] : '';
-        var statsHtml = (streak > 1 || topRepoShort)
-            ? '<div class="gh-stats">' +
-                  (streak > 1 ? '<span class="gh-streak">&#9654; ' + streak + 'd streak</span>' : '') +
-                  (topRepoShort ? '<span class="gh-top-repo">&#9733; ' + esc(topRepoShort) + (topCount > 1 ? ' &middot; ' + topCount + ' pushes' : '') + '</span>' : '') +
-              '</div>'
-            : '';
+        var chips = [];
+        if (streak > 1)            chips.push('<span class="gh-streak">&#9650; ' + streak + 'd streak</span>');
+        if (stats.pushes)          chips.push('<span class="gh-stat">&#8593; ' + stats.pushes + ' push' + (stats.pushes === 1 ? '' : 'es') + '</span>');
+        if (stats.followers != null) chips.push('<span class="gh-stat">&#9733; ' + stats.followers + ' follower' + (stats.followers === 1 ? '' : 's') + '</span>');
+        if (stats.repos != null)   chips.push('<span class="gh-stat">&#9636; ' + stats.repos + ' repo' + (stats.repos === 1 ? '' : 's') + '</span>');
+        var statsHtml = chips.length ? '<div class="gh-stats">' + chips.join('') + '</div>' : '';
         var workingOn = topRepoShort
             ? "I'm working on <a class=\"gh-status-repo\" href=\"https://github.com/" + esc(topRepo) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + esc(topRepoShort) + '</a>'
             : "I'm working on things";
@@ -485,6 +492,7 @@
                 '</ul>' +
                 '<div class="gh-meta">' +
                     '<a class="gh-link" href="' + esc(profileUrl || 'https://github.com/Damiensoobz') + '" target="_blank" rel="noopener noreferrer">' + GH_ICON + 'view profile ↗</a>' +
+                    (stats.since ? '<span class="gh-since">since ' + esc(stats.since) + '</span>' : '') +
                 '</div>' +
             '</div>';
     }

@@ -249,7 +249,7 @@
 
     function setStatus(msg) { if (statusEl) statusEl.textContent = msg; }
     function setTitle(t) {
-        var full = t + ' - Kurama';
+        var full = t + ' - Kurama Browser';
         if (titleEl) titleEl.textContent = full;
         if (ieBlock) ieBlock.dataset.winName = full;
     }
@@ -262,6 +262,38 @@
         throbber.classList.add('busy');
         clearTimeout(throbT);
         throbT = setTimeout(function () { throbber.classList.remove('busy'); }, 700);
+    }
+
+    // Thin loading bar under the toolbar — the classic "page is loading" strip.
+    var ieChrome = document.querySelector('[data-app="ie"] .ie-chrome');
+    var progress = null;
+    if (ieChrome) {
+        progress = document.createElement('div');
+        progress.className = 'ie-progress';
+        ieChrome.appendChild(progress);
+    }
+    var progT1, progT2;
+    function startProgress() {
+        if (!progress) return;
+        clearTimeout(progT1); clearTimeout(progT2);
+        progress.style.transition = 'none';
+        progress.style.opacity = '1';
+        progress.style.width = '0';
+        void progress.offsetWidth;                       // reflow so the next line animates
+        progress.style.transition = 'width 0.5s ease-out';
+        progress.style.width = '80%';
+    }
+    function endProgress() {
+        if (!progress) return;
+        progress.style.width = '100%';
+        progT1 = setTimeout(function () { progress.style.opacity = '0'; }, 200);
+        progT2 = setTimeout(function () { progress.style.transition = 'none'; progress.style.width = '0'; }, 550);
+    }
+    function stopProgress() {
+        if (!progress) return;
+        clearTimeout(progT1); clearTimeout(progT2);
+        progress.style.opacity = '0';
+        progress.style.width = '0';
     }
 
     // Idle status-bar flavor — rotates when nothing is loading.
@@ -286,6 +318,7 @@
         var p = PAGES[url];
         setStatus('Opening page ' + url + ' …');
         throb();
+        startProgress();
         if (urlInput) urlInput.value = url;
         page.innerHTML = p ? p.html() : notFoundPage(url);
         setTitle(p ? p.title : 'Cannot find server');
@@ -293,6 +326,7 @@
         if (p && p.after) p.after();
         page.scrollTop = 0;
         setStatus('Done');
+        endProgress();
         updateNav();
     }
     function go(url) {
@@ -315,6 +349,13 @@
     function wirePage() {
         [].forEach.call(page.querySelectorAll('[data-link]'), function (a) {
             a.addEventListener('click', function (e) { e.preventDefault(); go(a.getAttribute('data-link')); });
+        });
+        // Hovering any link previews its destination in the status bar (classic IE).
+        [].forEach.call(page.querySelectorAll('[data-link], a[href]'), function (el) {
+            var dest = el.getAttribute('data-link') || el.getAttribute('href') || '';
+            if (!dest) return;
+            el.addEventListener('mouseenter', function () { setStatus('Shortcut to ' + dest); });
+            el.addEventListener('mouseleave', function () { setStatus('Done'); });
         });
         var sf = page.querySelector('.gg-form');
         if (sf) {
@@ -346,11 +387,19 @@
     if (btn.fwd)     btn.fwd.addEventListener('click', forward);
     if (btn.refresh) btn.refresh.addEventListener('click', refresh);
     if (btn.home)    btn.home.addEventListener('click', function () { go(HOME); });
-    if (btn.stop)    btn.stop.addEventListener('click', function () { setStatus('Stopped'); });
-    if (btn.go)      btn.go.addEventListener('click', function () { go(urlInput.value); });
-    if (urlInput)    urlInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); go(urlInput.value); }
+    if (btn.stop)    btn.stop.addEventListener('click', function () {
+        if (throbber) throbber.classList.remove('busy');
+        stopProgress();
+        setStatus('Stopped');
     });
+    if (btn.go)      btn.go.addEventListener('click', function () { go(urlInput.value); });
+    if (urlInput) {
+        urlInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); go(urlInput.value); }
+        });
+        // Click into the address bar → select the whole URL, like a real browser.
+        urlInput.addEventListener('focus', function () { setTimeout(function () { urlInput.select(); }, 0); });
+    }
 
     // Bookmarks toolbar buttons
     [].forEach.call(document.querySelectorAll('.ie-glink[data-nav]'), function (b) {

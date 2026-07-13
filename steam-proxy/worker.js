@@ -33,6 +33,18 @@ const ALLOWED_ORIGINS = [
     'https://damienbuilds.dev'
 ];
 
+// Reflect the request Origin when it's one of ours, or any localhost/127.0.0.1
+// (any port) for local development. Anything else falls back to the primary
+// production origin. Without the localhost rule, the Steam widget "dies" during
+// local dev: the browser blocks the cross-origin response and the fetch throws,
+// dropping the widget to its offline state. (Last.fm/GitHub send `*`, so those
+// widgets keep working locally — which is why only Steam appears to break.)
+function resolveOrigin(origin) {
+    if (ALLOWED_ORIGINS.includes(origin)) return origin;
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+    return ALLOWED_ORIGINS[0];
+}
+
 const APIS = {
     recent:  (k, id) => `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${k}&steamid=${id}&count=5&format=json`,
     profile: (k, id) => `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${k}&steamids=${id}&format=json`,
@@ -50,7 +62,7 @@ export default {
     async fetch(request, env, ctx) {
         const origin = request.headers.get('Origin') || '';
         const cors = {
-            'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
+            'Access-Control-Allow-Origin': resolveOrigin(origin),
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Vary': 'Origin'
         };
