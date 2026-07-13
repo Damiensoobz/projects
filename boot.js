@@ -14,9 +14,10 @@
     document.documentElement.classList.add('booting');
 
     // Custom art — drop these files in /images. Each has a built-in fallback
-    // (the inline-SVG BIOS logo / the wizard emoji) if the file is missing.
-    var BIOS_LOGO_SRC = 'images/bios-logo.jpg';   // BIOS header logo
-    var AVATAR_SRC    = 'images/pfp.jpg';          // lock-screen profile picture
+    // (the inline-SVG shapes / the wizard emoji) if the file is missing.
+    var BIOS_BADGE_SRC = 'images/bios-logo.jpg';  // top-right corner logo
+    var BIOS_ICON_SRC  = 'images/bios-icon.jpg';  // small icon next to the brand text
+    var AVATAR_SRC     = 'images/pfp.jpg';        // lock-screen profile picture
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var stage = 'bios';
@@ -56,15 +57,34 @@
                 '<div class="bios-foot">Press <b>F</b> to pay respects &nbsp;&middot;&nbsp; Press <b>ENTER</b> to skip boot<br>' +
                     '<span class="b-dim">BIOS Date 06/25/98 &nbsp;&middot;&nbsp; Setup: there is no setup</span></div>' +
             '</div>';
-        // Swap the custom logo into the yellow badge (top-right) once it's
-        // confirmed to load; if the file is missing, the "★ D98" text stays.
+        // Swap the custom logo into the top-right corner once it's confirmed
+        // to load, uncropped at its natural aspect ratio; if the file is
+        // missing, the "★ D98" badge stays.
         (function () {
             var img = new Image();
             img.onload = function () {
                 var el = root.querySelector('.bios-badge');
-                if (el) { el.textContent = ''; el.classList.add('bios-badge-img'); el.style.backgroundImage = "url('" + BIOS_LOGO_SRC + "')"; }
+                if (!el) return;
+                el.textContent = '';
+                el.classList.add('bios-badge-img');
+                var pic = document.createElement('img');
+                pic.src = BIOS_BADGE_SRC;
+                pic.alt = '';
+                el.appendChild(pic);
             };
-            img.src = BIOS_LOGO_SRC;
+            img.src = BIOS_BADGE_SRC;
+        })();
+        // Same trick for the small icon next to the brand text; falls back
+        // to the inline-SVG geometric mark if the file is missing.
+        (function () {
+            var img = new Image();
+            img.onload = function () {
+                var el = root.querySelector('.bios-logo');
+                if (!el) return;
+                el.classList.add('bios-logo-img');
+                el.style.backgroundImage = "url('" + BIOS_ICON_SRC + "')";
+            };
+            img.src = BIOS_ICON_SRC;
         })();
         var box = root.querySelector('.bios-lines');
         function line(html, cls) {
@@ -209,7 +229,9 @@
         stage = 'done';
         clearTimers();
         var card = root.querySelector('.lock-card');
-        card.innerHTML = '<div class="lock-welcome">Welcome&hellip;<span>Getting things ready for you&hellip;</span></div>';
+        var avatarEl = card.querySelector('.lock-avatar');
+        card.innerHTML = (avatarEl ? avatarEl.outerHTML : '') +
+            '<div class="lock-welcome">Welcome<span>Getting things ready for you&hellip;</span></div>';
         setTimeout(function () {
             root.classList.add('boot-fade');
             setTimeout(function () {

@@ -317,12 +317,12 @@
         const name     = first.name || '—';
         const artist   = first.artist?.['#text'] || '—';
         const art      = lfmArt(first);
-        const status   = playing ? 'now playing' : 'last played';
+        const status   = playing ? "I'm listening to" : "I last listened to";
         // The previous track becomes the small "last listened" footnote.
         const prev    = tracks[1];
         const prevTxt = prev ? `${prev.name || '—'} — ${prev.artist?.['#text'] || ''}` : '';
         spotifyEl.innerHTML = `
-<div class="sp-panel wmp${playing ? ' playing' : ''}">
+<div class="sp-panel spotify${playing ? ' playing' : ''}">
   <div class="sp-now">
     ${art ? `<img class="sp-art" src="${esc(art)}" alt="" loading="lazy">` : '<div class="sp-art sp-art-empty"></div>'}
     <div class="sp-meta">
@@ -332,6 +332,7 @@
     </div>
     <div class="sp-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   </div>
+  <div class="sp-bar" aria-hidden="true"><span class="sp-bar-fill"></span></div>
   ${prevTxt ? `<div class="sp-last"><span class="sp-last-k">last</span> ${esc(prevTxt)}</div>` : ''}
   ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
@@ -339,9 +340,15 @@
 
     function renderSpotifyStatic(profileUrl) {
         spotifyEl.innerHTML = `
-<div class="sp-panel">
-  <div class="sp-status"><span class="sp-dot"></span>spotify</div>
-  <div class="sp-artist">signal lost &mdash; the bards are resting</div>
+<div class="sp-panel spotify">
+  <div class="sp-now">
+    <div class="sp-art sp-art-empty"></div>
+    <div class="sp-meta">
+      <div class="sp-status"><span class="sp-dot"></span>not listening right now</div>
+      <div class="sp-track">signal lost</div>
+      <div class="sp-artist">the bards are resting</div>
+    </div>
+  </div>
   ${profileUrl ? spotifyLinkHtml(profileUrl, 'View Spotify Profile') : ''}
 </div>`;
     }
@@ -455,10 +462,13 @@
                   (topRepoShort ? '<span class="gh-top-repo">&#9733; ' + esc(topRepoShort) + (topCount > 1 ? ' &middot; ' + topCount + ' pushes' : '') + '</span>' : '') +
               '</div>'
             : '';
+        var workingOn = topRepoShort
+            ? "I'm working on <a class=\"gh-status-repo\" href=\"https://github.com/" + esc(topRepo) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + esc(topRepoShort) + '</a>'
+            : "I'm working on things";
         ghEl.innerHTML =
             '<div class="gh-panel active">' +
                 statsHtml +
-                '<div class="gh-status"><span class="gh-dot"></span>recent activity</div>' +
+                '<div class="gh-status"><span class="gh-dot"></span>' + workingOn + '</div>' +
                 '<ul class="gh-feed">' +
                     items.map(function (it) {
                         var langHtml = it.lang
@@ -482,7 +492,7 @@
     function renderGithubStatic(username, profileUrl) {
         ghEl.innerHTML =
             '<div class="gh-panel">' +
-                '<div class="gh-status"><span class="gh-dot"></span>github</div>' +
+                '<div class="gh-status"><span class="gh-dot"></span>I\'m working on things</div>' +
                 (profileUrl
                     ? '<a class="gh-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">view profile ↗</a>'
                     : '<p class="sp-error">no recent activity found</p>') +
@@ -548,45 +558,29 @@
         var imgUrl   = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + appId + '/header.jpg';
         stEl.innerHTML =
             '<div class="steam-panel active">' +
-                '<div class="steam-status"><span class="steam-dot"></span>recently played</div>' +
-                '<a class="steam-disc" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
+                '<div class="steam-status"><span class="steam-dot"></span>I\'m playing</div>' +
+                '<a class="steam-cap" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
                     '<img class="steam-img" src="' + esc(imgUrl) + '" alt="' + esc(name) + '" loading="lazy">' +
-                    '<span class="steam-disc-hub"></span>' +
                 '</a>' +
                 '<div class="steam-info">' +
                     '<div class="steam-game">' + esc(name) + '</div>' +
-                    '<div class="steam-meta">' + hrs + ' hrs / 2 wks</div>' +
-                    (totalHrs ? '<div class="steam-meta">' + totalHrs.toLocaleString() + ' hrs total</div>' : '') +
+                    '<div class="steam-badge"><span class="steam-badge-dot"></span>In-Game</div>' +
+                    '<div class="steam-meta">' + hrs + ' hrs past 2 weeks' +
+                        (totalHrs ? ' &middot; ' + totalHrs.toLocaleString() + ' hrs on record' : '') + '</div>' +
                     '<a class="steam-store-link" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer">view on steam ↗</a>' +
                 '</div>' +
             '</div>';
-        pauseDiscWhenIdle();
-    }
-
-    // Stop the vinyl spinning while it's off-screen or the tab is hidden —
-    // a continuous gradient animation is needless battery drain otherwise.
-    function pauseDiscWhenIdle() {
-        var disc = stEl && stEl.querySelector('.steam-disc');
-        if (!disc) return;
-        var onScreen = true;
-        function apply() { disc.classList.toggle('paused', document.hidden || !onScreen); }
-        if ('IntersectionObserver' in window) {
-            new IntersectionObserver(function (entries) {
-                onScreen = entries[0].isIntersecting;
-                apply();
-            }).observe(disc);
-        }
-        document.addEventListener('visibilitychange', apply);
     }
 
     function renderSteamStatic(profileUrl) {
         stEl.innerHTML =
             '<div class="steam-panel">' +
-                '<div class="steam-status"><span class="steam-dot"></span>steam</div>' +
+                '<div class="steam-status"><span class="steam-dot"></span>currently offline</div>' +
                 '<div class="steam-info">' +
+                    '<div class="steam-game">Not in a game</div>' +
                     '<div class="steam-meta">the wizard is away from the keep</div>' +
                     (profileUrl
-                        ? '<a class="steam-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'steam profile ↗</a>'
+                        ? '<a class="steam-store-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">view profile ↗</a>'
                         : '') +
                 '</div>' +
             '</div>';

@@ -342,13 +342,21 @@ body.has-max { overflow: hidden; }
     width: 34px; height: 34px; flex-shrink: 0;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><rect x='6' y='6' width='20' height='20' fill='none' stroke='%232b4bee' stroke-width='2' transform='rotate(45 16 16)'/><rect x='11' y='11' width='10' height='10' fill='%23ffd200' transform='rotate(45 16 16)'/><circle cx='16' cy='16' r='2.4' fill='%232b4bee'/></svg>") center/contain no-repeat;
 }
+/* Custom icon swapped in for the geometric mark — same slot, own image. */
+.bios-logo.bios-logo-img { background-size: contain; background-repeat: no-repeat; background-position: center; }
 .bios-badge {
     flex-shrink: 0; color: #ffe600; border: 2px solid #ffe600; border-radius: 50%;
     width: 110px; height: 74px; display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;
     overflow: hidden;
 }
-.bios-badge-img { background-size: cover; background-position: center; }
+/* Custom logo: sits flush in the screen's top-right corner at its natural
+   aspect ratio (uncropped) instead of inside the yellow circle badge. */
+.bios-badge.bios-badge-img {
+    position: absolute; top: 0; right: 0; width: auto; height: auto;
+    border: none; border-radius: 0; overflow: visible;
+}
+.bios-badge-img img { display: block; max-width: 260px; max-height: 150px; }
 .bios-lines, .osload-lines { white-space: pre-wrap; }
 .b-line { min-height: 1.6em; }
 .b-red { color: #ff5252; } .b-yellow { color: #ffd24a; } .b-green { color: #39d271; } .b-dim { color: #7a7a7a; }
@@ -396,8 +404,8 @@ body.has-max { overflow: hidden; }
 }
 .lock-btn:active { border-color: #404040 #ffffff #ffffff #404040; }
 .lock-hint { min-height: 1.3em; margin-top: 9px; max-width: 100%; color: rgba(255,255,255,0.9); font-size: 0.66rem; line-height: 1.5; text-shadow: 0 1px 2px rgba(0,0,60,0.35); }
-.lock-welcome { color: #ffffff; font-size: 1.35rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,60,0.45); }
-.lock-welcome span { display: block; font-size: 0.78rem; margin-top: 10px; color: rgba(255,255,255,0.85); }
+.lock-welcome { align-self: center; margin-top: 36px; color: #ffffff; font-size: 1.35rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,60,0.45); }
+.lock-welcome span { display: block; font-size: 0.78rem; margin-top: 16px; color: rgba(255,255,255,0.85); }
 @media (max-width: 600px) {
     .boot-stage { padding: 18px 14px; }
     .bios-foot { left: 14px; right: 14px; }
