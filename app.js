@@ -361,7 +361,6 @@
 
     var GH_ICON     = '<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
     var BRANCH_ICON = '<svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>';
-    var STEAM_ICON  = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="11"/><circle cx="15.5" cy="9" r="3.2"/><circle cx="8" cy="15.5" r="2.2" fill="currentColor" stroke="none"/><line x1="9.6" y1="13.9" x2="13.6" y2="10.6"/></svg>';
 
     var LANG_COLORS = { JavaScript:'#f1e05a', TypeScript:'#3178c6', Python:'#3572a5', HTML:'#e34c26', CSS:'#563d7c', Java:'#b07219', 'C#':'#178600', 'C++':'#f34b7d', Go:'#00add8', Rust:'#dea584', PHP:'#4f5d95', Ruby:'#701516', Swift:'#f05138', Kotlin:'#a97bff', Shell:'#89e051' };
     var LANG_SHORT  = { JavaScript:'JS', TypeScript:'TS', Python:'Py', 'C#':'C#', 'C++':'C++', Shell:'SH', Kotlin:'KT', Swift:'SW' };
@@ -519,9 +518,6 @@
     }
 
     function fetchSteamRecent(proxyUrl, profileUrl) {
-        var profileP = cachedJson(proxyUrl + '?action=profile', 300000).catch(function () { return null; });
-        var libraryP = cachedJson(proxyUrl + '?action=library', 600000).catch(function () { return null; });
-
         cachedJson(proxyUrl + '?action=recent', 300000)
             .then(function (data) {
                 var games = data && data.response && data.response.games;
@@ -529,39 +525,12 @@
                 var g        = games[0];
                 var hrs      = g.playtime_2weeks  ? (Math.round(g.playtime_2weeks  / 6) / 10) : 0;
                 var totalHrs = g.playtime_forever ? Math.round(g.playtime_forever / 60)       : 0;
-                renderSteamGame(g.name, g.appid, hrs, totalHrs, profileUrl);
-
-                // Inject profile footer once profile + library resolve (doesn't re-render disc)
-                Promise.all([profileP, libraryP]).then(function (results) {
-                    var player    = results[0] && results[0].response && results[0].response.players && results[0].response.players[0];
-                    var gameCount = (results[1] && results[1].response && results[1].response.game_count) || 0;
-                    if (player) renderSteamFoot(player, gameCount, profileUrl);
-                });
+                renderSteamGame(g.name, g.appid, hrs, totalHrs);
             })
             .catch(function () { renderSteamStatic(profileUrl); });
     }
 
-    function renderSteamFoot(player, gameCount, profileUrl) {
-        var panel = stEl && stEl.querySelector('.steam-panel');
-        if (!panel) return;
-        var state = player.personastate || 0;
-        var url   = profileUrl || player.profileurl || '';
-        var foot  = document.createElement('div');
-        foot.className = 'steam-foot';
-        foot.innerHTML =
-            '<div class="steam-foot-id">' +
-                '<img class="steam-avatar" src="' + esc(player.avatarmedium || '') + '" alt="">' +
-                '<span class="steam-online-dot s' + state + '"></span>' +
-                '<span class="steam-persona">' + esc(player.personaname || '') + '</span>' +
-                (gameCount ? '<span class="steam-lib">' + gameCount + ' games</span>' : '') +
-            '</div>' +
-            (url
-                ? '<a class="steam-foot-link" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + STEAM_ICON + 'View Steam Profile ↗</a>'
-                : '');
-        panel.appendChild(foot);
-    }
-
-    function renderSteamGame(name, appId, hrs, totalHrs, profileUrl) {
+    function renderSteamGame(name, appId, hrs, totalHrs) {
         var storeUrl = 'https://store.steampowered.com/app/' + appId + '/';
         var imgUrl   = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + appId + '/header.jpg';
         stEl.innerHTML =

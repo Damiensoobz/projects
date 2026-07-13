@@ -31,25 +31,25 @@
     var HOME      = 'http://www.damienbuilds.dev/projects';
     var U_SEARCH  = 'http://www.googol.com';
     var U_BLOG    = 'http://www.damienbuilds.dev/blog';
-    var U_AD      = 'http://www.totally-real-deals.net/claim';
     var SITE      = 'https://damienbuilds.dev';
     var RICK      = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 
-    // ── Pseudo-ads — 90s banners trolling the modern web ───────
+    // ── Pseudo-ads — 90s banners, but the pitch is real: every one of them
+    // is actually for damienbuilds.dev and actually links there (new tab).
     // [headline, body, cta, skin] — skins keep the ad wall from looking
     // like one advertiser bought every slot. All static trusted strings.
     //   s1 classic yellow · s2 hacker terminal · s3 corporate memo
     //   s4 vaporwave · s5 hazard tape
     var ADS = [
-        ['Mine Bitcoin on dial-up!', 'Only ~4,000 years to your first coin. No refunds. Electricity not included.', 'START MINING', 's2'],
-        ['AI took your job?', 'Take its job. Retrain as an artisanal CAPTCHA solver today.', 'I AM NOT A ROBOT', 's3'],
-        ['The Doomscroll Wheel&trade;', 'Scroll 50% faster, feel 200% worse. Now with haptic regret.', 'UPGRADE MY SADNESS', 's4'],
-        ['Your data is for sale', 'We know. We sold it. Buy it back in 3 easy payments of $9.99.', 'BUY MYSELF BACK', 's1'],
-        ['FREE cloud storage*', '*The cloud is just someone else&rsquo;s computer. His name is Greg.', 'TRUST GREG', 's2'],
-        ['Streaming mega-bundle', 'All 14 services for the price of a mortgage. Cancel anytime**. **You can&rsquo;t.', 'SUBSCRIBE FOREVER', 's4'],
-        ['Refurbished attention span', 'Gently used. 8 seconds. One previous owner (a goldfish).', 'ADD TO CART', 's1'],
-        ['Y2K38 is coming', 'The clocks run out again in 2038. Panic early &mdash; beat the rush.', 'PANIC NOW', 's5'],
-        ['Hot singles? No.', 'Hot SIGNALS in your area. It&rsquo;s your router. It misses you.', 'RECONNECT', 's3']
+        ['Tired of boring websites?', 'One weirdly competent developer built this entire desktop from scratch. See more at damienbuilds.dev.', 'VISIT NOW', 's2'],
+        ['This could be YOUR website', 'Fast, weird, and shockingly functional. No mortgage-sized invoice required.', 'SEE THE WORK', 's3'],
+        ['BREAKING: local wizard makes websites', 'Neighbors are furious. Clients are thrilled. damienbuilds.dev has the receipts.', 'READ MORE', 's4'],
+        ['Your competitor already has one', 'A real website, that is. Fix that at damienbuilds.dev before it&rsquo;s too late.', 'GET STARTED', 's1'],
+        ['100% certified not-a-template', 'Every pixel here was placed on purpose (mostly). Hire the person who did it.', 'HIRE DAMIEN', 's2'],
+        ['WARNING: portfolio may cause hiring', 'Side effects include working code, good taste, and reasonable rates.', 'PROCEED ANYWAY', 's5'],
+        ['You&rsquo;ve won&hellip; a great developer', 'No prize wheel needed. Just go to damienbuilds.dev and say hello.', 'CLAIM DAMIEN', 's1'],
+        ['Websites. But good.', 'Revolutionary concept, we know. Available now at damienbuilds.dev.', 'LEARN MORE', 's4'],
+        ['This banner is self-aware', 'And so is the person who built it. Real projects, real code, no filler.', 'SEE PROOF', 's3']
     ];
     function adShuffle() {
         var a = ADS.slice();
@@ -58,7 +58,7 @@
     }
     function adHtml(ad) {
         return '<div class="bw-ad bw-ad-' + (ad[3] || 's1') + '"><span class="bw-ad-tag">advertisement</span>' +
-            '<a class="bw-ad-inner" data-link="' + U_AD + '">' +
+            '<a class="bw-ad-inner" href="' + SITE + '" target="_blank" rel="noopener noreferrer">' +
                 '<span class="bw-ad-head">' + ad[0] + '</span>' +
                 '<span class="bw-ad-body">' + ad[1] + '</span>' +
                 '<span class="bw-ad-cta">[ ' + ad[2] + ' ]</span>' +
@@ -68,10 +68,10 @@
         return '<aside class="bw-rail"><div class="bw-rail-sticky">' +
             adHtml(picks[0]) + adHtml(picks[1]) +
             '<div class="bw-ad bw-ad-s3"><span class="bw-ad-tag">advertisement</span>' +
-                '<a class="bw-ad-inner" href="mailto:' + CONTACT_EMAIL + '">' +
-                    '<span class="bw-ad-head">Your ad here</span>' +
-                    '<span class="bw-ad-body">1 million impressions/day* (*mostly Damien refreshing).</span>' +
-                    '<span class="bw-ad-cta">[ INQUIRE WITHIN ]</span>' +
+                '<a class="bw-ad-inner" href="' + SITE + '" target="_blank" rel="noopener noreferrer">' +
+                    '<span class="bw-ad-head">This ad space is real estate</span>' +
+                    '<span class="bw-ad-body">And it all points to one place: damienbuilds.dev.</span>' +
+                    '<span class="bw-ad-cta">[ GO NOW ]</span>' +
                 '</a></div>' +
             '</div></aside>';
     }
@@ -195,19 +195,6 @@
             '</form></div>';
     }
 
-    // Where every ad click lands — the prize is nothing, and it's beautiful.
-    function adClickPage() {
-        var n = 1;
-        try { n = (parseInt(sessionStorage.getItem('ad-clicks'), 10) || 0) + 1; sessionStorage.setItem('ad-clicks', String(n)); } catch (e) {}
-        return '<div class="bw-page bw-claim">' + nav('') +
-            '<h1 class="bw-claim-h">&#9733; CONGRATULATIONS!!! &#9733;</h1>' +
-            '<p class="bw-claim-p">You clicked an ad. On purpose. In ' + new Date().getFullYear() + '. The marketing department has been notified and is openly weeping with joy.</p>' +
-            '<p class="bw-claim-p">Your prize: <b>absolutely nothing</b>. No tracking pixel, no newsletter, no timeshare. It&rsquo;s very freeing.</p>' +
-            '<p class="bw-claim-count">prizes claimed this session: ' + n + ' &times; nothing</p>' +
-            '<p class="bw-claim-links"><a data-link="' + U_AD + '">claim again</a> &middot; <a data-link="' + HOME + '">&laquo; back to the projects</a></p>' +
-            '</div>';
-    }
-
     function notFoundPage(url) {
         return '<div class="bw-page bw-404">' + nav('') +
             '<h2 class="bw-404-h">The page cannot be displayed</h2>' +
@@ -223,9 +210,10 @@
                         after: function () { if (window.renderPortfolio) window.renderPortfolio(); insertFeedAds(); } };
     PAGES[U_SEARCH] = { title: 'Googol',                 html: function () { return searchPage(''); } };
     PAGES[U_BLOG]   = { title: "Damien's Blog",          html: function () { return withRail(blogPage()); } };
-    PAGES[U_AD]     = { title: 'YOU WON!!! (you did not)', html: adClickPage };
 
     // Drop two flashing banners between the project cards (after #2 and #4).
+    // Real anchors now (they open damienbuilds.dev in a new tab), so no click
+    // wiring is needed beyond inserting the markup.
     function insertFeedAds() {
         var grid = document.getElementById('cards-grid');
         if (!grid) return;
@@ -236,11 +224,7 @@
             if (cards.length <= slot[0]) return;
             var tmp = document.createElement('div');
             tmp.innerHTML = adHtml(slot[1]);
-            var ad = tmp.firstChild;
-            ad.querySelector('[data-link]').addEventListener('click', function (e) {
-                e.preventDefault(); go(U_AD);
-            });
-            grid.insertBefore(ad, cards[slot[0]]);
+            grid.insertBefore(tmp.firstChild, cards[slot[0]]);
         });
     }
 
