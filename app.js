@@ -535,13 +535,12 @@
         var imgUrl   = 'https://cdn.cloudflare.steamstatic.com/steam/apps/' + appId + '/header.jpg';
         stEl.innerHTML =
             '<div class="steam-panel active">' +
-                '<div class="steam-status"><span class="steam-dot"></span>I\'m playing</div>' +
+                '<div class="steam-status"><span class="steam-dot"></span>recently played</div>' +
                 '<a class="steam-cap" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer" tabindex="-1">' +
                     '<img class="steam-img" src="' + esc(imgUrl) + '" alt="' + esc(name) + '" loading="lazy">' +
                 '</a>' +
                 '<div class="steam-info">' +
                     '<div class="steam-game">' + esc(name) + '</div>' +
-                    '<div class="steam-badge"><span class="steam-badge-dot"></span>In-Game</div>' +
                     '<div class="steam-meta">' + hrs + ' hrs past 2 weeks' +
                         (totalHrs ? ' &middot; ' + totalHrs.toLocaleString() + ' hrs on record' : '') + '</div>' +
                     '<a class="steam-store-link" href="' + esc(storeUrl) + '" target="_blank" rel="noopener noreferrer">view on steam ↗</a>' +

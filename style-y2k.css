@@ -1196,9 +1196,7 @@ code {
 .steam-cap:hover .steam-img { filter: brightness(1.05) saturate(1.15); }
 
 .steam-info { padding: 9px 10px 10px; flex: 1; display: flex; flex-direction: column; background: #1b2838; }
-.steam-game { font-family: Tahoma, Arial, sans-serif; color: #ffffff; font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.steam-badge { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; font-family: Tahoma, Arial, sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.04em; color: #a4d007; margin-bottom: 6px; }
-.steam-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a4d007; box-shadow: 0 0 5px rgba(144,186,60,0.8); }
+.steam-game { font-family: Tahoma, Arial, sans-serif; color: #ffffff; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .steam-meta { font-family: Tahoma, Arial, sans-serif; color: #8f98a0; font-size: 0.6rem; margin-bottom: 8px; flex: 1; text-align: left; }
 .steam-store-link { color: #66c0f4; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; text-decoration: none; margin-top: auto; }
 .steam-store-link:hover { color: #9ddcff; text-decoration: underline; }
