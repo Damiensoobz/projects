@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
-//  boot.js — power-on theater: a quick BIOS POST, a damienOS
-//  load screen (lines populate, the progress bar hangs like it
-//  means it), then a lock screen whose password types itself.
+//  boot.js — power-on theater: a quick BIOS POST, a damienOS 98
+//  splash (flag logo + the classic scrolling light-bar), then a
+//  lock screen whose password types itself.
 //
 //  Runs before the desktop scripts. All windows start minimized; the
 //  user opens what they want from the desktop/taskbar/Start menu.
@@ -116,70 +116,30 @@
         later(next, 400);
     }
 
-    // ── Stage 2: damienOS loading (lines + hanging progress bar) ─
-    var ASCII =
-' ██████╗  █████╗ ███╗   ███╗██╗███████╗███╗   ██╗\n' +
-' ██╔══██╗██╔══██╗████╗ ████║██║██╔════╝████╗  ██║\n' +
-' ██║  ██║███████║██╔████╔██║██║█████╗  ██╔██╗ ██║\n' +
-' ██║  ██║██╔══██║██║╚██╔╝██║██║██╔══╝  ██║╚██╗██║\n' +
-' ██████╔╝██║  ██║██║ ╚═╝ ██║██║███████╗██║ ╚████║\n' +
-' ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚══════╝╚═╝  ╚═══╝';
-
+    // ── Stage 2: damienOS splash — like the real Win98 boot: a brief
+    //    text-mode "Starting…" line, then the flag logo over black with
+    //    the classic scrolling light-bar along the bottom edge. ─────────
     function showLoad() {
         stage = 'load';
         clearTimers();
         root.innerHTML =
             '<div class="boot-stage boot-load">' +
-                '<pre class="osload-logo">' + ASCII + '</pre>' +
-                '<div class="osload-tag">.portfolio</div>' +
-                '<div class="osload-lines"></div>' +
-                '<div class="boot-bar-wrap"><div class="boot-bar"><i></i></div>' +
-                '<div class="boot-bar-label">Loading system&hellip; 0%</div></div>' +
+                '<div class="osload-dos">Starting damienOS 98&hellip;</div>' +
             '</div>';
-        var box = root.querySelector('.osload-lines');
-        // [html, ms until the next line, css class]
-        var LINES = [
-            ['Starting damienOS 98&hellip;', 350],
-            ['HIMEM is testing extended memory&hellip; OK', 420],
-            ['Loading C:\\DAMIEN\\SYSTEM\\TEA.DLL', 240],
-            ['Loading C:\\DAMIEN\\SYSTEM\\WIZARD.DLL', 220],
-            ['WARNING: SLEEP.SYS not found &mdash; continuing without it', 520, 'b-yellow'],
-            ['ERROR: Failed to load MOTIVATION.DLL&hellip; Retrying', 700, 'b-red'],
-            ['Retrying&hellip; OK (close enough)', 420],
-            ['Loading C:\\DAMIEN\\SYSTEM\\IMPOSTER_SYNDROME.DLL', 260],
-            ['ERROR: IMPOSTER_SYNDROME.DLL cannot be unloaded', 600, 'b-red'],
-            ['Initializing devices&hellip;', 430],
-            ['Detecting hardware&hellip; 1 keyboard, 1 mouse, 0 excuses', 460],
-            ['Initializing registry&hellip;', 380],
-            ['Applying questionable decisions&hellip;', 520],
-            ['C:\\&gt; <span class="bsod-blink">_</span>', 0, 'b-prompt']
-        ];
-        var i = 0;
-        (function next() {
-            if (stage !== 'load' || i >= LINES.length) return;
-            var L = LINES[i];
-            var d = document.createElement('div');
-            d.className = 'b-line' + (L[2] ? ' ' + L[2] : '');
-            d.innerHTML = L[0];
-            box.appendChild(d);
-            i++;
-            if (i < LINES.length) later(next, L[1]);
-        })();
-
-        // The bar advances with deliberate stalls (24% and 59% are load-bearing).
-        var fill  = root.querySelector('.boot-bar i');
-        var label = root.querySelector('.boot-bar-label');
-        var STEPS = [[9, 400], [22, 520], [24, 1150], [41, 430], [58, 700], [59, 950], [76, 480], [90, 760], [97, 650], [100, 420]];
-        var s = 0;
-        (function bar() {
+        later(function () {
             if (stage !== 'load') return;
-            if (s < STEPS.length) {
-                fill.style.width = STEPS[s][0] + '%';
-                label.innerHTML = 'Loading system&hellip; ' + STEPS[s][0] + '%';
-                later(bar, STEPS[s][1]);
-                s++;
-            } else later(function () { showLock(false); }, 550);
-        })();
+            var host = root.querySelector('.boot-load');
+            if (!host) return;
+            host.innerHTML =
+                '<div class="osload-center">' +
+                    '<div class="osload-flag"></div>' +
+                    '<div class="osload-title">damienOS<span>98</span></div>' +
+                    '<div class="osload-sub">Second Edition (allegedly)</div>' +
+                '</div>' +
+                '<div class="osload-copy">&copy; 1998&ndash;' + new Date().getFullYear() + ' Damien Megatrends, Inc.</div>' +
+                '<div class="boot98-strip"><i></i></div>';
+            later(function () { showLock(false); }, 3400);
+        }, 1100);
     }
 
     // ── Stage 3: lock screen — the password types itself ────────
@@ -189,32 +149,17 @@
         clearTimers();
         root.innerHTML =
             '<div class="boot-stage boot-lock">' +
-                '<div class="lock-brand">damien<b>OS</b> 98 SE</div>' +
                 '<div class="lock-card">' +
-                    '<div class="lock-clock" id="lock-clock"></div>' +
-                    '<div class="lock-date" id="lock-date"></div>' +
                     '<div class="lock-avatar"><img class="lock-avatar-img" src="' + AVATAR_SRC + '" alt=""></div>' +
-                    '<div class="lock-user">Damien</div>' +
-                    '<div class="lock-sub">code wizard &middot; logged in since 1998</div>' +
+                    '<div class="lock-user">Hello there.</div>' +
                     '<label class="lock-label" for="lock-pass">Enter Password</label>' +
                     '<div class="lock-row">' +
                         '<input class="lock-input" id="lock-pass" type="password" readonly value="" aria-label="Password (damienOS fills this in for you)">' +
-                        '<button class="lock-btn" type="button">Log In</button>' +
+                        '<button class="lock-btn" type="button">Confirm</button>' +
                     '</div>' +
-                    '<div class="lock-hint">press ENTER to log in</div>' +
+                    '<div class="lock-hint">&nbsp;</div>' +
                 '</div>' +
             '</div>';
-        // Live clock + date, lock-screen style.
-        var clockEl = root.querySelector('#lock-clock');
-        var dateEl  = root.querySelector('#lock-date');
-        (function tick() {
-            if (!clockEl || !document.contains(clockEl)) return;
-            var d = new Date(), h = d.getHours(), m = d.getMinutes();
-            var hh = h % 12; if (hh === 0) hh = 12;
-            clockEl.textContent = hh + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM');
-            dateEl.textContent  = d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-            later(tick, 15000);
-        })();
         // If the custom profile picture is missing, fall back to the wizard emoji.
         var avatar = root.querySelector('.lock-avatar-img');
         if (avatar) avatar.addEventListener('error', function () {

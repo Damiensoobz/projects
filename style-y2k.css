@@ -592,14 +592,89 @@ code {
 }
 /* Dialog-sized versions — doubled class so they beat the generic
    .dlg-sys-logo Windows-flag fallback that used to override them. */
-.dlg-sys-logo.net-big {
-    width: 36px; height: 32px;
-    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 36 32' shape-rendering='crispEdges'><rect x='2' y='3' width='16' height='12' fill='%23c0c0c0' stroke='%23000'/><rect x='4' y='5' width='12' height='8' fill='%23008080'/><rect x='7' y='15' width='6' height='2' fill='%23808080'/><rect x='18' y='16' width='16' height='12' fill='%23c0c0c0' stroke='%23000'/><rect x='20' y='18' width='12' height='8' fill='%23008080'/><path d='M10 17 L10 22 L26 22 L26 16' fill='none' stroke='%23404040' stroke-width='1.5'/></svg>") center/contain no-repeat;
-}
 .dlg-sys-logo.shield-big {
     width: 34px; height: 34px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 2 L28 6 V15 C28 22 22.6 27.5 16 30 C9.4 27.5 4 22 4 15 V6 Z' fill='%232f9e46' stroke='%23145423' stroke-width='1.5'/><path d='M10 16 l4 4 8 -9' fill='none' stroke='%23ffffff' stroke-width='3'/></svg>") center/contain no-repeat;
 }
+/* Modem while disconnected — dark screens, no blink, red X */
+.tray-modem.offline {
+    animation: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='16' viewBox='0 0 18 16' shape-rendering='crispEdges'><rect x='1' y='3' width='9' height='7' fill='%23c0c0c0' stroke='%23000'/><rect x='2' y='4' width='7' height='5' fill='%23606060'/><rect x='8' y='6' width='9' height='7' fill='%23c0c0c0' stroke='%23000'/><rect x='9' y='7' width='7' height='5' fill='%23606060'/><path d='M12 1 L17 6 M17 1 L12 6' stroke='%23dd0000' stroke-width='1.6'/></svg>");
+}
+.tray-clock { cursor: pointer; }
+.tray-clock:hover { text-decoration: underline; }
+
+/* Generic Win98 push button for use inside dialog bodies (NOT .dlg-ok —
+   openDialog wires its close handler to the first .dlg-ok it finds) */
+.w98-btn {
+    padding: 4px 14px; cursor: pointer; background: #d4d0c8;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.72rem;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040; border-bottom: 2px solid #404040;
+    margin: 2px 0 6px;
+}
+.w98-btn:active {
+    border-top-color: #404040; border-left-color: #404040;
+    border-right-color: #ffffff; border-bottom-color: #ffffff;
+}
+
+/* Defender scan — sunken progress bar + scrolling filenames */
+.scan-zone { margin: 2px 0 4px; }
+.scan-bar {
+    height: 14px; background: #ffffff; padding: 1px; margin: 2px 0 5px;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+    box-shadow: inset 1px 1px 0 #404040;
+}
+.scan-bar i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, #000080 0 9px, #1084d0 9px 12px); transition: width 0.35s; }
+.scan-file { font-family: 'Courier New', monospace; font-size: 0.62rem; color: #333333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 270px; }
+.scan-done { font-size: 0.72rem; color: #0a7a2a; margin: 2px 0 6px; }
+
+/* Network Neighborhood explorer window */
+.nn-win .fw-body { padding: 0; }
+.nn-head { font-family: Tahoma, Arial, sans-serif; font-size: 0.68rem; color: #444444; padding: 6px 10px 5px; border-bottom: 1px solid #808080; }
+.nn-list {
+    width: 290px; max-width: 84vw; max-height: 250px; overflow: auto;
+    background: #ffffff; padding: 3px 0;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.nn-item {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 5px 11px; background: none; border: none; cursor: pointer; text-align: left;
+}
+.nn-item:hover { background: #000080; }
+.nn-item:hover .nn-name, .nn-item:hover .nn-sub { color: #ffffff; }
+.nn-ico { width: 26px; height: 22px; flex-shrink: 0; background: center/contain no-repeat; }
+.nn-ico-pc {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='22' viewBox='0 0 24 22' shape-rendering='crispEdges'><rect x='3' y='2' width='15' height='11' fill='%23cbc8bf' stroke='%23000'/><rect x='5' y='4' width='11' height='7' fill='%23167f9e'/><rect x='9' y='13' width='3' height='2' fill='%23808080'/><rect x='2' y='15' width='19' height='5' fill='%23d8d4cb' stroke='%23000'/></svg>");
+}
+.nn-ico-printer {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='22' viewBox='0 0 24 22' shape-rendering='crispEdges'><rect x='6' y='1' width='12' height='6' fill='%23ffffff' stroke='%23000'/><rect x='2' y='7' width='20' height='9' fill='%23cbc8bf' stroke='%23000'/><rect x='18' y='9' width='2' height='2' fill='%23cc2020'/><rect x='6' y='14' width='12' height='7' fill='%23ffffff' stroke='%23000'/><line x1='8' y1='17' x2='16' y2='17' stroke='%23404040'/><line x1='8' y1='19' x2='14' y2='19' stroke='%23404040'/></svg>");
+}
+.nn-ico-toaster {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='22' viewBox='0 0 24 22'><rect x='3' y='8' width='18' height='11' rx='3' fill='%23c0c4cc' stroke='%23000'/><rect x='6' y='4' width='5' height='6' rx='1' fill='%23c8873a' stroke='%23000'/><rect x='13' y='4' width='5' height='6' rx='1' fill='%23c8873a' stroke='%23000'/><rect x='17' y='12' width='2' height='4' fill='%23404040'/></svg>");
+}
+.nn-text { min-width: 0; }
+.nn-name { display: block; font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; font-weight: 700; color: #000000; }
+.nn-sub { display: block; font-family: Tahoma, Arial, sans-serif; font-size: 0.62rem; color: #777777; }
+
+/* Date/Time Properties */
+.dt-wrap { display: flex; gap: 18px; align-items: flex-start; }
+.dt-month { font-weight: 700; font-size: 0.74rem; margin-bottom: 6px; text-align: center; }
+.dt-cal { border-collapse: collapse; background: #ffffff; border: 1px solid #808080; }
+.dt-cal th { background: #d4d0c8; font-size: 0.6rem; padding: 2px 6px; border-bottom: 1px solid #808080; }
+.dt-cal td { font-size: 0.66rem; text-align: center; padding: 2px 6px; min-width: 20px; }
+.dt-today { background: #000080; color: #ffffff; font-weight: 700; }
+.dt-side { max-width: 170px; }
+.dt-time {
+    font-family: 'Courier New', monospace; font-size: 1.1rem; text-align: center;
+    background: #101810; color: #33ff66; padding: 6px 12px; margin-bottom: 9px;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+}
+.dt-tz { font-size: 0.66rem; color: #333333; margin-bottom: 6px; line-height: 1.5; }
+.dt-note { font-size: 0.62rem; }
 
 /* Volume slider popup */
 .vol-pop { position: fixed; z-index: 10001; display: none; flex-direction: column; align-items: center; gap: 6px;

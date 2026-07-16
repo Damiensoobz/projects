@@ -377,7 +377,7 @@
         if (vol) vol.addEventListener('click', function (e) { e.stopPropagation(); toggleVol(); });
         document.addEventListener('click', function () { if (pop) pop.classList.remove('open'); });
 
-        // Live "connected since page load" clock, formatted dial-up style.
+        // Live "connected since dial-up" clock, formatted dial-up style.
         var SESSION_START = Date.now();
         function sessionDuration() {
             var s = Math.floor((Date.now() - SESSION_START) / 1000);
@@ -386,56 +386,184 @@
             return ('00' + h).slice(-3) + ':' + p2(m) + ':' + p2(s % 60);
         }
 
+        // ── Dial-Up Networking — a tiny state machine. While connected the
+        //    status dialog has a working Disconnect button; disconnecting
+        //    darkens the tray icon until you dial back in (with the full
+        //    three-step handshake theater). ─────────────────────────────
+        var modemOn = true;
+        function setModemState(on) {
+            modemOn = on;
+            if (!modem) return;
+            modem.classList.toggle('offline', !on);
+            modem.title = on ? 'Dial-Up Networking — Connected at 56,600 bps'
+                             : 'Dial-Up Networking — Disconnected (click to reconnect)';
+        }
+        function openModemStatus() {
+            var ov = openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
+                '<p><b>Connected to The Internet</b></p>' +
+                '<div class="dlg-stat-rows">' +
+                    '<div><span>Status</span><b class="v-good">Connected</b></div>' +
+                    '<div><span>Speed</span><b>56,600 bps (allegedly)</b></div>' +
+                    '<div><span>Duration</span><b class="dlg-dur">' + sessionDuration() + '</b></div>' +
+                    '<div><span>Bytes received</span><b>a worrying amount</b></div>' +
+                    '<div><span>Bytes sent</span><b>mostly vibes</b></div>' +
+                '</div>' +
+                '<button class="w98-btn dial-dc" type="button">Disconnect</button>' +
+                '<p class="dim">Do not pick up the phone.</p></div></div>');
+            // Tick the duration while the dialog is open; stop once it's closed.
+            var durEl = ov.querySelector('.dlg-dur');
+            var t = setInterval(function () {
+                if (!document.body.contains(durEl)) { clearInterval(t); return; }
+                durEl.textContent = sessionDuration();
+            }, 1000);
+            ov.querySelector('.dial-dc').addEventListener('click', function () {
+                setModemState(false);
+                ov.querySelector('.dlg-x').click();
+            });
+        }
+        function openModemDial() {
+            var ov = openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
+                '<p><b>Connecting to The Internet&hellip;</b></p>' +
+                '<div class="dlg-stat-rows">' +
+                    '<div><span>Dialing 1&#8209;555&#8209;DAMIEN&hellip;</span><b class="dial-s"></b></div>' +
+                    '<div><span>Verifying user name and password&hellip;</span><b class="dial-s"></b></div>' +
+                    '<div><span>Registering your computer on the network&hellip;</span><b class="dial-s"></b></div>' +
+                '</div>' +
+                '<p class="dim">*aggressive modem screeching*</p></div></div>');
+            var steps = ov.querySelectorAll('.dial-s');
+            [700, 1600, 2500].forEach(function (ms, i) {
+                setTimeout(function () {
+                    if (document.body.contains(steps[i])) { steps[i].textContent = 'OK'; steps[i].className = 'v-good'; }
+                }, ms);
+            });
+            setTimeout(function () {
+                setModemState(true);
+                SESSION_START = Date.now();
+                if (document.body.contains(ov)) ov.querySelector('.dlg-x').click();
+            }, 3100);
+        }
         if (modem) {
-            modem.title = 'Dial-Up Networking — Connected at 56,600 bps';
+            setModemState(true);
             modem.addEventListener('click', function (e) {
                 e.stopPropagation();
-                var ov = openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
-                    '<p><b>Connected to The Internet</b></p>' +
-                    '<div class="dlg-stat-rows">' +
-                        '<div><span>Status</span><b class="v-good">Connected</b></div>' +
-                        '<div><span>Speed</span><b>56,600 bps (allegedly)</b></div>' +
-                        '<div><span>Duration</span><b class="dlg-dur">' + sessionDuration() + '</b></div>' +
-                        '<div><span>Bytes received</span><b>a worrying amount</b></div>' +
-                        '<div><span>Bytes sent</span><b>mostly vibes</b></div>' +
-                    '</div>' +
-                    '<p class="dim">Do not pick up the phone.</p></div></div>');
-                // Tick the duration while the dialog is open; stop once it's closed.
-                var durEl = ov.querySelector('.dlg-dur');
-                var t = setInterval(function () {
-                    if (!document.body.contains(durEl)) { clearInterval(t); return; }
-                    durEl.textContent = sessionDuration();
-                }, 1000);
+                if (modemOn) openModemStatus(); else openModemDial();
             });
         }
 
+        // ── Network Neighborhood — an explorer window, not a dialog.
+        //    Every machine on this workgroup has a story. ────────────────
+        function openNetHood() {
+            if (document.querySelector('.nn-win')) { alreadyRunning('Network Neighborhood'); return; }
+            var MACHINES = [
+                { ico: 'pc',      name: 'DAMIEN-98',   sub: 'this computer · you are here', open: function () { openSysProps(); } },
+                { ico: 'pc',      name: 'MOMS-PC',     sub: 'last seen 2003', deny: '\\\\MOMS-PC is not accessible.<br><br>The machine remembers that you did not call.' },
+                { ico: 'printer', name: 'PRINTER-666', sub: 'online · hostile', deny: '\\\\PRINTER-666 refused the connection.<br><br>It is out of magenta and will not print black text until this is addressed. It knows you know.' },
+                { ico: 'toaster', name: 'TOASTER',     sub: 'connected · nobody knows why', deny: 'You cannot browse \\\\TOASTER.<br><br>It joined the workgroup uninvited in 2019 and sends exactly 2 bytes every midnight. Nobody has been brave enough to read them.' }
+            ];
+            var html =
+                '<div class="nn-head">Workgroup: <b>WIZARDS</b> &middot; ' + MACHINES.length + ' object(s)</div>' +
+                '<div class="nn-list">' +
+                MACHINES.map(function (m, i) {
+                    return '<button class="nn-item" type="button" data-i="' + i + '">' +
+                        '<span class="nn-ico nn-ico-' + m.ico + '"></span>' +
+                        '<span class="nn-text"><span class="nn-name">' + m.name + '</span>' +
+                        '<span class="nn-sub">' + m.sub + '</span></span></button>';
+                }).join('') +
+                '</div>';
+            var w = createWindow('Network Neighborhood', html, 'nn-win');
+            [].forEach.call(w.body.querySelectorAll('.nn-item'), function (btn) {
+                btn.addEventListener('click', function () {
+                    var m = MACHINES[+btn.getAttribute('data-i')];
+                    if (m.open) { m.open(); return; }
+                    openDialog('\\\\' + m.name, '<p class="dlg-p">' + m.deny + '</p>');
+                });
+            });
+        }
         var net = document.getElementById('tray-net');
-        if (net) net.addEventListener('click', function (e) {
-            e.stopPropagation();
-            openDialog('Network Neighborhood', '<div class="dlg-sys"><div class="dlg-sys-logo net-big"></div><div class="dlg-sys-text">' +
-                '<p><b>Local Area Connection</b></p>' +
-                '<div class="dlg-stat-rows">' +
-                    '<div><span>Status</span><b class="v-good">connected (mostly)</b></div>' +
-                    '<div><span>Workgroup</span><b>WIZARDS</b></div>' +
-                    '<div><span>Other computers</span><b>0</b></div>' +
-                    '<div><span>Packets lost</span><b class="v-warn">only the important ones</b></div>' +
-                '</div>' +
-                '<p class="dim">It is just you out here. It has always been just you.</p></div></div>');
-        });
+        if (net) net.addEventListener('click', function (e) { e.stopPropagation(); openNetHood(); });
 
+        // ── damienOS Defender — Scan Now genuinely scans (for regrets). ──
+        var regretsFound = 4;
         var shield = document.getElementById('tray-shield');
         if (shield) shield.addEventListener('click', function (e) {
             e.stopPropagation();
-            openDialog('damienOS Defender', '<div class="dlg-sys"><div class="dlg-sys-logo shield-big"></div><div class="dlg-sys-text">' +
+            var ov = openDialog('damienOS Defender', '<div class="dlg-sys"><div class="dlg-sys-logo shield-big"></div><div class="dlg-sys-text">' +
                 '<p><b class="v-good">&#10003; Your system is protected.</b></p>' +
                 '<div class="dlg-stat-rows">' +
-                    '<div><span>Last scan</span><b>just now</b></div>' +
+                    '<div><span>Last scan</span><b class="sc-last">a while ago</b></div>' +
                     '<div><span>Threats found</span><b class="v-good">0</b></div>' +
-                    '<div><span>Regrets found</span><b class="v-bad">4</b></div>' +
+                    '<div><span>Regrets found</span><b class="v-bad sc-regrets">' + regretsFound + '</b></div>' +
                     '<div><span>Definitions</span><b class="v-warn">last updated 1999</b></div>' +
                 '</div>' +
+                '<div class="scan-zone"><button class="w98-btn scan-btn" type="button">Scan Now</button></div>' +
                 '<p class="dim">Real-time protection against bad decisions is unavailable.</p></div></div>');
+            var zone = ov.querySelector('.scan-zone');
+            function runScan() {
+                var FILES = [
+                    'C:\\DAMIEN\\SYSTEM\\TEA.DLL',
+                    'C:\\DAMIEN\\SYSTEM\\WIZARD.DLL',
+                    'C:\\DAMIEN\\FEELINGS\\REGRETS.DAT',
+                    'C:\\DAMIEN\\PROJECTS\\UNFINISHED\\*.*',
+                    'C:\\WINDOWS\\SOLITAIRE.EXE (3am entries)',
+                    'C:\\DAMIEN\\BROWSER\\TABS(147).TMP'
+                ];
+                zone.innerHTML = '<div class="scan-bar"><i></i></div><div class="scan-file">&nbsp;</div>';
+                var barEl  = zone.querySelector('.scan-bar i');
+                var fileEl = zone.querySelector('.scan-file');
+                var i = 0;
+                var t = setInterval(function () {
+                    if (!document.body.contains(zone)) { clearInterval(t); return; }
+                    if (i < FILES.length) {
+                        fileEl.textContent = 'Scanning ' + FILES[i];
+                        barEl.style.width = Math.round(((i + 1) / FILES.length) * 100) + '%';
+                        i++;
+                    } else {
+                        clearInterval(t);
+                        regretsFound++;
+                        var last = ov.querySelector('.sc-last');    if (last) last.textContent = 'just now';
+                        var reg  = ov.querySelector('.sc-regrets'); if (reg)  reg.textContent  = regretsFound;
+                        zone.innerHTML =
+                            '<div class="scan-done">Scan complete &mdash; 0 threats, ' + regretsFound + ' regrets <span class="dim">(+1 since last scan)</span></div>' +
+                            '<button class="w98-btn scan-btn" type="button">Scan Again</button>';
+                        zone.querySelector('.scan-btn').addEventListener('click', runScan);
+                    }
+                }, 420);
+            }
+            zone.querySelector('.scan-btn').addEventListener('click', runScan);
         });
+
+        // ── Tray clock → Date/Time Properties (calendar + live time) ────
+        var clockBtn = document.getElementById('tray-clock');
+        if (clockBtn) clockBtn.addEventListener('click', function (e) { e.stopPropagation(); openDateTime(); });
+        function openDateTime() {
+            var now  = new Date();
+            var lead = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            var days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            var cells = '', col = lead;
+            for (var b = 0; b < lead; b++) cells += '<td></td>';
+            for (var d = 1; d <= days; d++) {
+                cells += '<td' + (d === now.getDate() ? ' class="dt-today"' : '') + '>' + d + '</td>';
+                if (++col % 7 === 0 && d < days) cells += '</tr><tr>';
+            }
+            var ov = openDialog('Date/Time Properties',
+                '<div class="dt-wrap">' +
+                    '<div>' +
+                        '<div class="dt-month">' + now.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) + '</div>' +
+                        '<table class="dt-cal"><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr><tr>' + cells + '</tr></table>' +
+                    '</div>' +
+                    '<div class="dt-side">' +
+                        '<div class="dt-time" id="dt-time">&nbsp;</div>' +
+                        '<div class="dt-tz">Time zone: (GMT+1998)<br>Damien Standard Time</div>' +
+                        '<p class="dim dt-note">Changing the date does not bring the time back.</p>' +
+                    '</div>' +
+                '</div>');
+            var tEl = ov.querySelector('#dt-time');
+            (function tickDT() {
+                if (!document.body.contains(tEl)) return;
+                tEl.textContent = new Date().toLocaleTimeString();
+                setTimeout(tickDT, 1000);
+            })();
+        }
     })();
 
     // ── Reusable Win98 dialog ───────────────────────────────────

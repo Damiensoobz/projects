@@ -330,8 +330,9 @@ body.has-max { overflow: hidden; }
     font-family: 'Lucida Console', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6;
     transition: opacity 0.45s;
 }
-/* CRT glass: scanlines + corner vignette over every boot stage */
-.boot::after {
+/* CRT glass: scanlines + corner vignette — BIOS and OS-splash stages only,
+   the login screen stays clean old-school Windows */
+.boot-bios::after, .boot-load::after {
     content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 20;
     background:
         repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,0.22) 2px 3px),
@@ -370,122 +371,70 @@ body.has-max { overflow: hidden; }
 .bios-foot { position: absolute; left: 30px; right: 30px; bottom: 20px; color: #8fa092; }
 .bios-foot b { color: #ffffff; }
 
-/* damienOS loading — full phosphor-green terminal */
-.osload-logo {
-    color: #33ff66; font-size: 0.55rem; line-height: 1.15; margin: 0 0 2px; overflow: hidden;
-    text-shadow: 0 0 8px rgba(51,255,102,0.55), 0 0 22px rgba(51,255,102,0.25);
+/* damienOS splash — like the real thing: brief text-mode "Starting…" line,
+   then the flag logo with the classic scrolling bar along the bottom */
+.boot-load { background: #000000; }
+.osload-dos { color: #c8c8c8; }
+.osload-center {
+    position: absolute; inset: 0 0 60px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
 }
-.osload-tag { color: #1f9c43; margin-bottom: 22px; letter-spacing: 0.2em; }
-.osload-lines .b-line { color: #33ff66; text-shadow: 0 0 5px rgba(51,255,102,0.4); }
-.osload-lines .b-line:not(.b-prompt)::before { content: '> '; color: #1f9c43; }
-.osload-lines .b-red { color: #ff5252; text-shadow: 0 0 5px rgba(255,82,82,0.45); }
-.osload-lines .b-yellow { color: #ffd24a; text-shadow: 0 0 5px rgba(255,210,74,0.4); }
-.osload-lines .b-dim { color: #6b7a6e; text-shadow: none; }
-.boot-bar-wrap { position: absolute; left: 30px; right: 30px; bottom: 30px; }
-.boot-bar {
-    height: 14px; background: #04120a; border-radius: 0; overflow: hidden;
-    border: 1px solid #1f9c43; box-shadow: 0 0 10px rgba(51,255,102,0.18), inset 0 0 6px rgba(0,0,0,0.8);
-    padding: 2px;
+.osload-flag {
+    width: 128px; height: 112px; margin-bottom: 20px;
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='56' viewBox='0 0 16 14'><g transform='skewY(-9)' transform-origin='8 7'><rect x='1' y='4' width='6' height='4' fill='%23ff3b30'/><rect x='8' y='4' width='6' height='4' fill='%232fb344'/><rect x='1' y='9' width='6' height='4' fill='%23308cff'/><rect x='8' y='9' width='6' height='4' fill='%23ffd200'/></g></svg>") center/contain no-repeat;
+    filter: drop-shadow(0 0 26px rgba(70,120,255,0.28));
 }
-.boot-bar i {
-    display: block; height: 100%; width: 0%; border-radius: 0; transition: width 0.3s;
-    background: repeating-linear-gradient(90deg, #33ff66 0 6px, #0d5c28 6px 8px);
-    box-shadow: 0 0 8px rgba(51,255,102,0.55);
+.osload-title {
+    font-family: Tahoma, 'Trebuchet MS', Arial, sans-serif;
+    font-style: italic; font-weight: 700; font-size: 3rem; color: #ffffff; line-height: 1.1;
 }
-.boot-bar-label {
-    display: flex; justify-content: space-between;
-    font-size: 0.7rem; color: #33ff66; margin-top: 6px; letter-spacing: 0.08em;
-    text-shadow: 0 0 5px rgba(51,255,102,0.4);
+.osload-title span { color: #9cb2d8; font-size: 1.9rem; margin-left: 10px; }
+.osload-sub {
+    margin-top: 10px; font-family: Tahoma, Arial, sans-serif;
+    font-size: 0.64rem; letter-spacing: 0.4em; color: #8a8a8a; text-transform: uppercase;
 }
-.boot-bar-label::after { content: '[ damienOS 98 SE ]'; color: #1f9c43; }
+.osload-copy { position: absolute; left: 26px; bottom: 28px; color: #5f5f5f; font-size: 0.66rem; }
+.boot98-strip {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 15px;
+    background: #00127a; border-top: 1px solid #2a3a8a; overflow: hidden;
+}
+.boot98-strip i {
+    position: absolute; top: 1px; bottom: 1px; width: 130px;
+    background: linear-gradient(90deg, rgba(0,18,122,0) 0%, #2a6df0 30%, #8fc0ff 50%, #2a6df0 70%, rgba(0,18,122,0) 100%);
+    animation: strip-roll 1.5s linear infinite;
+}
+@keyframes strip-roll { from { left: -140px; } to { left: 100%; } }
 
-/* Lock screen — dark glass over a faint green grid, to match the boot */
+/* Lock screen — classic old-school Windows blue */
 .boot-lock {
-    background:
-        linear-gradient(rgba(51,255,102,0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(51,255,102,0.028) 1px, transparent 1px),
-        radial-gradient(110% 130% at 50% -10%, #0c2416 0%, #060d09 45%, #020403 100%);
-    background-size: 34px 34px, 34px 34px, 100% 100%;
+    background: linear-gradient(180deg, #4a80f0 0%, #2e9ce2 55%, #0ab6c9 100%);
     display: flex; align-items: center; justify-content: center;
     font-family: Tahoma, Arial, sans-serif;
 }
-.lock-brand {
-    position: absolute; top: 22px; left: 26px;
-    font-family: 'Lucida Console', 'Courier New', monospace; font-size: 0.72rem;
-    color: #1f9c43; letter-spacing: 0.14em;
-}
-.lock-brand b { color: #33ff66; text-shadow: 0 0 7px rgba(51,255,102,0.5); }
-.lock-clock {
-    align-self: center;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-    font-size: 2.6rem; color: #ddffe6; letter-spacing: 0.04em;
-    text-shadow: 0 0 14px rgba(51,255,102,0.35);
-    margin-bottom: 2px;
-}
-.lock-date {
-    align-self: center; color: #57b878; font-size: 0.7rem; letter-spacing: 0.12em;
-    text-transform: uppercase; margin-bottom: 34px;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-}
 /* Hug the content (the input row is the widest child) so the card stays
    centred. The readonly password + short static hint can't reflow it. */
-.lock-card {
-    display: flex; flex-direction: column; align-items: center; width: max-content;
-    padding: 30px 40px 26px;
-    background: rgba(6, 14, 9, 0.72);
-    border: 1px solid rgba(51,255,102,0.22);
-    border-radius: 10px;
-    box-shadow: 0 0 34px rgba(51,255,102,0.09), 0 14px 40px rgba(0,0,0,0.6);
-    backdrop-filter: blur(5px);
-}
+.lock-card { display: flex; flex-direction: column; align-items: flex-start; width: max-content; padding-bottom: 8vh; }
 .lock-avatar {
-    align-self: center; width: 110px; height: 110px; display: flex; align-items: center; justify-content: center;
-    font-size: 64px; line-height: 1; overflow: hidden; background: #0a1a10;
-    border-radius: 50%;
-    border: 1px solid rgba(51,255,102,0.5);
-    box-shadow: 0 0 0 3px rgba(51,255,102,0.12), 0 0 24px rgba(51,255,102,0.28);
+    align-self: center; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 76px; line-height: 1; overflow: hidden; background: linear-gradient(180deg, #cfe7ff, #7fc4ef);
+    border: 1px solid rgba(255,255,255,0.75); box-shadow: 0 2px 8px rgba(0,0,60,0.3);
 }
 .lock-avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.lock-user { align-self: center; color: #ffffff; font-weight: 700; font-size: 1.05rem; margin: 13px 0 2px; letter-spacing: 0.02em; }
-.lock-sub {
-    align-self: center; color: #57b878; font-size: 0.64rem; letter-spacing: 0.1em;
-    text-transform: uppercase; margin-bottom: 24px;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-}
-.lock-label {
-    align-self: flex-start; color: #57b878; font-size: 0.62rem; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-}
-.lock-row { display: flex; gap: 7px; }
-.lock-input {
-    width: 160px; padding: 7px 10px; font-size: 1rem; letter-spacing: 3px;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-    border: 1px solid rgba(51,255,102,0.35); border-radius: 4px;
-    background: #04120a; color: #33ff66; caret-color: #33ff66;
-}
-.lock-input:focus { outline: none; border-color: rgba(51,255,102,0.7); box-shadow: 0 0 9px rgba(51,255,102,0.25); }
+.lock-user { align-self: center; color: #ffffff; font-weight: 700; font-size: 0.82rem; margin: 9px 0 28px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
+.lock-label { color: #ffffff; font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
+.lock-row { display: flex; }
+.lock-input { width: 150px; padding: 6px 8px; font-size: 1rem; letter-spacing: 2px; border: 1px solid #274a76; background: #ffffff; color: #000000; }
+.lock-input:focus { outline: none; }
 .lock-btn {
-    padding: 7px 16px; cursor: pointer;
-    background: #0d3a1e; color: #aef7c4;
+    padding: 6px 12px; cursor: pointer; background: #d4d0c8;
     font-family: Tahoma, Arial, sans-serif; font-size: 0.74rem; font-weight: 700;
-    border: 1px solid rgba(51,255,102,0.5); border-radius: 4px;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040; border-bottom: 2px solid #404040;
 }
-.lock-btn:hover { background: #124d28; box-shadow: 0 0 10px rgba(51,255,102,0.3); }
-.lock-btn:active { background: #0a2c17; }
-.lock-hint {
-    min-height: 1.3em; margin-top: 12px; max-width: 100%;
-    color: #3f8a5c; font-size: 0.62rem; line-height: 1.5; letter-spacing: 0.06em;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-}
-.lock-welcome {
-    align-self: center; margin-top: 26px; color: #ddffe6; font-size: 1.5rem; text-align: center;
-    letter-spacing: 0.04em; text-shadow: 0 0 16px rgba(51,255,102,0.4);
-}
-.lock-welcome span {
-    display: block; font-size: 0.68rem; margin-top: 14px; color: #57b878;
-    font-family: 'Lucida Console', 'Courier New', monospace; letter-spacing: 0.1em;
-}
+.lock-btn:active { border-color: #404040 #ffffff #ffffff #404040; }
+.lock-hint { min-height: 1.3em; margin-top: 9px; max-width: 100%; color: rgba(255,255,255,0.9); font-size: 0.66rem; line-height: 1.5; text-shadow: 0 1px 2px rgba(0,0,60,0.35); }
+.lock-welcome { align-self: center; margin-top: 36px; color: #ffffff; font-size: 1.35rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,60,0.45); }
+.lock-welcome span { display: block; font-size: 0.78rem; margin-top: 16px; color: rgba(255,255,255,0.85); }
 @media (max-width: 600px) {
     .boot-stage { padding: 18px 14px; }
     .bios-foot { left: 14px; right: 14px; }
