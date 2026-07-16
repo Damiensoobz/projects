@@ -380,10 +380,34 @@
     if (urlInput) {
         urlInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') { e.preventDefault(); go(urlInput.value); }
+            // Esc → abandon the edit, restore the current page's URL.
+            else if (e.key === 'Escape') { urlInput.value = hist[hpos] || ''; urlInput.blur(); }
         });
         // Click into the address bar → select the whole URL, like a real browser.
         urlInput.addEventListener('focus', function () { setTimeout(function () { urlInput.select(); }, 0); });
+        // Autocomplete: suggest the sites this browser actually knows about.
+        var dl = document.createElement('datalist');
+        dl.id = 'ie-url-suggest';
+        [HOME, U_SEARCH, U_BLOG].forEach(function (u) {
+            var o = document.createElement('option');
+            o.value = u;
+            dl.appendChild(o);
+        });
+        document.body.appendChild(dl);
+        urlInput.setAttribute('list', 'ie-url-suggest');
     }
+
+    // Keyboard shortcuts — only while the pointer or focus is on the Kurama
+    // window, so they never hijack the DOS prompt or the real browser.
+    document.addEventListener('keydown', function (e) {
+        if (!ieBlock) return;
+        if (ieBlock.classList.contains('win-min') || ieBlock.classList.contains('win-closed')) return;
+        var engaged = ieBlock.contains(document.activeElement) || ieBlock.matches(':hover');
+        if (!engaged) return;
+        if (e.altKey && e.key === 'ArrowLeft')  { e.preventDefault(); back(); }
+        else if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); forward(); }
+        else if (e.key === 'F5') { e.preventDefault(); refresh(); }
+    });
 
     // Bookmarks toolbar buttons
     [].forEach.call(document.querySelectorAll('.ie-glink[data-nav]'), function (b) {

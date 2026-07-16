@@ -152,7 +152,7 @@
             ['Detecting hardware&hellip; 1 keyboard, 1 mouse, 0 excuses', 460],
             ['Initializing registry&hellip;', 380],
             ['Applying questionable decisions&hellip;', 520],
-            ['C:\\&gt; <span class="bsod-blink">_</span>', 0]
+            ['C:\\&gt; <span class="bsod-blink">_</span>', 0, 'b-prompt']
         ];
         var i = 0;
         (function next() {
@@ -189,17 +189,32 @@
         clearTimers();
         root.innerHTML =
             '<div class="boot-stage boot-lock">' +
+                '<div class="lock-brand">damien<b>OS</b> 98 SE</div>' +
                 '<div class="lock-card">' +
+                    '<div class="lock-clock" id="lock-clock"></div>' +
+                    '<div class="lock-date" id="lock-date"></div>' +
                     '<div class="lock-avatar"><img class="lock-avatar-img" src="' + AVATAR_SRC + '" alt=""></div>' +
-                    '<div class="lock-user">Hello there.</div>' +
+                    '<div class="lock-user">Damien</div>' +
+                    '<div class="lock-sub">code wizard &middot; logged in since 1998</div>' +
                     '<label class="lock-label" for="lock-pass">Enter Password</label>' +
                     '<div class="lock-row">' +
                         '<input class="lock-input" id="lock-pass" type="password" readonly value="" aria-label="Password (damienOS fills this in for you)">' +
-                        '<button class="lock-btn" type="button">Confirm</button>' +
+                        '<button class="lock-btn" type="button">Log In</button>' +
                     '</div>' +
-                    '<div class="lock-hint">&nbsp;</div>' +
+                    '<div class="lock-hint">press ENTER to log in</div>' +
                 '</div>' +
             '</div>';
+        // Live clock + date, lock-screen style.
+        var clockEl = root.querySelector('#lock-clock');
+        var dateEl  = root.querySelector('#lock-date');
+        (function tick() {
+            if (!clockEl || !document.contains(clockEl)) return;
+            var d = new Date(), h = d.getHours(), m = d.getMinutes();
+            var hh = h % 12; if (hh === 0) hh = 12;
+            clockEl.textContent = hh + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM');
+            dateEl.textContent  = d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+            later(tick, 15000);
+        })();
         // If the custom profile picture is missing, fall back to the wizard emoji.
         var avatar = root.querySelector('.lock-avatar-img');
         if (avatar) avatar.addEventListener('error', function () {

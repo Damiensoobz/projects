@@ -116,7 +116,14 @@
             '<button class="wc wc-close" title="Close"    aria-label="Close"></button>';
         prompt.appendChild(ctrls);
         ctrls.querySelector('.wc-min').addEventListener('click',   function (e) { e.stopPropagation(); minimize(b); });
-        if (canMax) ctrls.querySelector('.wc-max').addEventListener('click', function (e) { e.stopPropagation(); toggleMax(b); });
+        if (canMax) {
+            ctrls.querySelector('.wc-max').addEventListener('click', function (e) { e.stopPropagation(); toggleMax(b); });
+            // Double-clicking the title bar toggles maximize, like real Windows.
+            prompt.addEventListener('dblclick', function (e) {
+                if (e.target.closest('.wc')) return;
+                toggleMax(b);
+            });
+        }
         ctrls.querySelector('.wc-close').addEventListener('click', function (e) { e.stopPropagation(); closeWin(b); });
     });
 
@@ -370,16 +377,35 @@
         if (vol) vol.addEventListener('click', function (e) { e.stopPropagation(); toggleVol(); });
         document.addEventListener('click', function () { if (pop) pop.classList.remove('open'); });
 
+        // Live "connected since page load" clock, formatted dial-up style.
+        var SESSION_START = Date.now();
+        function sessionDuration() {
+            var s = Math.floor((Date.now() - SESSION_START) / 1000);
+            function p2(n) { return (n < 10 ? '0' : '') + n; }
+            var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+            return ('00' + h).slice(-3) + ':' + p2(m) + ':' + p2(s % 60);
+        }
+
         if (modem) {
             modem.title = 'Dial-Up Networking — Connected at 56,600 bps';
             modem.addEventListener('click', function (e) {
                 e.stopPropagation();
-                openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
+                var ov = openDialog('Dial-Up Networking', '<div class="dlg-sys"><div class="dlg-sys-logo modem-big"></div><div class="dlg-sys-text">' +
                     '<p><b>Connected to The Internet</b></p>' +
-                    '<p>Speed: 56,600 bps (allegedly)</p>' +
-                    '<p>Duration: 004:20:00</p>' +
-                    '<p>Bytes received: a worrying amount</p>' +
+                    '<div class="dlg-stat-rows">' +
+                        '<div><span>Status</span><b class="v-good">Connected</b></div>' +
+                        '<div><span>Speed</span><b>56,600 bps (allegedly)</b></div>' +
+                        '<div><span>Duration</span><b class="dlg-dur">' + sessionDuration() + '</b></div>' +
+                        '<div><span>Bytes received</span><b>a worrying amount</b></div>' +
+                        '<div><span>Bytes sent</span><b>mostly vibes</b></div>' +
+                    '</div>' +
                     '<p class="dim">Do not pick up the phone.</p></div></div>');
+                // Tick the duration while the dialog is open; stop once it's closed.
+                var durEl = ov.querySelector('.dlg-dur');
+                var t = setInterval(function () {
+                    if (!document.body.contains(durEl)) { clearInterval(t); return; }
+                    durEl.textContent = sessionDuration();
+                }, 1000);
             });
         }
 
@@ -388,9 +414,12 @@
             e.stopPropagation();
             openDialog('Network Neighborhood', '<div class="dlg-sys"><div class="dlg-sys-logo net-big"></div><div class="dlg-sys-text">' +
                 '<p><b>Local Area Connection</b></p>' +
-                '<p>Status: connected (mostly)</p>' +
-                '<p>Workgroup: WIZARDS</p>' +
-                '<p>Other computers on this network: <b>0</b></p>' +
+                '<div class="dlg-stat-rows">' +
+                    '<div><span>Status</span><b class="v-good">connected (mostly)</b></div>' +
+                    '<div><span>Workgroup</span><b>WIZARDS</b></div>' +
+                    '<div><span>Other computers</span><b>0</b></div>' +
+                    '<div><span>Packets lost</span><b class="v-warn">only the important ones</b></div>' +
+                '</div>' +
                 '<p class="dim">It is just you out here. It has always been just you.</p></div></div>');
         });
 
@@ -398,10 +427,13 @@
         if (shield) shield.addEventListener('click', function (e) {
             e.stopPropagation();
             openDialog('damienOS Defender', '<div class="dlg-sys"><div class="dlg-sys-logo shield-big"></div><div class="dlg-sys-text">' +
-                '<p><b>Your system is protected.</b></p>' +
-                '<p>Last scan: just now</p>' +
-                '<p>Threats found: <b>0</b> &middot; Regrets found: <b>4</b></p>' +
-                '<p>Definitions last updated: 1999</p>' +
+                '<p><b class="v-good">&#10003; Your system is protected.</b></p>' +
+                '<div class="dlg-stat-rows">' +
+                    '<div><span>Last scan</span><b>just now</b></div>' +
+                    '<div><span>Threats found</span><b class="v-good">0</b></div>' +
+                    '<div><span>Regrets found</span><b class="v-bad">4</b></div>' +
+                    '<div><span>Definitions</span><b class="v-warn">last updated 1999</b></div>' +
+                '</div>' +
                 '<p class="dim">Real-time protection against bad decisions is unavailable.</p></div></div>');
         });
     })();

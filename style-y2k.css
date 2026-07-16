@@ -578,8 +578,8 @@ code {
 @keyframes modem-blink {
     50% { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='16' viewBox='0 0 18 16' shape-rendering='crispEdges'><rect x='1' y='3' width='9' height='7' fill='%23c0c0c0' stroke='%23000'/><rect x='2' y='4' width='7' height='5' fill='%2300b000'/><rect x='8' y='6' width='9' height='7' fill='%23c0c0c0' stroke='%23000'/><rect x='9' y='7' width='7' height='5' fill='%23008080'/></svg>"); }
 }
-.modem-big {
-    width: 32px; height: 32px;
+.dlg-sys-logo.modem-big {
+    width: 36px; height: 32px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 36 32' shape-rendering='crispEdges'><rect x='1' y='5' width='18' height='14' fill='%23c0c0c0' stroke='%23000'/><rect x='3' y='7' width='14' height='10' fill='%23008080'/><rect x='15' y='12' width='18' height='14' fill='%23c0c0c0' stroke='%23000'/><rect x='17' y='14' width='14' height='10' fill='%2300b000'/></svg>") center/contain no-repeat;
 }
 /* Network Neighborhood — two little PCs */
@@ -590,12 +590,14 @@ code {
 .tray-shield {
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'><path d='M8 1 L14 3 V8 C14 11.5 11.3 14 8 15 C4.7 14 2 11.5 2 8 V3 Z' fill='%232f9e46' stroke='%23145423'/><path d='M5 8 l2 2 4 -4.5' fill='none' stroke='%23ffffff' stroke-width='1.6'/></svg>");
 }
-.net-big {
-    width: 32px; height: 32px;
+/* Dialog-sized versions — doubled class so they beat the generic
+   .dlg-sys-logo Windows-flag fallback that used to override them. */
+.dlg-sys-logo.net-big {
+    width: 36px; height: 32px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 36 32' shape-rendering='crispEdges'><rect x='2' y='3' width='16' height='12' fill='%23c0c0c0' stroke='%23000'/><rect x='4' y='5' width='12' height='8' fill='%23008080'/><rect x='7' y='15' width='6' height='2' fill='%23808080'/><rect x='18' y='16' width='16' height='12' fill='%23c0c0c0' stroke='%23000'/><rect x='20' y='18' width='12' height='8' fill='%23008080'/><path d='M10 17 L10 22 L26 22 L26 16' fill='none' stroke='%23404040' stroke-width='1.5'/></svg>") center/contain no-repeat;
 }
-.shield-big {
-    width: 32px; height: 32px;
+.dlg-sys-logo.shield-big {
+    width: 34px; height: 34px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M16 2 L28 6 V15 C28 22 22.6 27.5 16 30 C9.4 27.5 4 22 4 15 V6 Z' fill='%232f9e46' stroke='%23145423' stroke-width='1.5'/><path d='M10 16 l4 4 8 -9' fill='none' stroke='%23ffffff' stroke-width='3'/></svg>") center/contain no-repeat;
 }
 
@@ -730,6 +732,21 @@ code {
 .dlg-body { padding: 16px; font-family: Tahoma, Arial, sans-serif; font-size: 0.8rem; color: #000000; }
 .dlg-p { line-height: 1.6; }
 .dlg-sys-text p { margin-bottom: 5px; }
+/* Sunken stat panel inside system dialogs (dial-up / network / defender) */
+.dlg-stat-rows {
+    background: #ffffff;
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff; border-bottom: 1px solid #ffffff;
+    box-shadow: inset 1px 1px 0 #404040;
+    padding: 6px 10px; margin: 8px 0 9px;
+    font-size: 0.74rem; min-width: 230px;
+}
+.dlg-stat-rows > div { display: flex; justify-content: space-between; gap: 20px; padding: 3px 0; }
+.dlg-stat-rows span { color: #666666; flex-shrink: 0; }
+.dlg-stat-rows b { text-align: right; font-weight: 700; }
+.dlg-body .v-good { color: #0a7a2a; }
+.dlg-body .v-warn { color: #a06000; }
+.dlg-body .v-bad  { color: #b00000; }
 .dlg-sys-logo {
     width: 48px; height: 42px;
     background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14'><g transform='skewY(-9)' transform-origin='8 7'><rect x='1' y='4' width='6' height='4' fill='%23ff3b30'/><rect x='8' y='4' width='6' height='4' fill='%232fb344'/><rect x='1' y='9' width='6' height='4' fill='%23308cff'/><rect x='8' y='9' width='6' height='4' fill='%23ffd200'/></g></svg>") center/contain no-repeat;
