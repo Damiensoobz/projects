@@ -1442,8 +1442,9 @@ code {
 .bw-blog-sub-note { font-size: 0.68rem; color: #999; font-style: italic; margin-top: 8px; }
 
 /* ── Pseudo-ads — 90s banners that troll the modern world ─────
-   Five "advertisers" (s1–s5) so the ad wall doesn't look like one
-   agency bought every slot. Structure is shared; skins recolor. */
+   Six "advertisers" (s1–s6), each with its own LAYOUT, not just its
+   own palette: sleaze flyer, terminal window, print memo, vaporwave
+   horizon, roadwork banner, and a fake Win98 popup dialog. */
 .bw-ad { margin: 4px 0; text-align: center; }
 .bw-ad-tag { display: block; font-family: Tahoma, Arial, sans-serif; font-size: 0.54rem; color: #a0a0a0; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 2px; }
 .bw-ad-inner { display: block; cursor: pointer; text-decoration: none; padding: 10px 14px 11px; }
@@ -1452,45 +1453,118 @@ code {
 .bw-ad-cta { display: inline-block; font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.72rem; padding: 2px 10px; }
 @keyframes ad-blink { 50% { opacity: 0.35; } }
 
-/* s1 — classic sleaze: yellow, red Impact, magenta dashes */
-.bw-ad-s1 .bw-ad-inner { background: #fff34d; border: 2px solid #000000; outline: 2px dashed #ff00aa; outline-offset: -6px; }
-.bw-ad-s1 .bw-ad-inner:hover { background: #ffe81a; }
+/* s1 — garage-sale flyer: tilted yellow, red Impact, a FREE!? sticker */
+.bw-ad-s1 .bw-ad-inner {
+    position: relative; background: #fff34d; border: 2px solid #000000;
+    outline: 2px dashed #ff00aa; outline-offset: -6px;
+    transform: rotate(-0.8deg);
+}
+.bw-ad-s1 .bw-ad-inner:hover { background: #ffe81a; transform: rotate(0.5deg); }
+.bw-ad-s1 .bw-ad-inner::after {
+    content: 'FREE!?'; position: absolute; top: -8px; right: -6px;
+    background: #d40000; color: #ffffff; font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 0.62rem; letter-spacing: 0.05em; padding: 3px 7px;
+    transform: rotate(12deg); box-shadow: 1px 2px 0 rgba(0,0,0,0.45);
+}
 .bw-ad-s1 .bw-ad-head { font-family: Impact, 'Arial Black', sans-serif; color: #d40000; }
 .bw-ad-s1 .bw-ad-body { font-family: 'Comic Sans MS', 'Comic Sans', Tahoma, sans-serif; color: #1a1a1a; }
 .bw-ad-s1 .bw-ad-cta { color: #ffffff; background: #d40000; animation: ad-blink 1s step-end infinite; }
 
-/* s2 — hacker terminal: black, phosphor green mono */
-.bw-ad-s2 .bw-ad-inner { background: #050a05; border: 2px solid #1f9c43; }
-.bw-ad-s2 .bw-ad-inner:hover { background: #0a140a; }
-.bw-ad-s2 .bw-ad-head { font-family: 'Courier New', monospace; font-weight: 700; color: #33ff66; text-shadow: 0 0 5px rgba(51,255,102,0.5); }
-.bw-ad-s2 .bw-ad-body { font-family: 'Courier New', monospace; color: #2bd457; }
-.bw-ad-s2 .bw-ad-cta { color: #050a05; background: #33ff66; }
-.bw-ad-s2 .bw-ad-cta::before { content: '> '; }
-
-/* s3 — corporate memo: polite white, navy serif, very trustworthy */
-.bw-ad-s3 .bw-ad-inner { background: #f4f6fb; border: 2px solid #0b3d91; }
-.bw-ad-s3 .bw-ad-inner:hover { background: #e9eefb; }
-.bw-ad-s3 .bw-ad-head { font-family: Georgia, 'Times New Roman', serif; color: #0b3d91; text-transform: none; font-style: italic; }
-.bw-ad-s3 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #445; }
-.bw-ad-s3 .bw-ad-cta { color: #ffffff; background: #0b3d91; border-radius: 2px; }
-
-/* s4 — vaporwave: hot pink, cyan glow, aggressively chill */
-.bw-ad-s4 .bw-ad-inner { background: linear-gradient(160deg, #ff71ce 0%, #b967ff 100%); border: 2px solid #01cdfe; }
-.bw-ad-s4 .bw-ad-inner:hover { filter: saturate(1.2); }
-.bw-ad-s4 .bw-ad-head { font-family: 'Comic Sans MS', 'Comic Sans', cursive; color: #ffffff; text-shadow: 2px 2px 0 #7b2fa0; }
-.bw-ad-s4 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #fdeaff; }
-.bw-ad-s4 .bw-ad-cta { color: #4b0a6e; background: #05ffa1; }
-
-/* s5 — hazard tape: emergency orange between warning stripes */
-.bw-ad-s5 .bw-ad-inner {
-    background: #ff9500; border: 2px solid #000000;
-    border-image: repeating-linear-gradient(45deg, #ffcc00 0 8px, #1a1a1a 8px 16px) 4;
+/* s2 — a little terminal WINDOW: title bar, left-aligned mono, cursor */
+.bw-ad-s2 .bw-ad-inner { background: #050a05; border: 1px solid #1f9c43; padding-top: 0; text-align: left; }
+.bw-ad-s2 .bw-ad-inner::before {
+    content: 'C:\\ADVERT.EXE \2500\2500\2500\2500\2500 [\2013][\25A1][\00D7]';
+    display: block; margin: 0 -14px 8px; padding: 3px 9px;
+    background: #1f9c43; color: #04120a;
+    font-family: 'Courier New', monospace; font-size: 0.6rem; font-weight: 700;
+    white-space: nowrap; overflow: hidden;
 }
-.bw-ad-s5 .bw-ad-inner:hover { background: #ffa722; }
-.bw-ad-s5 .bw-ad-head { font-family: Impact, 'Arial Black', sans-serif; color: #1a1a1a; }
-.bw-ad-s5 .bw-ad-head::before { content: '\26A0 '; }
-.bw-ad-s5 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #401a00; font-weight: 700; }
-.bw-ad-s5 .bw-ad-cta { color: #ffcc00; background: #1a1a1a; animation: ad-blink 0.8s step-end infinite; }
+.bw-ad-s2 .bw-ad-inner:hover { background: #0a140a; }
+.bw-ad-s2 .bw-ad-head { font-family: 'Courier New', monospace; font-weight: 700; font-size: 0.86rem; color: #33ff66; text-shadow: 0 0 5px rgba(51,255,102,0.5); text-transform: none; }
+.bw-ad-s2 .bw-ad-head::before { content: '$ '; color: #1f9c43; }
+.bw-ad-s2 .bw-ad-body { font-family: 'Courier New', monospace; font-size: 0.66rem; color: #2bd457; }
+.bw-ad-s2 .bw-ad-cta { color: #050a05; background: #33ff66; padding: 1px 8px; }
+.bw-ad-s2 .bw-ad-cta::before { content: '> '; }
+.bw-ad-s2 .bw-ad-cta::after { content: '_'; animation: blink 1s step-end infinite; }
+
+/* s3 — print memo: quiet white letterhead, serif, underlined link. The
+   most dangerous ad is the one that looks like a paragraph. */
+.bw-ad-s3 .bw-ad-inner { background: #fffdf8; border: 1px solid #b9b2a4; border-top: 3px double #6b6353; text-align: left; }
+.bw-ad-s3 .bw-ad-inner::before {
+    content: 'From the desk of damienbuilds.dev';
+    display: block; font-family: Georgia, 'Times New Roman', serif; font-style: italic;
+    font-size: 0.6rem; color: #8d8574; border-bottom: 1px solid #e3ddcf;
+    padding-bottom: 4px; margin-bottom: 7px;
+}
+.bw-ad-s3 .bw-ad-inner:hover { background: #fbf6ea; }
+.bw-ad-s3 .bw-ad-head { font-family: Georgia, 'Times New Roman', serif; font-size: 0.95rem; color: #29261c; text-transform: none; }
+.bw-ad-s3 .bw-ad-body { font-family: Georgia, 'Times New Roman', serif; color: #4a463b; font-size: 0.74rem; }
+.bw-ad-s3 .bw-ad-cta { font-family: Georgia, serif; font-weight: 400; color: #0b3d91; background: none; padding: 0; text-decoration: underline; }
+.bw-ad-s3 .bw-ad-cta::after { content: ' \2192'; }
+
+/* s4 — vaporwave sunset: neon horizon grid, glowing outline text */
+.bw-ad-s4 .bw-ad-inner {
+    background:
+        repeating-linear-gradient(0deg, rgba(1,205,254,0) 0 9px, rgba(1,205,254,0.28) 9px 10px),
+        repeating-linear-gradient(90deg, rgba(1,205,254,0) 0 22px, rgba(1,205,254,0.2) 22px 23px),
+        linear-gradient(180deg, #2b1055 0%, #7b2fa0 52%, #ff71ce 100%);
+    border: 2px solid #01cdfe; border-radius: 7px;
+}
+.bw-ad-s4 .bw-ad-inner:hover { filter: saturate(1.25) brightness(1.06); }
+.bw-ad-s4 .bw-ad-head { font-family: 'Comic Sans MS', 'Comic Sans', cursive; font-style: italic; color: #ffffff; letter-spacing: 0.14em; text-shadow: 2px 2px 0 #7b2fa0, 0 0 12px rgba(1,205,254,0.65); }
+.bw-ad-s4 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #fdeaff; }
+.bw-ad-s4 .bw-ad-body::after { content: ' \301C aesthetic \301C'; color: #01cdfe; font-size: 0.6rem; letter-spacing: 0.2em; }
+.bw-ad-s4 .bw-ad-cta { color: #4b0a6e; background: #05ffa1; border-radius: 99px; padding: 2px 14px; }
+
+/* s5 — roadwork banner: hazard stripes top & bottom, night-shift black */
+.bw-ad-s5 .bw-ad-inner { position: relative; background: #14110c; border: 2px solid #000000; padding-top: 19px; padding-bottom: 20px; }
+.bw-ad-s5 .bw-ad-inner::before,
+.bw-ad-s5 .bw-ad-inner::after {
+    content: ''; position: absolute; left: 0; right: 0; height: 9px;
+    background: repeating-linear-gradient(45deg, #ffcc00 0 10px, #1a1a1a 10px 20px);
+}
+.bw-ad-s5 .bw-ad-inner::before { top: 0; }
+.bw-ad-s5 .bw-ad-inner::after { bottom: 0; }
+.bw-ad-s5 .bw-ad-inner:hover { background: #1d1810; }
+.bw-ad-s5 .bw-ad-head { font-family: Impact, 'Arial Black', sans-serif; color: #ff9500; }
+.bw-ad-s5 .bw-ad-head::before { content: '\26A0 '; color: #ffcc00; }
+.bw-ad-s5 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #e8d9b0; font-weight: 700; }
+.bw-ad-s5 .bw-ad-cta { color: #1a1a1a; background: #ffcc00; animation: ad-blink 0.8s step-end infinite; }
+
+/* s6 — fake Win98 popup: title bar, beveled chrome, a ✕ that is a lie
+   (the whole thing is the link — closing it also opens the site, as is
+   tradition). No "advertisement" tag; popups never admit to being ads. */
+.bw-ad-s6 .bw-ad-tag { display: none; }
+.bw-ad-s6 .bw-ad-inner {
+    position: relative; background: #d4d0c8; padding-top: 0;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040; border-bottom: 2px solid #404040;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.35);
+}
+.bw-ad-s6 .bw-ad-inner::before {
+    content: 'Message from damienbuilds.dev';
+    display: block; margin: 0 -14px 9px; padding: 3px 24px 3px 8px;
+    background: linear-gradient(to right, #000080, #1084d0); color: #ffffff;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.66rem; font-weight: 700;
+    text-align: left; white-space: nowrap; overflow: hidden;
+}
+.bw-ad-s6 .bw-ad-inner::after {
+    content: '\2715'; position: absolute; top: 3px; right: 3px;
+    width: 14px; height: 13px; background: #d4d0c8;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
+    border-right: 1px solid #404040; border-bottom: 1px solid #404040;
+    font-size: 8px; font-weight: 700; color: #000000;
+    display: flex; align-items: center; justify-content: center;
+}
+.bw-ad-s6 .bw-ad-head { font-family: Tahoma, Arial, sans-serif; font-size: 0.82rem; font-weight: 700; color: #000000; text-transform: none; }
+.bw-ad-s6 .bw-ad-body { font-family: Tahoma, Arial, sans-serif; color: #333333; }
+.bw-ad-s6 .bw-ad-cta {
+    font-family: Tahoma, Arial, sans-serif; font-weight: 400; color: #000000; background: #d4d0c8;
+    padding: 3px 16px;
+    border-top: 1px solid #ffffff; border-left: 1px solid #ffffff;
+    border-right: 1px solid #404040; border-bottom: 1px solid #404040;
+    outline: 1px dotted #000000; outline-offset: -4px;
+}
 /* In-feed banner between project cards */
 .cards-grid .bw-ad { padding: 12px 22px; border-bottom: 1px dashed #b8b8b8; background: #ffffff; }
 
@@ -1505,6 +1579,10 @@ code {
 .bw-rail .bw-ad-head { font-size: 0.86rem; }
 .bw-rail .bw-ad-body { font-size: 0.66rem; }
 .bw-rail .bw-ad-cta { font-size: 0.64rem; }
+/* The window-style skins (terminal + popup) keep their title bars flush
+   in the narrower rail slots */
+.bw-rail .bw-ad-s2 .bw-ad-inner, .bw-rail .bw-ad-s6 .bw-ad-inner { padding-top: 0; }
+.bw-rail .bw-ad-s2 .bw-ad-inner::before, .bw-rail .bw-ad-s6 .bw-ad-inner::before { margin-left: -8px; margin-right: -8px; }
 
 /* 404 */
 .bw-404-h { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }

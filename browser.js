@@ -36,10 +36,11 @@
 
     // ── Pseudo-ads — 90s banners, but the pitch is real: every one of them
     // is actually for damienbuilds.dev and actually links there (new tab).
-    // [headline, body, cta, skin] — skins keep the ad wall from looking
-    // like one advertiser bought every slot. All static trusted strings.
-    //   s1 classic yellow · s2 hacker terminal · s3 corporate memo
-    //   s4 vaporwave · s5 hazard tape
+    // [headline, body, cta, skin] — each skin is its own LAYOUT (not just a
+    // palette) so the ad wall reads like six different advertisers bought
+    // slots. All static trusted strings.
+    //   s1 garage-sale flyer · s2 terminal window · s3 print memo
+    //   s4 vaporwave horizon · s5 roadwork banner · s6 fake Win98 popup
     var ADS = [
         ['Tired of boring websites?', 'One weirdly competent developer built this entire desktop from scratch. See more at damienbuilds.dev.', 'VISIT NOW', 's2'],
         ['This could be YOUR website', 'Fast, weird, and shockingly functional. No mortgage-sized invoice required.', 'SEE THE WORK', 's3'],
@@ -47,7 +48,7 @@
         ['Your competitor already has one', 'A real website, that is. Fix that at damienbuilds.dev before it&rsquo;s too late.', 'GET STARTED', 's1'],
         ['100% certified not-a-template', 'Every pixel here was placed on purpose (mostly). Hire the person who did it.', 'HIRE DAMIEN', 's2'],
         ['WARNING: portfolio may cause hiring', 'Side effects include working code, good taste, and reasonable rates.', 'PROCEED ANYWAY', 's5'],
-        ['You&rsquo;ve won&hellip; a great developer', 'No prize wheel needed. Just go to damienbuilds.dev and say hello.', 'CLAIM DAMIEN', 's1'],
+        ['You&rsquo;ve won&hellip; a great developer', 'No prize wheel needed. Just go to damienbuilds.dev and say hello.', 'CLAIM DAMIEN', 's6'],
         ['Websites. But good.', 'Revolutionary concept, we know. Available now at damienbuilds.dev.', 'LEARN MORE', 's4'],
         ['This banner is self-aware', 'And so is the person who built it. Real projects, real code, no filler.', 'SEE PROOF', 's3']
     ];
