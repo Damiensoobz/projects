@@ -107,6 +107,14 @@
         return '<div class="bw-page bw-home">' + nav('projects') + introHtml() +
             '<p class="out dim ls-meta">total <span id="project-count">' + n + '</span></p>' +
             '<div class="cards-grid" id="cards-grid"></div>' +
+            // The sacred 88×31 badge wall — no old-school page is complete
+            '<div class="bw-badges" aria-hidden="true">' +
+                '<span class="b88 b88-kurama">KURAMA<br>ready</span>' +
+                '<span class="b88 b88-notepad">made with<br>NOTEPAD.EXE</span>' +
+                '<span class="b88 b88-y2k">Y2K<br>compliant*</span>' +
+                '<span class="b88 b88-tea">powered by<br>TEA</span>' +
+                '<span class="b88 b88-800">best viewed at<br>800 &times; 600</span>' +
+            '</div>' +
             '<div class="ie-teaser"><h3 class="ie-teaser-title">Currently conjuring&hellip;</h3>' +
             '<p class="ie-teaser-body">Something new is in the cauldron. Bookmark this page (Ctrl&#8209;D, it&rsquo;ll pretend to work) and check back &mdash; or just <a href="mailto:' + CONTACT_EMAIL + '">email me</a> and beat the queue.</p></div>' +
             '</div>';
@@ -299,9 +307,14 @@
         return url.replace(/\/+$/, '');     // drop trailing slash so keys match
     }
 
+    var paintSeq = 0;
     function paint(url) {
         var p = PAGES[url];
-        setStatus('Opening page ' + url + ' …');
+        var seq = ++paintSeq;
+        var host = url.replace(/^https?:\/\//, '').split('/')[0];
+        // Little 56k theater: connect → open → done. Guarded by seq so a
+        // rapid second navigation doesn't get stale status lines.
+        setStatus('Connecting to site ' + host + '…');
         throb();
         startProgress();
         if (urlInput) urlInput.value = url;
@@ -310,7 +323,8 @@
         wirePage();
         if (p && p.after) p.after();
         page.scrollTop = 0;
-        setStatus('Done');
+        setTimeout(function () { if (seq === paintSeq) setStatus('Opening page ' + url + ' …'); }, 240);
+        setTimeout(function () { if (seq === paintSeq) setStatus('Done'); }, 560);
         endProgress();
         updateNav();
     }
@@ -397,6 +411,52 @@
         document.body.appendChild(dl);
         urlInput.setAttribute('list', 'ie-url-suggest');
     }
+
+    // ── History menu — the menubar's "History" becomes a real Win98
+    //    dropdown of this session's pages (with a Clear that works). ────
+    var histMenuEl = null;
+    function closeHistMenu() { if (histMenuEl) { histMenuEl.remove(); histMenuEl = null; } }
+    (function wireHistoryMenu() {
+        var histSpan = null;
+        [].forEach.call(document.querySelectorAll('[data-app="ie"] .ie-menubar span'), function (s) {
+            if (s.textContent === 'History') histSpan = s;
+        });
+        var chrome = document.querySelector('[data-app="ie"] .ie-chrome');
+        if (!histSpan || !chrome) return;
+        histSpan.classList.add('ie-menu-live');
+        histSpan.title = 'Where you have been (this session only, we respect the fiction of privacy)';
+        histSpan.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (histMenuEl) { closeHistMenu(); return; }
+            var seen = {}, items = [];
+            for (var i = hist.length - 1; i >= 0 && items.length < 8; i--) {
+                if (seen[hist[i]]) continue;
+                seen[hist[i]] = 1;
+                items.push({ url: hist[i], title: PAGES[hist[i]] ? PAGES[hist[i]].title : hist[i], current: hist[i] === hist[hpos] });
+            }
+            histMenuEl = document.createElement('div');
+            histMenuEl.className = 'ie-hist-menu';
+            histMenuEl.innerHTML =
+                items.map(function (it) {
+                    return '<button class="ie-hist-item' + (it.current ? ' on' : '') + '" type="button" data-u="' + esc(it.url) + '">' + esc(it.title) + '</button>';
+                }).join('') +
+                '<div class="ie-hist-sep"></div>' +
+                '<button class="ie-hist-item ie-hist-clear" type="button">Clear History</button>';
+            chrome.appendChild(histMenuEl);
+            histMenuEl.style.left = histSpan.offsetLeft + 'px';
+            histMenuEl.style.top  = (histSpan.offsetTop + histSpan.offsetHeight + 5) + 'px';
+            [].forEach.call(histMenuEl.querySelectorAll('[data-u]'), function (b) {
+                b.addEventListener('click', function () { closeHistMenu(); go(b.getAttribute('data-u')); });
+            });
+            histMenuEl.querySelector('.ie-hist-clear').addEventListener('click', function () {
+                closeHistMenu();
+                hist = hist.slice(hpos, hpos + 1); hpos = 0; updateNav();
+                paintSeq++;                     // cancel any pending status lines
+                setStatus('History cleared. It never happened.');
+            });
+            setTimeout(function () { document.addEventListener('click', closeHistMenu, { once: true }); }, 0);
+        });
+    })();
 
     // Keyboard shortcuts — only while the pointer or focus is on the Kurama
     // window, so they never hijack the DOS prompt or the real browser.
