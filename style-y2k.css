@@ -1524,8 +1524,16 @@ code {
 .bw-ad-s2 .bw-ad-cta::after { content: '_'; animation: blink 1s step-end infinite; }
 
 /* s3 — print memo: quiet white letterhead, serif, underlined link. The
-   most dangerous ad is the one that looks like a paragraph. */
-.bw-ad-s3 .bw-ad-inner { background: #fffdf8; border: 1px solid #b9b2a4; border-top: 3px double #6b6353; text-align: left; }
+   most dangerous ad is the one that looks like a paragraph. A red rubber
+   stamp keeps it from reading as plain when it sits alone. */
+.bw-ad-s3 .bw-ad-inner { position: relative; background: #fffdf8; border: 1px solid #b9b2a4; border-top: 3px double #6b6353; text-align: left; }
+.bw-ad-s3 .bw-ad-inner::after {
+    content: '100% SINCERE'; position: absolute; top: 9px; right: 8px;
+    color: #c22a2a; border: 2px solid #c22a2a; border-radius: 3px;
+    font-family: Tahoma, Arial, sans-serif; font-size: 0.5rem; font-weight: 700;
+    letter-spacing: 0.08em; padding: 1px 5px;
+    transform: rotate(8deg); opacity: 0.7;
+}
 .bw-ad-s3 .bw-ad-inner::before {
     content: 'From the desk of damienbuilds.dev';
     display: block; font-family: Georgia, 'Times New Roman', serif; font-style: italic;
@@ -1615,6 +1623,14 @@ code {
 .bw-rail .bw-ad-head { font-size: 0.86rem; }
 .bw-rail .bw-ad-body { font-size: 0.66rem; }
 .bw-rail .bw-ad-cta { font-size: 0.64rem; }
+
+/* Web-ring navigator — ridge border, lavender, deeply 1998 */
+.bw-ring { border: 2px ridge #b39ddb; background: #f3eefc; padding: 9px 10px 10px; text-align: center; }
+.bw-ring-head { font-family: Tahoma, Arial, sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; color: #5e35b1; margin-bottom: 5px; }
+.bw-ring-p { font-family: Tahoma, Arial, sans-serif; font-size: 0.62rem; color: #555555; line-height: 1.45; margin-bottom: 7px; }
+.bw-ring-nav { display: flex; justify-content: center; gap: 10px; font-family: Tahoma, Arial, sans-serif; font-size: 0.64rem; white-space: nowrap; }
+.bw-ring-nav a { color: #0b3d91; text-decoration: underline; cursor: pointer; }
+.bw-ring-nav a:hover { color: #5e35b1; }
 
 /* 404 */
 .bw-404-h { font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }

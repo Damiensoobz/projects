@@ -50,12 +50,27 @@
         ['WARNING: portfolio may cause hiring', 'Side effects include working code, good taste, and reasonable rates.', 'PROCEED ANYWAY', 's5'],
         ['You&rsquo;ve won&hellip; a great developer', 'No prize wheel needed. Just go to damienbuilds.dev and say hello.', 'CLAIM DAMIEN', 's6'],
         ['Websites. But good.', 'Revolutionary concept, we know. Available now at damienbuilds.dev.', 'LEARN MORE', 's4'],
-        ['This banner is self-aware', 'And so is the person who built it. Real projects, real code, no filler.', 'SEE PROOF', 's3']
+        ['This banner is self-aware', 'And so is the person who built it. Real projects, real code, no filler.', 'SEE PROOF', 's3'],
+        ['One weird trick for a better website', 'Agencies hate him. He just&hellip; builds the thing properly, on time.', 'SEE THE TRICK', 's1'],
+        ['HOT DEALS on cold hard code', '50% off nothing! Everything is already reasonably priced at damienbuilds.dev.', 'SHOP NOW-ISH', 's1'],
+        ['sudo hire damien', 'Permission granted. The command actually works at damienbuilds.dev.', 'EXECUTE', 's2'],
+        ['Websites from the future (1998)', 'Retro on the outside, modern underneath. The timeline is a circle.', 'RIDE THE WAVE', 's4'],
+        ['ROAD WORK AHEAD?', 'Yeah, we work on the web. Under construction since 1998, shipping anyway.', 'MERGE LEFT', 's5'],
+        ['Your PC is running&hellip; fine, actually', 'This is not a virus warning. It is a Damien warning. He will improve your website.', 'SCAN ANYWAY', 's6'],
+        ['This ad space is real estate', 'And it all points to one place: damienbuilds.dev.', 'GO NOW', 's3']
     ];
     function adShuffle() {
         var a = ADS.slice();
         for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
         return a;
+    }
+    // Pick n ads such that no two on screen share a skin — three identical
+    // cream memos stacked in the rail was the bad-luck case this kills.
+    function adPicks(n) {
+        var pool = adShuffle(), picks = [], used = {};
+        pool.forEach(function (ad) { if (picks.length < n && !used[ad[3]]) { used[ad[3]] = 1; picks.push(ad); } });
+        pool.forEach(function (ad) { if (picks.length < n && picks.indexOf(ad) === -1) picks.push(ad); });
+        return picks;
     }
     function adHtml(ad) {
         return '<div class="bw-ad bw-ad-' + (ad[3] || 's1') + '"><span class="bw-ad-tag">advertisement</span>' +
@@ -65,21 +80,28 @@
                 '<span class="bw-ad-cta">[ ' + ad[2] + ' ]</span>' +
             '</a></div>';
     }
+    // Classic web-ring navigator — fills the bottom of the rail with
+    // something that isn't an ad. Prev is a lesson, Random is a real
+    // project, Next is the mothership.
+    function webringHtml() {
+        return '<div class="bw-ring">' +
+            '<div class="bw-ring-head">&#9733; WIZARD WEB RING &#9733;</div>' +
+            '<p class="bw-ring-p">This site is member <b>#98</b> of the Ring of Code Wizards.</p>' +
+            '<div class="bw-ring-nav">' +
+                '<a href="' + RICK + '" target="_blank" rel="noopener noreferrer">&laquo; prev</a>' +
+                '<a data-ring="random">random</a>' +
+                '<a href="' + SITE + '" target="_blank" rel="noopener noreferrer">next &raquo;</a>' +
+            '</div></div>';
+    }
     function railHtml(picks) {
         return '<aside class="bw-rail"><div class="bw-rail-sticky">' +
-            adHtml(picks[0]) + adHtml(picks[1]) +
-            '<div class="bw-ad bw-ad-s3"><span class="bw-ad-tag">advertisement</span>' +
-                '<a class="bw-ad-inner" href="' + SITE + '" target="_blank" rel="noopener noreferrer">' +
-                    '<span class="bw-ad-head">This ad space is real estate</span>' +
-                    '<span class="bw-ad-body">And it all points to one place: damienbuilds.dev.</span>' +
-                    '<span class="bw-ad-cta">[ GO NOW ]</span>' +
-                '</a></div>' +
+            picks.map(adHtml).join('') +
+            webringHtml() +
             '</div></aside>';
     }
     // Wraps a page in the shell that carries the sidebar ad rail.
     function withRail(pageHtml) {
-        var picks = adShuffle();
-        return '<div class="bw-shell">' + pageHtml + railHtml(picks) + '</div>';
+        return '<div class="bw-shell">' + pageHtml + railHtml(adPicks(4)) + '</div>';
     }
 
     function social(key) { return (typeof socialConfig !== 'undefined' && socialConfig[key]) || SITE; }
@@ -228,7 +250,7 @@
         if (!grid) return;
         var cards = grid.querySelectorAll('.card');
         if (cards.length < 3) return;
-        var picks = adShuffle();
+        var picks = adPicks(2);
         [[2, picks[0]], [4, picks[1]]].forEach(function (slot) {
             if (cards.length <= slot[0]) return;
             var tmp = document.createElement('div');
@@ -355,6 +377,12 @@
             if (!dest) return;
             el.addEventListener('mouseenter', function () { setStatus('Shortcut to ' + dest); });
             el.addEventListener('mouseleave', function () { setStatus('Done'); });
+        });
+        // Web ring "random" → a random live project, new tab.
+        var ring = page.querySelector('[data-ring="random"]');
+        if (ring) ring.addEventListener('click', function () {
+            var ps = (window.projects || []).filter(function (p) { return p.link && p.link !== '#'; });
+            if (ps.length) window.open(ps[Math.floor(Math.random() * ps.length)].link, '_blank', 'noopener,noreferrer');
         });
         var sf = page.querySelector('.gg-form');
         if (sf) {
