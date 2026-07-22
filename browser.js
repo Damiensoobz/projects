@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
-//  browser.js — turns the "ie" window into Foxfire, a tiny
-//  multi-page old-school Firefox parody. The portfolio is "home";
+//  browser.js — turns the "ie" window into Kurama Browser, a tiny
+//  multi-page old-school browser parody. The portfolio is "home";
 //  the rest are period gags. Working Back / Forward / Reload / Home
 //  + an editable address bar with its own history stack. Loads after
 //  app.js (uses window.renderPortfolio to paint the home page's cards).
@@ -182,7 +182,7 @@
             searchResult('Damien &middot; GitHub', social('github'), 'Public repositories with live commit history. At least three of them are finished.', 'ext') +
             searchResult('Damien Subramanian | LinkedIn', social('linkedin'), 'Professional&trade;. Open to work, opportunities, and free snacks.', 'ext') +
             searchResult('@damienbuilds.dev &middot; Instagram', social('instagram'), 'Screenshots of code that compiled on the first try. A rare and beautiful archive.', 'ext') +
-            searchResult('Download more RAM &mdash; 100% FREE (legit)', RICK, 'Your PC is low on memory. Click here to install an extra 16&nbsp;GB instantly. No catch.', 'ext') +
+            searchResult('Download more RAM &mdash; 100% FREE (legit)', 'https://downloadmoreram.com/#faq', 'Your PC is low on memory. Click here to install an extra 16&nbsp;GB instantly. No catch.', 'ext') +
             searchResult('&#9733; YOU are visitor 1,000,000 &mdash; claim your prize &#9733;', RICK, 'CONGRATULATIONS!!! A brand-new iPod is reserved in your name. Click within 0:59 to claim.', 'ext') +
             searchResult('Hire Damien (Sponsored)', 'mailto:' + CONTACT_EMAIL, 'The #1 result for &ldquo;' + esc(q) + '&rdquo;. Sponsored. (Sponsored by him.)', 'mail') +
             searchResult('damien_resume_FINAL_v7_REAL.doc', 'http://files.damienbuilds.dev/resume', 'Download starts in 1998 seconds. Do not close this window. Do not open another.');
@@ -233,7 +233,7 @@
             '<p class="bw-404-p">Please try the following:</p>' +
             '<ul class="bw-404-list"><li>Click the <a data-link="' + HOME + '">Home</a> button. It always works.</li>' +
             '<li>Blow on the cartridge.</li><li>Turn it off and on again.</li></ul>' +
-            '<p class="bw-404-code">HTTP 404 &mdash; File not found<br>Kurama</p></div>';
+            '<p class="bw-404-code">HTTP 404 &mdash; File not found<br>Kurama Browser</p></div>';
     }
 
     var PAGES = {};

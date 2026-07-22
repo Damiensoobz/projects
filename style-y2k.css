@@ -875,10 +875,10 @@ code {
 .dlg-act-note { font-size: 0.72rem; color: #555555; line-height: 1.5; }
 
 /* ═══════════════════════════════════════════════════════════════
-   APP: Projects → Foxfire (an old-school Firefox parody) + a blog
+   APP: Projects → Kurama Browser (an old-school browser parody) + a blog
    ═══════════════════════════════════════════════════════════════ */
 .block[data-app="ie"] { display: flex; flex-direction: column; padding: 0; }
-/* Foxfire — warm orange/red title bar, classic browser-chrome proportions */
+/* Kurama Browser — warm orange/red title bar, classic browser-chrome proportions */
 .block[data-app="ie"] > .prompt {
     margin: 0;
     background: linear-gradient(to right, #a3260b 0%, #e2571b 60%, #ff8a3d 100%);
@@ -886,7 +886,7 @@ code {
     gap: 8px;
 }
 .block[data-app="ie"] > .prompt .p-cmd { font-size: 0.76rem; letter-spacing: 0.02em; }
-/* Foxfire mark — a real fox emoji, not the Mozilla Firefox logo */
+/* Kurama mark — a real fox emoji, not a real browser logo */
 .block[data-app="ie"] > .prompt::before {
     content: '\1F98A';
     font-size: 0.85rem;
@@ -1328,10 +1328,11 @@ code {
 .steam-store-link:hover { color: #9ddcff; text-decoration: underline; }
 
 /* Status apps: a consistent dark Win98 window (chrome = drag handle + controls),
-   each wearing its own brand toolbar (the panel ::before) just below. */
+   each wearing its own brand toolbar (the panel ::before) just below.
+   No auto side-margins — they'd override flex-stretch in the mobile stack
+   and shrink-wrap the windows (Steam collapses when its content is short). */
 .block[data-app="winamp"], .block[data-app="terminal"], .block[data-app="cdplayer"] {
     padding: 0; border: 1px solid #000000; box-shadow: 0 2px 7px rgba(0,0,0,0.45);
-    margin-left: auto; margin-right: auto;
 }
 /* Neutral dark title bar for all three; the brand colour lives in the toolbar below */
 .block[data-app="winamp"] > .prompt,
@@ -1612,7 +1613,7 @@ code {
 /* In-feed banner between project cards */
 .cards-grid .bw-ad { padding: 12px 22px; border-bottom: 1px dashed #b8b8b8; background: #ffffff; }
 
-/* Sidebar ad rail — appears when the Foxfire window is wide */
+/* Sidebar ad rail — appears when the Kurama window is wide */
 .bw-shell { display: flex; justify-content: center; align-items: flex-start; }
 .bw-shell > .bw-page { flex: 0 1 900px; min-width: 0; margin: 0; }
 .bw-rail { display: none; width: 168px; flex-shrink: 0; padding: 12px 14px 12px 0; }
@@ -1728,7 +1729,7 @@ code {
        would wrongly target the IE window (last in markup). Terminal padding
        handles trailing space. */
 
-    /* Foxfire window: compact chrome so it never overflows the screen */
+    /* Kurama window: compact chrome so it never overflows the screen */
     .block[data-app="ie"] .ie-menubar { gap: 11px; flex-wrap: wrap; }
     .block[data-app="ie"] .ie-toolbar { flex-wrap: wrap; gap: 0; }
     .block[data-app="ie"] .ie-btn { font-size: 0; gap: 0; padding: 4px 6px; }  /* icon-only buttons */

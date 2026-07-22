@@ -115,16 +115,7 @@ body { min-height: 100vh; }
 
 .empty-state { padding: 8px 0; }
 
-/* ── Status grid + shared panel scaffolding ────────────────── */
-.status-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    align-items: stretch;
-}
-@media (max-width: 780px) { .status-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .status-grid { grid-template-columns: 1fr; } }
-.status-grid > * { display: flex; flex-direction: column; }
-
+/* ── Status-widget panel scaffolding ───────────────────────── */
 .sp-panel, .gh-panel, .steam-panel {
     display: flex;
     flex-direction: column;

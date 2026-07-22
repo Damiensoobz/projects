@@ -207,7 +207,7 @@
     // Initial desktop arrangement (runs once, the first time desktop mode is
     // active): only hello.bat is open (and on the taskbar) by default —
     // every other app starts fully closed, off the taskbar too, and is
-    // opened from its desktop icon / Start menu. Foxfire keeps its maximized
+    // opened from its desktop icon / Start menu. Kurama keeps its maximized
     // geometry queued up so it still launches full-screen whenever it's
     // first opened.
     function applyDefaultStates() {

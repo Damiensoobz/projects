@@ -51,32 +51,32 @@ var projects = [
         tags: ["Python", "FastAPI", "Procedural Gen"]
     },
     {
-    title: "Dungeon Dice!",
-    subtitle: "DIGITAL GAME MASTER TOOLKIT.",
-    description: "It was only supposed to be a fun way to emulate a dice roll...",
-    image: "images/dice.png",
-    link: "https://damiensoobz.github.io/DungeonDice/",
-    github: "https://github.com/Damiensoobz/DungeonDice",
-    tags: ["JavaScript", "API", "CSS"],
-    mobile: true
+        title: "Dungeon Dice!",
+        subtitle: "digital game-master toolkit",
+        description: "It was only supposed to be a dice roller. It leveled up. Every die a dungeon needs — rolled, tallied, and ready before the party finishes arguing about the rules.",
+        image: "images/dice.png",
+        link: "https://damiensoobz.github.io/DungeonDice/",
+        github: "https://github.com/Damiensoobz/DungeonDice",
+        tags: ["JavaScript", "API", "CSS"],
+        mobile: true
     },
     {
-    title: "Hecker",
-    subtitle: "Pretend you're a real life hacker.",
-    description: "Instructions at the bottom of the screen on first load - press ? for help :)",
-    image: "images/hecker.png",
-    link: "https://damiensoobz.github.io/hecker/",
-    github: "https://github.com/Damiensoobz/hecker",
-    tags: ["JavaScript", "HTML", "CSS"]
+        title: "Hecker",
+        subtitle: "hollywood hacker terminal toy",
+        description: "Mash the keyboard and watch impossibly serious code pour out, movie-style. Zero real hacking, one hundred percent feeling like the person who says “I’m in.” Press ? for the full toolkit.",
+        image: "images/hecker.png",
+        link: "https://damiensoobz.github.io/hecker/",
+        github: "https://github.com/Damiensoobz/hecker",
+        tags: ["JavaScript", "HTML", "CSS"]
     },
     {
-    title: "Asciifier",
-    subtitle: "Turn images into ascii images.",
-    description: "Upload an image and convert it to an ascii version - works best with invert checked.",
-    image: "images/ascii.png",
-    link: "https://damiensoobz.github.io/Ascii-fier/",
-    github: "https://github.com/Damiensoobz/Ascii-fier",
-    tags: ["JavaScript", "HTML", "CSS"]
+        title: "Asciifier",
+        subtitle: "image-to-ASCII art converter",
+        description: "Feed it any image and it rebuilds the picture out of pure characters, pixel by glyph. Tip: check invert for the crispiest results — some images just read better in the dark.",
+        image: "images/ascii.png",
+        link: "https://damiensoobz.github.io/Ascii-fier/",
+        github: "https://github.com/Damiensoobz/Ascii-fier",
+        tags: ["JavaScript", "HTML", "CSS"]
     }
 ];
 
@@ -110,19 +110,15 @@ var githubConfig = {
 // ─────────────────────────────────────────────────────────────
 //  Steam "recently played"
 //
-//  ⚠ Steam Web API keys must NOT be put here — they grant access
-//    to your whole key quota and live forever in git history.
-//    The old key was exposed and must be revoked at:
-//    https://steamcommunity.com/dev/apikey
-//
-//  PLAN: route through a serverless proxy (e.g. Vercel function)
-//  that holds the key as an env var, then set proxyUrl below.
-//  Until then the widget shows a plain profile link.
+//  ⚠ Steam Web API keys must NOT be put here — anything in this
+//    repo is world-readable. The key (and SteamID) live as secrets
+//    on the Cloudflare Worker below (see steam-proxy/worker.js),
+//    which serves the recent/profile/library endpoints with CORS
+//    locked to the live domains + localhost for dev.
 // ─────────────────────────────────────────────────────────────
 
 var steamConfig = {
     proxyUrl:   "https://rapid-feather-4bb1.damiensoobz.workers.dev",
-    steamId:    "76561198823151635",
     profileUrl: "https://steamcommunity.com/profiles/76561198823151635",
 };
 
