@@ -512,22 +512,22 @@
 
     if (stEl && stCfg.proxyUrl) {
         stEl.innerHTML = '<p class="sp-loading out dim">> connecting to steam...</p>';
-        fetchSteamRecent(stCfg.proxyUrl, stCfg.profileUrl);
+        fetchSteamRecent(stCfg.proxyUrl);
     } else if (stEl) {
-        renderSteamStatic(stCfg.profileUrl || '');
+        renderSteamStatic();
     }
 
-    function fetchSteamRecent(proxyUrl, profileUrl) {
+    function fetchSteamRecent(proxyUrl) {
         cachedJson(proxyUrl + '?action=recent', 300000)
             .then(function (data) {
                 var games = data && data.response && data.response.games;
-                if (!games || games.length === 0) { renderSteamStatic(profileUrl); return; }
+                if (!games || games.length === 0) { renderSteamStatic(); return; }
                 var g        = games[0];
                 var hrs      = g.playtime_2weeks  ? (Math.round(g.playtime_2weeks  / 6) / 10) : 0;
                 var totalHrs = g.playtime_forever ? Math.round(g.playtime_forever / 60)       : 0;
                 renderSteamGame(g.name, g.appid, hrs, totalHrs);
             })
-            .catch(function () { renderSteamStatic(profileUrl); });
+            .catch(function () { renderSteamStatic(); });
     }
 
     function renderSteamGame(name, appId, hrs, totalHrs) {
@@ -548,16 +548,13 @@
             '</div>';
     }
 
-    function renderSteamStatic(profileUrl) {
+    function renderSteamStatic() {
         stEl.innerHTML =
             '<div class="steam-panel">' +
                 '<div class="steam-status"><span class="steam-dot"></span>currently offline</div>' +
                 '<div class="steam-info">' +
                     '<div class="steam-game">Not in a game</div>' +
                     '<div class="steam-meta">the wizard is away from the keep</div>' +
-                    (profileUrl
-                        ? '<a class="steam-store-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">view profile ↗</a>'
-                        : '') +
                 '</div>' +
             '</div>';
     }

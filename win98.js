@@ -205,13 +205,14 @@
     function isDesktop() { return window.innerWidth >= 1024 && window.innerHeight >= 560; }
 
     // Initial desktop arrangement (runs once, the first time desktop mode is
-    // active): only hello.bat is open (and on the taskbar) by default —
-    // every other app starts fully closed, off the taskbar too, and is
-    // opened from its desktop icon / Start menu. Kurama keeps its maximized
-    // geometry queued up so it still launches full-screen whenever it's
-    // first opened.
+    // active): hello.bat and Spotify98 are open (and on the taskbar) by
+    // default — Spotify98 "launches on startup", as media players always
+    // insisted on doing. Every other app starts fully closed, off the taskbar
+    // too, and is opened from its desktop icon / Start menu. Kurama keeps its
+    // maximized geometry queued up so it still launches full-screen whenever
+    // it's first opened.
     function applyDefaultStates() {
-        ['cdplayer', 'winamp', 'terminal', 'notepad'].forEach(function (app) {
+        ['cdplayer', 'terminal', 'notepad'].forEach(function (app) {
             var b = document.querySelector('[data-app="' + app + '"]');
             if (b) closeWin(b);
         });

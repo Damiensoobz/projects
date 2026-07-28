@@ -1,6 +1,19 @@
-name = "steam-recent-proxy"
+# ⚠ `name` MUST match the EXISTING deployed worker, otherwise `wrangler deploy`
+# publishes a brand-new worker at a different URL and the live one (the URL in
+# projects.js → steamConfig.proxyUrl) keeps running the old code.
+#   Live worker: https://rapid-feather-4bb1.damiensoobz.workers.dev
+name = "rapid-feather-4bb1"
 main = "worker.js"
 compatibility_date = "2024-11-01"
+
+# ⚠ The visitor counter needs a KV namespace bound as HITS. Bindings set only
+# in the dashboard are NOT preserved by `wrangler deploy` — they must be
+# declared here too, or the counter breaks after deploying.
+# Get the id with:  wrangler kv namespace list
+# then uncomment:
+# [[kv_namespaces]]
+# binding = "HITS"
+# id = "<your-kv-namespace-id>"
 
 # Secrets are NOT stored here. Set them with:
 #   wrangler secret put STEAM_API_KEY
