@@ -257,6 +257,25 @@
             zTop = 20 + i;
         });
         if (!defaultsDone) { defaultsDone = true; applyDefaultStates(); }
+        blocks.forEach(keepOnScreen);   // re-layout (e.g. window resize) can push a tall window off-screen
+    }
+
+    // Widgets (Git98, Steam98…) fill in after layout, so a window placed low
+    // on the desktop can grow past the taskbar. Nudge it up while it's still
+    // sitting at its home spot — never fight a window the visitor dragged.
+    function keepOnScreen(b) {
+        if (!desktopMode || b.classList.contains('win-max') || b.style.top !== b.dataset.homeTop) return;
+        var maxTop = window.innerHeight - 30 - b.offsetHeight - 8;   // 30 = taskbar
+        var top = parseFloat(b.style.top) || 0;
+        if (top > maxTop) {
+            b.style.top = b.dataset.homeTop = Math.max(2, Math.round(maxTop)) + 'px';
+        }
+    }
+    if (window.ResizeObserver) {
+        var fitObs = new ResizeObserver(function (entries) {
+            entries.forEach(function (en) { keepOnScreen(en.target); });
+        });
+        blocks.forEach(function (b) { fitObs.observe(b); });
     }
 
     function bringFront(b) { b.style.zIndex = ++zTop; }

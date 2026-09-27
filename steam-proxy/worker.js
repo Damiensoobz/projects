@@ -12,6 +12,8 @@
 //    ?action=library  → GetOwnedGames  (game count)
 //    ?action=hits     → increments + returns a real hit count (KV-backed,
 //                       independent of the Steam secrets below)
+//    ?action=contrib  → GitHub contribution calendar (last year) for the
+//                       Git98 heatmap. GraphQL-only, so it needs a token.
 //
 //  If the widget still falls back after this, the account's "Game details"
 //  privacy setting is almost certainly not Public — both endpoints above
@@ -21,6 +23,9 @@
 //  Secrets (set in Cloudflare dashboard, NOT in this file):
 //    STEAM_API_KEY  — https://steamcommunity.com/dev/apikey
 //    STEAM_ID       — your 64-bit SteamID
+//    GITHUB_TOKEN   — GitHub personal access token (fine-grained, public
+//                     repositories read-only, no extra permissions needed)
+//    GITHUB_USER    — optional, defaults to Damiensoobz
 //
 //  Bindings:
 //    HITS — a KV namespace, bound under this exact name, for the counter.
@@ -72,6 +77,8 @@ export default {
 
         // Visitor counter — its own thing, no Steam config required.
         if (action === 'hits') return handleHits(request, env, cors);
+        // GitHub heatmap — also independent of Steam.
+        if (action === 'contrib') return handleContrib(request, env, ctx, cors);
 
         if (!env.STEAM_API_KEY || !env.STEAM_ID) {
             return json({ error: 'Worker not configured: set STEAM_API_KEY and STEAM_ID secrets.' }, 500, cors);
@@ -152,6 +159,51 @@ async function handleHits(request, env, cors) {
         await env.HITS.put(dedupeKey, '1', { expirationTtl: 86400 });
     }
     return json({ count }, 200, Object.assign({ 'Cache-Control': 'no-store' }, cors));
+}
+
+// Contribution calendar for the Git98 heatmap. Only GitHub's GraphQL API
+// exposes it, and GraphQL always needs a token — hence the proxy. Reshaped
+// to the bare minimum: a total plus weeks of 0–4 intensity levels.
+const CONTRIB_LEVEL = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+const CONTRIB_TTL = 3600;
+
+async function handleContrib(request, env, ctx, cors) {
+    if (!env.GITHUB_TOKEN) {
+        return json({ error: 'Worker not configured: set the GITHUB_TOKEN secret.' }, 500, cors);
+    }
+    const cacheKey = new Request(new URL(request.url).origin + '/github-contrib');
+    const cache = caches.default;
+    const hit = await cache.match(cacheKey);
+    if (hit) return withCors(hit, cors);
+
+    const query = `query($login: String!) { user(login: $login) { contributionsCollection {
+        contributionCalendar { totalContributions weeks { contributionDays { date contributionCount contributionLevel } } }
+    } } }`;
+    let cal;
+    try {
+        const r = await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'bearer ' + env.GITHUB_TOKEN,
+                'Content-Type': 'application/json',
+                'User-Agent': 'damien-portfolio-worker'   // GitHub rejects requests without one
+            },
+            body: JSON.stringify({ query, variables: { login: env.GITHUB_USER || 'Damiensoobz' } })
+        });
+        if (!r.ok) throw new Error('GitHub API returned ' + r.status);
+        cal = (await r.json())?.data?.user?.contributionsCollection?.contributionCalendar;
+        if (!cal) throw new Error('no calendar');
+    } catch (e) {
+        return json({ error: 'contrib unavailable' }, 502, cors);
+    }
+
+    const weeks = cal.weeks.map(w => w.contributionDays.map(d => ({
+        d: d.date, c: d.contributionCount, l: CONTRIB_LEVEL[d.contributionLevel] || 0
+    })));
+    const res = json({ total: cal.totalContributions, weeks },
+        200, Object.assign({ 'Cache-Control': 'public, max-age=' + CONTRIB_TTL }, cors));
+    ctx.waitUntil(cache.put(cacheKey, res.clone()));
+    return res;
 }
 
 function json(obj, status, headers) {

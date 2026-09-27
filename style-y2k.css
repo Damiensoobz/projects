@@ -1280,6 +1280,31 @@ code {
 .gh-ev-repo { color: #ff9b6a; text-decoration: none; }
 .gh-ev-repo:hover { color: #ffb98f; text-decoration: underline; }
 .gh-ev-time { color: #8a7360; }
+.gh-ev-sep { color: #8a7360; }
+.gh-ev-msg { color: #e6d9cc; }
+
+/* Contribution heatmap — git-orange intensity scale instead of GitHub green */
+.gh-heat { padding: 7px 10px 8px; border-bottom: 1px solid #3a2a1e; font-family: 'Courier New', monospace; }
+.gh-heat-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.58rem; color: #b3a294; white-space: nowrap; }
+.gh-heat-head b { color: #ff9b6a; }
+.gh-heat-key { display: inline-flex; align-items: center; gap: 2px; color: #8a7360; }
+.gh-heat-key .gh-hc { width: 7px; height: 7px; }
+.gh-heat-grid { display: grid; grid-template-rows: repeat(7, auto); grid-auto-flow: column; gap: 1px; }
+.gh-hc { display: block; aspect-ratio: 1; border-radius: 1px; background: #241a14; }
+.gh-hc-pad { background: transparent; }
+.gh-hc-1 { background: #5a2a18; }
+.gh-hc-2 { background: #8f3b1f; }
+.gh-hc-3 { background: #c94a26; }
+.gh-hc-4 { background: #f05133; box-shadow: 0 0 3px rgba(240,81,51,0.6); }
+
+/* Language mix — stacked bar + key, like a repo's language strip */
+.gh-langs { padding: 7px 10px 8px; border-bottom: 1px solid #3a2a1e; }
+.gh-langbar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; background: #241a14; }
+.gh-langbar span { display: block; min-width: 2px; }
+.gh-langkey { display: flex; flex-wrap: wrap; gap: 3px 10px; margin-top: 5px; font-family: 'Courier New', monospace; font-size: 0.56rem; color: #b3a294; }
+.gh-langkey span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.gh-langkey i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.gh-langkey b { color: #8a7360; font-weight: 400; }
 
 /* Footer link + join year */
 .gh-meta { background: #14100d; border-top-color: #3a2a1e; justify-content: space-between; }

@@ -404,29 +404,30 @@
                 var topRepo = '', topCount = 0;
                 Object.keys(repoPushCount).forEach(function (r) { if (repoPushCount[r] > topCount) { topCount = repoPushCount[r]; topRepo = r; } });
 
-                // Fetch language for top push repos (up to 4)
-                var pushRepos = Object.keys(repoPushCount).sort(function (a, b) { return repoPushCount[b] - repoPushCount[a]; }).slice(0, 4);
-                var langFetches = pushRepos.map(function (full) {
-                    return cachedJson('https://api.github.com/repos/' + full, 3600000)
-                        .then(function (d) { return { full: full, lang: d.language || null }; })
-                        .catch(function () { return { full: full, lang: null }; });
-                });
+                // One repo-list call covers both the per-row language tags and
+                // the language bar (instead of one call per repo).
+                var reposP = cachedJson('https://api.github.com/users/' + encodeURIComponent(username) + '/repos?per_page=100&sort=pushed', 3600000)
+                    .catch(function () { return []; });
                 // Account-level stats (followers, public repos, join year)
                 var userP = cachedJson('https://api.github.com/users/' + encodeURIComponent(username), 3600000)
                     .catch(function () { return null; });
 
-                Promise.all([Promise.all(langFetches), userP]).then(function (res) {
-                    var results = res[0], user = res[1] || {};
-                    var langMap = {};
-                    results.forEach(function (r) { if (r.lang) langMap[r.full] = r.lang; });
+                var items = [];
+                for (var i = 0; i < events.length && items.length < 6; i++) {
+                    var it = describeEvent(events[i]);
+                    if (it) items.push(it);
+                }
+                if (!items.length) { renderGithubStatic(username, profileUrl); return; }
+                var commitsP = fetchCommitMessages(items);
 
-                    var items = [];
-                    for (var i = 0; i < events.length && items.length < 7; i++) {
-                        var it = describeEvent(events[i]);
-                        if (it) { it.lang = langMap[it.full] || null; items.push(it); }
-                    }
-                    if (!items.length) { renderGithubStatic(username, profileUrl); return; }
+                Promise.all([reposP, userP, commitsP]).then(function (res) {
+                    var repos = Array.isArray(res[0]) ? res[0] : [], user = res[1] || {};
+                    var langMap = {};
+                    repos.forEach(function (r) { if (r.language) langMap[r.full_name] = r.language; });
+                    items.forEach(function (it) { it.lang = langMap[it.full] || null; });
+
                     renderGithubFeed(items, profileUrl, {
+                        langs: languageMix(repos),
                         streak: streak, topRepo: topRepo, topCount: topCount,
                         pushes: totalPushes,
                         followers: (typeof user.followers === 'number') ? user.followers : null,
@@ -436,6 +437,86 @@
                 });
             })
             .catch(function () { renderGithubStatic(username, profileUrl); });
+    }
+
+    // Swap "pushed to" for the real commit message. The events feed no longer
+    // carries commit messages, only the head SHA, so each push costs one
+    // call — capped at 3 to stay inside GitHub's 60/hr anonymous limit.
+    // Rows keep the plain "pushed to" text if the lookup fails.
+    function fetchCommitMessages(items) {
+        var seen = {};
+        var lookups = items.filter(function (it) {
+            if (!it.sha || seen[it.sha]) return false;
+            return (seen[it.sha] = true);
+        }).slice(0, 3).map(function (it) {
+            return cachedJson('https://api.github.com/repos/' + it.full + '/commits/' + it.sha, 86400000)
+                .then(function (c) {
+                    var msg = c && c.commit && c.commit.message ? c.commit.message.split('\n')[0] : '';
+                    items.forEach(function (row) { if (row.sha === it.sha && msg) row.msg = msg; });
+                })
+                .catch(function () {});
+        });
+        return Promise.all(lookups);
+    }
+
+    // Share of non-fork repos per primary language, top 5 + "Other".
+    function languageMix(repos) {
+        var counts = {}, total = 0;
+        repos.forEach(function (r) {
+            if (r.fork || !r.language) return;
+            counts[r.language] = (counts[r.language] || 0) + 1;
+            total++;
+        });
+        if (!total) return [];
+        var list = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+        var mix = list.slice(0, 5).map(function (l) { return { lang: l, n: counts[l] }; });
+        var rest = list.slice(5).reduce(function (s, l) { return s + counts[l]; }, 0);
+        if (rest) mix.push({ lang: 'Other', n: rest });
+        mix.forEach(function (m) { m.pct = Math.round(m.n / total * 100); });
+        return mix;
+    }
+
+    function renderLangBar(mix) {
+        if (!mix || !mix.length) return '';
+        return '<div class="gh-langs">' +
+            '<div class="gh-langbar">' +
+                mix.map(function (m) {
+                    return '<span style="flex:' + m.n + ';background:' + langColor(m.lang) + '" title="' + esc(m.lang) + ' ' + m.pct + '%"></span>';
+                }).join('') +
+            '</div>' +
+            '<div class="gh-langkey">' +
+                mix.map(function (m) {
+                    return '<span><i style="background:' + langColor(m.lang) + '"></i>' + esc(m.lang) + ' <b>' + m.pct + '%</b></span>';
+                }).join('') +
+            '</div>' +
+        '</div>';
+    }
+
+    // Contribution heatmap — the calendar only comes from GitHub's GraphQL
+    // API (token required), so it's served by the same Worker as Steam
+    // (?action=contrib). Quietly removes itself if that isn't available.
+    function loadHeatmap() {
+        var el = document.getElementById('gh-heat');
+        var proxy = (typeof steamConfig !== 'undefined') && steamConfig.proxyUrl;
+        if (!el) return;
+        if (!proxy) { el.remove(); return; }
+        cachedJson(proxy + '?action=contrib', 3600000)
+            .then(function (data) {
+                if (!data || !Array.isArray(data.weeks) || !data.weeks.length) throw new Error('no data');
+                var weeks = data.weeks, cells = [];
+                // Weeks run Sun→Sat; pad the first (partial) week so rows line up by weekday.
+                for (var p = 0; p < 7 - weeks[0].length; p++) cells.push('<i class="gh-hc gh-hc-pad"></i>');
+                weeks.forEach(function (w) {
+                    w.forEach(function (d) {
+                        cells.push('<i class="gh-hc gh-hc-' + d.l + '" title="' + d.c + ' contribution' + (d.c === 1 ? '' : 's') + ' on ' + esc(d.d) + '"></i>');
+                    });
+                });
+                el.innerHTML =
+                    '<div class="gh-heat-head"><span><b>' + Number(data.total).toLocaleString() + '</b> contributions in the last year</span>' +
+                        '<span class="gh-heat-key">less <i class="gh-hc gh-hc-0"></i><i class="gh-hc gh-hc-1"></i><i class="gh-hc gh-hc-2"></i><i class="gh-hc gh-hc-3"></i><i class="gh-hc gh-hc-4"></i> more</span></div>' +
+                    '<div class="gh-heat-grid" style="grid-template-columns:repeat(' + weeks.length + ',1fr)">' + cells.join('') + '</div>';
+            })
+            .catch(function () { el.remove(); });
     }
 
     // Turn a raw GitHub event into a feed row (glyphs are ASCII so they render
@@ -448,6 +529,7 @@
         switch (ev.type) {
             case 'PushEvent':
                 var n = p.size || (p.commits ? p.commits.length : 0);
+                base.sha = p.head || null;               // resolved to a commit message later
                 return row('push', '>', 'pushed' + (n ? ' ' + n + ' commit' + (n > 1 ? 's' : '') : '') + ' to');
             case 'CreateEvent':       return row('create', '+', 'created ' + (p.ref_type || 'repo'));
             case 'WatchEvent':        return row('star',   '*', 'starred');
@@ -478,15 +560,21 @@
             '<div class="gh-panel active">' +
                 statsHtml +
                 '<div class="gh-status"><span class="gh-dot"></span>' + workingOn + '</div>' +
+                '<div class="gh-heat" id="gh-heat"></div>' +
+                renderLangBar(stats.langs) +
                 '<ul class="gh-feed">' +
                     items.map(function (it) {
                         var langHtml = it.lang
                             ? '<span class="gh-lang" style="background:' + langColor(it.lang) + '">' + esc(langShort(it.lang)) + '</span>'
                             : '';
+                        var repoLink = '<a class="gh-ev-repo" href="https://github.com/' + esc(it.full) + '" target="_blank" rel="noopener noreferrer">' + esc(it.repo) + '</a>';
+                        // With a commit message: "repo: message" (git log style); otherwise the generic event text.
+                        var textHtml = it.msg
+                            ? repoLink + '<span class="gh-ev-sep">:</span> <span class="gh-ev-msg" title="' + esc(it.msg) + '">' + esc(it.msg) + '</span>'
+                            : esc(it.text) + ' ' + repoLink;
                         return '<li class="gh-ev">' +
                             '<span class="gh-ev-ico gh-ev-' + it.kind + '">' + esc(it.glyph) + '</span>' +
-                            '<span class="gh-ev-text">' + esc(it.text) + ' ' +
-                                '<a class="gh-ev-repo" href="https://github.com/' + esc(it.full) + '" target="_blank" rel="noopener noreferrer">' + esc(it.repo) + '</a></span>' +
+                            '<span class="gh-ev-text">' + textHtml + '</span>' +
                             langHtml +
                             '<span class="gh-ev-time">' + esc(it.when) + '</span>' +
                         '</li>';
@@ -497,6 +585,7 @@
                     (stats.since ? '<span class="gh-since">since ' + esc(stats.since) + '</span>' : '') +
                 '</div>' +
             '</div>';
+        loadHeatmap();
     }
 
     function renderGithubStatic(username, profileUrl) {
