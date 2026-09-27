@@ -1163,11 +1163,11 @@ code {
 .block[data-app="dos"] > .prompt::before {
     content: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14' shape-rendering='crispEdges'><rect width='16' height='14' fill='%23000000' stroke='%23808080'/><text x='2' y='10' font-family='monospace' font-size='8' fill='%23c0c0c0'>C:\</text></svg>");
 }
-.dos-screen { background: #000000; padding: 12px 16px 16px; overflow: auto; max-height: 58vh; cursor: text; }
+.dos-screen { background: #000000; padding: 12px 16px 16px; overflow: auto; max-height: calc(100vh - 90px); cursor: text; }
 .block[data-app="dos"].win-max .dos-screen { max-height: none; }
 .dos-screen .ascii-art { background: none; border: none; margin: 4px 0 12px; padding: 0; color: #c0c0c0; }
 .dos-screen .ascii-art { width: fit-content; max-width: 100%; margin-inline: auto; }
-.dos-screen .ascii-portrait { font-size: clamp(0.24rem, 0.64vw, 0.36rem); line-height: 1; margin: 0 auto 12px; color: #c0c0c0; }
+.dos-screen .ascii-portrait { font-size: clamp(0.24rem, min(0.64vw, 0.5vh), 0.36rem); line-height: 1; margin: 0 auto 12px; color: #c0c0c0; }
 .dos-screen .out.center { text-align: center; }
 .dos-screen .out { color: #c0c0c0; font-family: 'Courier New', monospace; font-size: 0.8rem; }
 .dos-screen .out.dim { color: #7a7a7a; }

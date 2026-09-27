@@ -4,44 +4,45 @@
 
     // ── ASCII name scramble — hover or load to decode ───────────
     var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var _scramblers = [];
-    Array.prototype.forEach.call(document.querySelectorAll('.ascii-art'), function (_art) {
-        var _orig = _art.textContent;
-        var _pool = '▓▒░▄▀◆●★#@$%!?><~^*+';
-        var _busy = false;
-
-        function _scramble() {
-            if (_busy || _reduceMotion) return;   // honor reduced-motion: leave the name decoded
-            _busy = true;
-            var chars = _orig.split('');
-            var idxs  = chars.reduce(function(a, c, i) {
-                if (c !== ' ' && c !== '\n' && c !== '\r') a.push(i);
-                return a;
-            }, []);
-            // Random reveal order so it doesn't just sweep left-to-right
-            var order = idxs.slice().sort(function() { return Math.random() - 0.5; });
-            var done  = {};
-            var f = 0, totalF = 44;
-
-            (function tick() {
-                var rev = Math.floor(f / totalF * order.length);
-                for (var k = 0; k < rev; k++) done[order[k]] = 1;
-                _art.textContent = chars.map(function(c, i) {
-                    if (c === ' ' || c === '\n' || c === '\r') return c;
-                    return done[i] ? c : _pool[Math.floor(Math.random() * _pool.length)];
-                }).join('');
-                if (++f <= totalF) requestAnimationFrame(tick);
-                else { _art.textContent = _orig; _busy = false; }
-            })();
-        }
-
-        _scramble();                             // auto-run on load
-        _art.style.cursor = 'crosshair';
-        _art.addEventListener('mouseenter', _scramble);  // hover to re-trigger
-        _scramblers.push(_scramble);
+    // Every .ascii-art block (name + portrait) glitches together as one animation.
+    var _arts = Array.prototype.map.call(document.querySelectorAll('.ascii-art'), function (el) {
+        return { el: el, chars: el.textContent.split('') };
     });
-    // expose for theme switcher — re-glitches every ASCII block
-    window.triggerScramble = function () { _scramblers.forEach(function (fn) { fn(); }); };
+    var _pool = '▓▒░▄▀◆●★#@$%!?><~^*+';
+    var _busy = false;
+
+    function _isBlank(c) { return c === ' ' || c === '\n' || c === '\r'; }
+
+    function _scramble() {
+        if (_busy || _reduceMotion || !_arts.length) return;   // honor reduced-motion: leave the art decoded
+        _busy = true;
+        _arts.forEach(function (a) {
+            var idxs = a.chars.reduce(function (acc, c, i) { if (!_isBlank(c)) acc.push(i); return acc; }, []);
+            // Random reveal order so it doesn't just sweep left-to-right
+            a.order = idxs.sort(function () { return Math.random() - 0.5; });
+            a.done  = {};
+        });
+        var f = 0, totalF = 44;
+
+        (function tick() {
+            _arts.forEach(function (a) {
+                var rev = Math.floor(f / totalF * a.order.length);
+                for (var k = 0; k < rev; k++) a.done[a.order[k]] = 1;
+                a.el.textContent = a.chars.map(function (c, i) {
+                    return _isBlank(c) || a.done[i] ? c : _pool[Math.floor(Math.random() * _pool.length)];
+                }).join('');
+            });
+            if (++f <= totalF) requestAnimationFrame(tick);
+            else { _arts.forEach(function (a) { a.el.textContent = a.chars.join(''); }); _busy = false; }
+        })();
+    }
+
+    _scramble();                                 // auto-run on load
+    _arts.forEach(function (a) {
+        a.el.style.cursor = 'crosshair';
+        a.el.addEventListener('mouseenter', _scramble);  // hover either block to re-trigger both
+    });
+    window.triggerScramble = _scramble;          // expose for theme switcher
 
     // ── Interactive MS-DOS prompt ───────────────────────────────
     (function dosShell() {
