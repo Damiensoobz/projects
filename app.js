@@ -4,8 +4,8 @@
 
     // ── ASCII name scramble — hover or load to decode ───────────
     var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var _art  = document.querySelector('.ascii-art');
-    if (_art) {
+    var _scramblers = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.ascii-art'), function (_art) {
         var _orig = _art.textContent;
         var _pool = '▓▒░▄▀◆●★#@$%!?><~^*+';
         var _busy = false;
@@ -38,8 +38,10 @@
         _scramble();                             // auto-run on load
         _art.style.cursor = 'crosshair';
         _art.addEventListener('mouseenter', _scramble);  // hover to re-trigger
-        window.triggerScramble = _scramble;      // expose for theme switcher
-    }
+        _scramblers.push(_scramble);
+    });
+    // expose for theme switcher — re-glitches every ASCII block
+    window.triggerScramble = function () { _scramblers.forEach(function (fn) { fn(); }); };
 
     // ── Interactive MS-DOS prompt ───────────────────────────────
     (function dosShell() {
