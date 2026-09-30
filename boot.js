@@ -17,7 +17,7 @@
     // (the inline-SVG shapes / the wizard emoji) if the file is missing.
     var BIOS_BADGE_SRC = 'images/bios-logo.jpg';  // top-right corner logo
     var BIOS_ICON_SRC  = 'images/bios-icon.jpg';  // small icon next to the brand text
-    var AVATAR_SRC     = 'images/pfp.jpg';        // lock-screen profile picture
+    var AVATAR_SRC     = 'images/welcomepic.jpeg'; // lock-screen profile picture
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var stage = 'bios';

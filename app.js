@@ -169,12 +169,28 @@
             .then(function (d) { try { sessionStorage.setItem('gh:' + url, JSON.stringify({ t: Date.now(), d: d })); } catch (e) {} return d; });
     }
 
+    // GitHub REST calls go through the Worker (?action=gh): it adds a token and
+    // edge-caches, so visitors share one copy instead of each spending the
+    // 60/hr anonymous limit. If the Worker is unreachable or refuses the path,
+    // fall back to calling GitHub directly. A 404/409 is GitHub's real answer
+    // (missing / empty repo), so that's passed on rather than retried.
+    function ghApi(path, ttl) {
+        var proxy  = (typeof steamConfig !== 'undefined' && steamConfig.proxyUrl) || '';
+        var direct = function () { return cachedJson('https://api.github.com' + path, ttl); };
+        if (!proxy) return direct();
+        return cachedJson(proxy + '?action=gh&path=' + encodeURIComponent(path), ttl)
+            .catch(function (e) {
+                if (e && (e.message === '404' || e.message === '409')) throw e;
+                return direct();
+            });
+    }
+
     // Fill each card's "last commit" line from its repo's latest commit.
     function hydrateCommits() {
         [].forEach.call(document.querySelectorAll('.card-commit[data-repo]'), function (el) {
             var slug = el.getAttribute('data-repo');
             if (!slug) return;
-            cachedJson('https://api.github.com/repos/' + slug + '/commits?per_page=1', 600000)
+            ghApi('/repos/' + slug + '/commits?per_page=1', 600000)
                 .then(function (arr) {
                     var c = arr && arr[0];
                     if (!c || !c.commit) return;
@@ -371,7 +387,7 @@
     function langShort(l) { return LANG_SHORT[l] || (l && l.length > 4 ? l.slice(0, 3) : (l || '')); }
 
     function fetchGithubFeed(username, profileUrl) {
-        cachedJson('https://api.github.com/users/' + encodeURIComponent(username) + '/events?per_page=30', 300000)
+        ghApi('/users/' + encodeURIComponent(username) + '/events?per_page=30', 300000)
             .then(function (events) {
                 if (!Array.isArray(events)) { renderGithubStatic(username, profileUrl); return; }
 
@@ -406,10 +422,10 @@
 
                 // One repo-list call covers both the per-row language tags and
                 // the language bar (instead of one call per repo).
-                var reposP = cachedJson('https://api.github.com/users/' + encodeURIComponent(username) + '/repos?per_page=100&sort=pushed', 3600000)
+                var reposP = ghApi('/users/' + encodeURIComponent(username) + '/repos?per_page=100&sort=pushed', 3600000)
                     .catch(function () { return []; });
                 // Account-level stats (followers, public repos, join year)
-                var userP = cachedJson('https://api.github.com/users/' + encodeURIComponent(username), 3600000)
+                var userP = ghApi('/users/' + encodeURIComponent(username), 3600000)
                     .catch(function () { return null; });
 
                 var items = [];
@@ -449,7 +465,7 @@
             if (!it.sha || seen[it.sha]) return false;
             return (seen[it.sha] = true);
         }).slice(0, 3).map(function (it) {
-            return cachedJson('https://api.github.com/repos/' + it.full + '/commits/' + it.sha, 86400000)
+            return ghApi('/repos/' + it.full + '/commits/' + it.sha, 86400000)
                 .then(function (c) {
                     var msg = c && c.commit && c.commit.message ? c.commit.message.split('\n')[0] : '';
                     items.forEach(function (row) { if (row.sha === it.sha && msg) row.msg = msg; });
@@ -592,10 +608,14 @@
         ghEl.innerHTML =
             '<div class="gh-panel">' +
                 '<div class="gh-status"><span class="gh-dot"></span>I\'m working on things</div>' +
+                // The heatmap comes from the Worker, not the rate-limited public
+                // API, so it can still show when the activity feed can't.
+                '<div class="gh-heat" id="gh-heat"></div>' +
                 (profileUrl
-                    ? '<a class="gh-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">view profile ↗</a>'
+                    ? '<div class="gh-meta"><a class="gh-link" href="' + esc(profileUrl) + '" target="_blank" rel="noopener noreferrer">' + GH_ICON + 'view profile ↗</a></div>'
                     : '<p class="sp-error">no recent activity found</p>') +
             '</div>';
+        loadHeatmap();
     }
 
     // ── Steam recently played widget ─────────────────────────────

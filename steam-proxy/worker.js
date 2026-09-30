@@ -14,6 +14,11 @@
 //                       independent of the Steam secrets below)
 //    ?action=contrib  → GitHub contribution calendar (last year) for the
 //                       Git98 heatmap. GraphQL-only, so it needs a token.
+//    ?action=gh&path= → authenticated, edge-cached passthrough to the GitHub
+//                       REST API for Git98 + the project cards. Visitors share
+//                       one cached copy instead of each burning GitHub's
+//                       60/hr anonymous limit. Only an allowlist of read-only
+//                       paths under GITHUB_USER is served (see GH_ROUTES).
 //
 //  If the widget still falls back after this, the account's "Game details"
 //  privacy setting is almost certainly not Public — both endpoints above
@@ -79,6 +84,7 @@ export default {
         if (action === 'hits') return handleHits(request, env, cors);
         // GitHub heatmap — also independent of Steam.
         if (action === 'contrib') return handleContrib(request, env, ctx, cors);
+        if (action === 'gh')      return handleGithub(request, env, ctx, cors);
 
         if (!env.STEAM_API_KEY || !env.STEAM_ID) {
             return json({ error: 'Worker not configured: set STEAM_API_KEY and STEAM_ID secrets.' }, 500, cors);
@@ -183,12 +189,8 @@ async function handleContrib(request, env, ctx, cors) {
     try {
         const r = await fetch('https://api.github.com/graphql', {
             method: 'POST',
-            headers: {
-                'Authorization': 'bearer ' + env.GITHUB_TOKEN,
-                'Content-Type': 'application/json',
-                'User-Agent': 'damien-portfolio-worker'   // GitHub rejects requests without one
-            },
-            body: JSON.stringify({ query, variables: { login: env.GITHUB_USER || 'Damiensoobz' } })
+            headers: Object.assign({ 'Content-Type': 'application/json' }, githubHeaders(env)),
+            body: JSON.stringify({ query, variables: { login: githubUser(env) } })
         });
         if (!r.ok) throw new Error('GitHub API returned ' + r.status);
         cal = (await r.json())?.data?.user?.contributionsCollection?.contributionCalendar;
@@ -202,6 +204,60 @@ async function handleContrib(request, env, ctx, cors) {
     })));
     const res = json({ total: cal.totalContributions, weeks },
         200, Object.assign({ 'Cache-Control': 'public, max-age=' + CONTRIB_TTL }, cors));
+    ctx.waitUntil(cache.put(cacheKey, res.clone()));
+    return res;
+}
+
+function githubUser(env) { return env.GITHUB_USER || 'Damiensoobz'; }
+function githubHeaders(env) {
+    return {
+        'Authorization': 'bearer ' + env.GITHUB_TOKEN,
+        'Accept': 'application/vnd.github+json',
+        'User-Agent': 'damien-portfolio-worker'   // GitHub rejects requests without one
+    };
+}
+
+// Exactly the REST paths the site uses, each with its cache lifetime (s).
+// Everything is locked to GITHUB_USER's account, so the token can't be used
+// to proxy arbitrary GitHub requests.
+function githubRoutes(user) {
+    const u = user.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const repo = '(?!\\.+/)[\\w.-]+';   // a repo name — but never "." / "..", which fetch would resolve away
+    return [
+        { re: new RegExp('^/users/' + u + '$', 'i'),                                       ttl: 3600  },  // followers, repo count, join year
+        { re: new RegExp('^/users/' + u + '/events\\?per_page=30$', 'i'),                  ttl: 300   },  // activity feed
+        { re: new RegExp('^/users/' + u + '/repos\\?per_page=100&sort=pushed$', 'i'),      ttl: 3600  },  // languages
+        { re: new RegExp('^/repos/' + u + '/' + repo + '/commits\\?per_page=1$', 'i'),     ttl: 600   },  // project cards' last commit
+        { re: new RegExp('^/repos/' + u + '/' + repo + '/commits/[0-9a-f]{7,40}$', 'i'),   ttl: 86400 }   // commit message by SHA (immutable)
+    ];
+}
+
+async function handleGithub(request, env, ctx, cors) {
+    if (!env.GITHUB_TOKEN) {
+        return json({ error: 'Worker not configured: set the GITHUB_TOKEN secret.' }, 500, cors);
+    }
+    const path = new URL(request.url).searchParams.get('path') || '';
+    const route = githubRoutes(githubUser(env)).find(r => r.re.test(path));
+    if (!route) return json({ error: 'Path not allowed' }, 403, cors);
+
+    const cacheKey = new Request(new URL(request.url).origin + '/github' + path.toLowerCase());
+    const cache = caches.default;
+    const hit = await cache.match(cacheKey);
+    if (hit) return withCors(hit, cors);
+
+    let r;
+    try {
+        r = await fetch('https://api.github.com' + path, { headers: githubHeaders(env) });
+    } catch (e) {
+        return json({ error: 'GitHub unreachable' }, 502, cors);
+    }
+    // Pass GitHub's own errors through (404 = missing repo, 409 = empty repo)
+    // but only cache successes.
+    if (!r.ok) return json({ error: 'GitHub returned ' + r.status }, r.status, cors);
+    const res = new Response(await r.text(), {
+        status: 200,
+        headers: Object.assign({ 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=' + route.ttl }, cors)
+    });
     ctx.waitUntil(cache.put(cacheKey, res.clone()));
     return res;
 }

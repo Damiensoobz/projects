@@ -1,6 +1,9 @@
 # Portfolio TODO
 
 ## 🔴 Action required (only you can do these)
+- [ ] **Renew `GITHUB_TOKEN` before it expires.** Git98's heatmap and the
+      GitHub proxy both use it; when it lapses the heatmap hides and GitHub
+      calls fall back to the rate-limited public API. Set a reminder.
 - [ ] **Deploy the Steam worker.** `steam-proxy/worker.js` in this repo has the
       CORS fix (allows `localhost`/`127.0.0.1` on any port), but the LIVE worker
       is still running the old code — so the Steam widget shows "the wizard is

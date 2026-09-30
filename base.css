@@ -410,7 +410,7 @@ body.has-max { overflow: hidden; }
     font-size: 76px; line-height: 1; overflow: hidden; background: linear-gradient(180deg, #cfe7ff, #7fc4ef);
     border: 1px solid rgba(255,255,255,0.75); box-shadow: 0 2px 8px rgba(0,0,60,0.3);
 }
-.lock-avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lock-avatar-img { width: 100%; height: 100%; object-fit: cover; object-position: center 70%; display: block; }  /* portrait shot: keep the desk centred */
 .lock-user { align-self: center; color: #ffffff; font-weight: 700; font-size: 0.82rem; margin: 9px 0 28px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
 .lock-label { color: #ffffff; font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,60,0.45); }
 .lock-row { display: flex; }
