@@ -117,16 +117,9 @@
     }
 
     // ── Pages ───────────────────────────────────────────────────
-    // Always shown — this one stays put rather than being dismissible.
-    function introHtml() {
-        return '<div class="bw-intro" id="bw-intro">' +
-            '<p>This whole thing is Damien&rsquo;s developer portfolio, dressed up as a Windows&nbsp;98 desktop. You&rsquo;re currently reading the project list in <b>Kurama</b> &mdash; minimize this window (or grab it from the taskbar) to poke around the rest of the desktop: a terminal with live GitHub activity, a media player, Steam stats, and a few things that bite back.</p>' +
-            '<p class="bw-intro-note">Heads up: the full desktop experience really wants a bigger screen. If you&rsquo;re on mobile, this project list is already the best part &mdash; sorry about that.</p>' +
-            '</div>';
-    }
     function homePage() {
         var n = (window.projects ? window.projects.length : '');
-        return '<div class="bw-page bw-home">' + nav('projects') + introHtml() +
+        return '<div class="bw-page bw-home">' + nav('projects') +
             '<p class="out dim ls-meta">total <span id="project-count">' + n + '</span></p>' +
             '<div class="cards-grid" id="cards-grid"></div>' +
             // The sacred 88×31 badge wall — no old-school page is complete
